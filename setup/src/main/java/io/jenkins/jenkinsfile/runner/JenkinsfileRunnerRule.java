@@ -12,6 +12,7 @@ import org.jvnet.hudson.test.ThreadPoolImpl;
 import org.jvnet.hudson.test.WarExploder;
 
 import javax.servlet.ServletContext;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,14 +28,14 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class JenkinsfileRunnerRule extends JenkinsRule {
-    private final Bootstrap bootstrap;
+    private final File warDir;
     /**
      * Keep the reference around to prevent them from getting GCed.
      */
     private final Set<Object> noGc = new HashSet<>();
 
-    public JenkinsfileRunnerRule(Bootstrap bootstrap) {
-        this.bootstrap = bootstrap;
+    public JenkinsfileRunnerRule(File warDir) {
+        this.warDir = warDir;
     }
 
     /**
@@ -50,7 +51,7 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
             }
         })));
 
-        WebAppContext context = new WebAppContext(bootstrap.warDir.getPath(), contextPath);
+        WebAppContext context = new WebAppContext(warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));

@@ -38,8 +38,11 @@ public class Bootstrap {
         ClassLoader jenkins = createJenkinsWarClassLoader();
         ClassLoader setup = createSetupClassLoader(jenkins);
 
-        IApp r = (IApp) setup.loadClass("io.jenkins.jenkinsfile.runner.App").newInstance();
-        return r.run(this);
+        Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
+        return (int)c.getMethod("run",File.class).invoke(
+                c.newInstance(),
+                warDir
+        );
     }
 
     public ClassLoader createJenkinsWarClassLoader() throws IOException {

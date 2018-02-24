@@ -4,9 +4,11 @@ import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.queue.QueueTaskFuture;
 import hudson.tasks.Shell;
+import jdk.nashorn.internal.runtime.linker.Bootstrap;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -16,11 +18,10 @@ import java.util.concurrent.Callable;
 /**
  * This code runs after Jetty and Jenkins classloaders are set up correctly.
  */
-public class App implements IApp {
-    @Override
-    public int run(Bootstrap bootstrap) throws Throwable {
+public class App {
+    public int run(File warDir) throws Throwable {
         final int[] returnCode = new int[]{-1};
-        JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule(bootstrap);
+        JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule(warDir);
         Statement s = rule.apply(new Statement() {
 
             private FreeStyleBuild b;
