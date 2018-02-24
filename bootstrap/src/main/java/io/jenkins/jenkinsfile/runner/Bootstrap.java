@@ -24,14 +24,21 @@ public class Bootstrap {
      */
     public final File warDir;
 
-    public Bootstrap(File warDir) {
+    public final File pluginsDir;
+
+    public Bootstrap(File warDir, File pluginsDir) {
         this.warDir = warDir;
+        this.pluginsDir = pluginsDir;
     }
 
     public static void main(String[] args) throws Throwable {
         // TODO: support exploding war. See WebInfConfiguration.unpack()
+        if (args.length<2) {
+            System.err.println("Usage: jenkinsfilerunner <jenkins.war> <pluginsDir>");
+            System.exit(1);
+        }
 
-        System.exit(new Bootstrap(new File(args[0])).run());
+        System.exit(new Bootstrap(new File(args[0]), new File(args[1])).run());
     }
 
     public int run() throws Throwable {
@@ -39,9 +46,8 @@ public class Bootstrap {
         ClassLoader setup = createSetupClassLoader(jenkins);
 
         Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
-        return (int)c.getMethod("run",File.class).invoke(
-                c.newInstance(),
-                warDir
+        return (int)c.getMethod("run",File.class,File.class).invoke(
+                c.newInstance(), warDir, pluginsDir
         );
     }
 

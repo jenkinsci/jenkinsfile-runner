@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.LocalPluginManager;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -29,13 +30,15 @@ import java.util.logging.Logger;
  */
 public class JenkinsfileRunnerRule extends JenkinsRule {
     private final File warDir;
+    private final File pluginsDir;
     /**
      * Keep the reference around to prevent them from getting GCed.
      */
     private final Set<Object> noGc = new HashSet<>();
 
-    public JenkinsfileRunnerRule(File warDir) {
+    public JenkinsfileRunnerRule(File warDir, File pluginsDir) {
         this.warDir = warDir;
+        this.pluginsDir = pluginsDir;
     }
 
     /**
@@ -57,11 +60,13 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
         context.getSecurityHandler().setLoginService(configureUserRealm());
-        context.setResourceBase(WarExploder.getExplodedDir().getPath());
+        context.setResourceBase(warDir.getPath());
 
         server.start();
 
         localPort = -1;
+
+        setPluginManager(new LocalPluginManager(context.getServletContext(),pluginsDir));
 
         return context.getServletContext();
     }
