@@ -1,4 +1,4 @@
-package io.jenkins.jenkinsfile.runner;
+package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -48,9 +48,7 @@ public class Bootstrap {
         Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
 
         Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
-        return (int)c.getMethod("run",File.class,File.class).invoke(
-                c.newInstance(), warDir, pluginsDir
-        );
+        return ((IApp)c.newInstance()).run(this);
     }
 
     public ClassLoader createJenkinsWarClassLoader() throws IOException {
@@ -58,7 +56,8 @@ public class Bootstrap {
         // servlet API needs to be visible to jenkins.war
         collectJars(new File(appRepo,"javax/servlet"),(File f)->true, jars);
 
-        return new URLClassLoader(jars.toArray(new URL[jars.size()]), null);
+        return new URLClassLoader(jars.toArray(new URL[jars.size()]),
+                new SideClassLoader(null));
     }
 
     public ClassLoader createSetupClassLoader(ClassLoader jenkins) throws IOException {

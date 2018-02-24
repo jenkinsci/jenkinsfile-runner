@@ -51,6 +51,7 @@ THE SOFTWARE.
   <modules>
     <module>bootstrap</module>
     <module>setup</module>
+    <module>payload-dependencies</module>
     <module>payload</module>
     <module>app</module>
   </modules>

@@ -87,7 +87,7 @@ and
             <configuration>
               <programs>
                 <program>
-                  <mainClass>io.jenkins.jenkinsfile.runner.Bootstrap</mainClass>
+                  <mainClass>io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap</mainClass>
                   <id>app</id>
                 </program>
               </programs>
@@ -107,6 +107,11 @@ and
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>jenkinsfile-runner-setup</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>jenkinsfile-runner-payload</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
