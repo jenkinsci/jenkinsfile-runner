@@ -1,10 +1,8 @@
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.init.InitMilestone;
-import hudson.init.Initializer;
-import hudson.model.Hudson;
-import jenkins.model.Jenkins;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -14,7 +12,6 @@ import org.jvnet.hudson.test.ThreadPoolImpl;
 import org.jvnet.hudson.test.WarExploder;
 
 import javax.servlet.ServletContext;
-import java.util.Collections;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -49,7 +46,7 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
-
+        context.getSecurityHandler().setLoginService(configureUserRealm());
         context.setResourceBase(WarExploder.getExplodedDir().getPath());
 
         server.start();
@@ -57,6 +54,14 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         localPort = -1;
 
         return context.getServletContext();
+    }
+
+    /**
+     * Supply a dummy {@link LoginService} that allows nobody.
+     */
+    @Override
+    protected LoginService configureUserRealm() {
+        return new HashLoginService();
     }
 
     @Override
@@ -72,6 +77,18 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         Logger.getLogger("").setLevel(Level.WARNING);
         l2 = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
         l2.setLevel(Level.OFF);
+    }
+
+    /**
+     * Skips the clean up.
+     *
+     * This was initially motivated by SLF4J leaving gnarly messages.
+     * The whole JVM is going to die anyway, so we don't really care about cleaning up anything nicely.
+     */
+    @Override
+    public void after() throws Exception {
+        jenkins = null;
+        super.after();
     }
 
     // Doesn't work as intended
