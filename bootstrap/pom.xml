@@ -8,17 +8,10 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>jenkinsfile-runner-setup</artifactId>
+  <artifactId>jenkinsfile-runner-bootstrap</artifactId>
 
   <build>
     <plugins>
-      <plugin>
-        <!-- to treat executable-war type of artifact correctly -->
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <version>2.0</version>
-        <extensions>true</extensions>
-      </plugin>
       <plugin>
          <groupId>org.codehaus.mojo</groupId>
          <artifactId>appassembler-maven-plugin</artifactId>
@@ -26,7 +19,7 @@
          <configuration>
            <programs>
              <program>
-               <mainClass>io.jenkins.jenkinsfile.runner.App</mainClass>
+               <mainClass>org.jvnet.hudson.test.JenkinsRule</mainClass>
                <id>app</id>
              </program>
            </programs>
@@ -36,38 +29,15 @@
   </build>
 
   <dependencies>
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>instance-identity</artifactId>
-      <version>2.1</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.jenkins-ci.modules</groupId>-->
+      <!--<artifactId>instance-identity</artifactId>-->
+      <!--<version>2.1</version>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-test-harness</artifactId>
-      <version>2.34</version>
-    </dependency>
-
-    <!--
-      These are for compilation only, and at runtime the user specified jenkins.war
-      and its content will be used.
-    -->
-    <dependency>
-      <groupId>org.jenkins-ci.main</groupId>
-      <artifactId>jenkins-core</artifactId>
-      <version>${jenkins.version}</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.main</groupId>
-      <artifactId>jenkins-war</artifactId>
-      <version>${jenkins.version}</version>
-      <type>executable-war</type>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jenkins-ci.modules</groupId>
-          <artifactId>sshd</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>${jenkins.testharness.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

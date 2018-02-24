@@ -50,8 +50,16 @@ THE SOFTWARE.
 
   <modules>
     <module>bootstrap</module>
+    <module>setup</module>
     <module>payload</module>
   </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.level>8</java.level>
+    <jenkins.version>2.89</jenkins.version>
+    <jenkins.testharness.version>2.34</jenkins.testharness.version>
+  </properties>
 
   <build>
     <plugins>
