@@ -1,12 +1,7 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -52,39 +47,16 @@ public class Bootstrap {
     }
 
     public ClassLoader createJenkinsWarClassLoader() throws IOException {
-        List<URL> jars = collectJars(new File(warDir,"WEB-INF/lib"),(File f)->true, new ArrayList<>());
-        // servlet API needs to be visible to jenkins.war
-        collectJars(new File(appRepo,"javax/servlet"),(File f)->true, jars);
-
-        return new URLClassLoader(jars.toArray(new URL[jars.size()]),
-                new SideClassLoader(null));
+        return new ClassLoaderBuilder(new SideClassLoader(null))
+                .collectJars(new File(warDir,"WEB-INF/lib"))
+                // servlet API needs to be visible to jenkins.war
+                .collectJars(new File(appRepo,"javax/servlet"))
+                .make();
     }
 
     public ClassLoader createSetupClassLoader(ClassLoader jenkins) throws IOException {
-        List<URL> jars = collectJars(
-                appRepo,
-                (File f)->true,
-                new ArrayList<>());
-
-        return new URLClassLoader(jars.toArray(new URL[jars.size()]), jenkins);
-    }
-
-    /**
-     * Recursively scan a directory to find jars
-     */
-    private List<URL> collectJars(File dir, FileFilter filter, List<URL> jars) throws IOException {
-        File[] children = dir.listFiles();
-        if (children!=null) {
-            for (File child : children) {
-                if (child.isDirectory()) {
-                    collectJars(child, filter, jars);
-                } else {
-                    if (child.getName().endsWith(".jar") && filter.accept(child)) {
-                        jars.add(child.toURI().toURL());
-                    }
-                }
-            }
-        }
-        return jars;    // just to make this method flow a bit better
+        return new ClassLoaderBuilder(jenkins)
+                .collectJars(appRepo)
+                .make();
     }
 }

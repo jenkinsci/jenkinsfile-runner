@@ -5,7 +5,7 @@ package io.jenkins.jenkinsfile.runner.bootstrap;
  *
  * @author Kohsuke Kawaguchi
  */
-public class SideClassLoader extends ClassLoader {
+class SideClassLoader extends ClassLoader {
     public SideClassLoader(ClassLoader parent) {
         super(parent);
     }
