@@ -20,7 +20,7 @@ public class App implements IApp {
     @Override
     public int run(Bootstrap bootstrap) throws Throwable {
         final int[] returnCode = new int[]{-1};
-        JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule();
+        JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule(bootstrap);
         Statement s = rule.apply(new Statement() {
 
             private FreeStyleBuild b;

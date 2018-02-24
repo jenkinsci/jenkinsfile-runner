@@ -12,6 +12,8 @@ import org.jvnet.hudson.test.ThreadPoolImpl;
 import org.jvnet.hudson.test.WarExploder;
 
 import javax.servlet.ServletContext;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -25,8 +27,15 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class JenkinsfileRunnerRule extends JenkinsRule {
+    private final Bootstrap bootstrap;
+    /**
+     * Keep the reference around to prevent them from getting GCed.
+     */
+    private final Set<Object> noGc = new HashSet<>();
 
-    private Logger l2;
+    public JenkinsfileRunnerRule(Bootstrap bootstrap) {
+        this.bootstrap = bootstrap;
+    }
 
     /**
      * Sets up Jetty without any actual TCP port serving HTTP.
@@ -41,7 +50,7 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
             }
         })));
 
-        WebAppContext context = new WebAppContext(, contextPath);
+        WebAppContext context = new WebAppContext(bootstrap.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
@@ -75,8 +84,9 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
      */
     private void setLogLevels() {
         Logger.getLogger("").setLevel(Level.WARNING);
-        l2 = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
-        l2.setLevel(Level.OFF);
+        Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
+        l.setLevel(Level.OFF);
+        noGc.add(l);    // the configuration will be lost if Logger gets GCed.
     }
 
     /**
