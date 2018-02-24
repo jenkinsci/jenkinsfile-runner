@@ -52,6 +52,7 @@ THE SOFTWARE.
     <module>bootstrap</module>
     <module>setup</module>
     <module>payload</module>
+    <module>app</module>
   </modules>
 
   <properties>

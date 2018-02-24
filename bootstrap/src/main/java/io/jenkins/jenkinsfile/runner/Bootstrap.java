@@ -14,15 +14,15 @@ import java.util.concurrent.Callable;
  */
 public class Bootstrap {
     public static void main(String[] args) throws Exception {
-        new Bootstrap().run(new File(args[0]));
+        System.exit(new Bootstrap().run(new File(args[0])));
     }
 
-    public void run(File war) throws Exception {
+    public int run(File war) throws Exception {
         ClassLoader jenkins = createJenkinsWarClassLoader(war);
         ClassLoader setup = createSetupClassLoader(jenkins);
 
-        Callable r = (Callable) setup.loadClass("io.jenkins.jenkinsfile.runner.Bootstrap").newInstance();
-        r.call();
+        Callable<Integer> r = (Callable<Integer>) setup.loadClass("io.jenkins.jenkinsfile.runner.Bootstrap").newInstance();
+        return r.call();
     }
 
     public ClassLoader createJenkinsWarClassLoader(File war) throws IOException {

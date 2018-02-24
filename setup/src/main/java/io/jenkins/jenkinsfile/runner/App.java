@@ -11,13 +11,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.NoSuchFileException;
+import java.util.concurrent.Callable;
 
-public class App {
-    public static void main(String[] args) throws Throwable {
-        System.exit(new App().run());
-    }
-
-    public int run() throws Throwable {
+/**
+ * This code runs after Jetty and Jenkins classloaders are set up correctly.
+ */
+public class App implements Callable<Integer> {
+    @Override
+    public Integer call() throws Exception {
         final int[] returnCode = new int[]{-1};
         JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule();
         Statement s = rule.apply(new Statement() {
@@ -60,7 +61,14 @@ public class App {
                 }
             }
         }, Description.createSuiteDescription("main"));
-        s.evaluate();
+
+        try {
+            s.evaluate();
+        } catch (Exception|Error e) {
+            throw e;
+        } catch (Throwable e) {
+            throw new Error(e);
+        }
 
         return returnCode[0];
     }

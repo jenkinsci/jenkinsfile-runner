@@ -9,40 +9,4 @@
   </parent>
 
   <artifactId>jenkinsfile-runner-bootstrap</artifactId>
-
-  <build>
-    <plugins>
-      <plugin>
-         <groupId>org.codehaus.mojo</groupId>
-         <artifactId>appassembler-maven-plugin</artifactId>
-         <version>1.10</version>
-         <configuration>
-           <programs>
-             <program>
-               <mainClass>org.jvnet.hudson.test.JenkinsRule</mainClass>
-               <id>app</id>
-             </program>
-           </programs>
-         </configuration>
-       </plugin>
-    </plugins>
-  </build>
-
-  <dependencies>
-    <!--<dependency>-->
-      <!--<groupId>org.jenkins-ci.modules</groupId>-->
-      <!--<artifactId>instance-identity</artifactId>-->
-      <!--<version>2.1</version>-->
-    <!--</dependency>-->
-    <dependency>
-      <groupId>org.jenkins-ci.main</groupId>
-      <artifactId>jenkins-test-harness</artifactId>
-      <version>${jenkins.testharness.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.25</version>
-    </dependency>
-  </dependencies>
 </project>
