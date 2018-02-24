@@ -4,8 +4,10 @@ import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
+import org.jenkinsci.plugins.workflow.flow.FlowDurabilityHint;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
+import org.jenkinsci.plugins.workflow.job.properties.DurabilityHintJobProperty;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +29,7 @@ public class Runner {
     public int run(Bootstrap bootstrap) throws Exception {
         Jenkins j = Jenkins.getInstance();
         WorkflowJob w = j.createProject(WorkflowJob.class, "job");
+        w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.wsDir),"Jenkinsfile"));
         QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0,

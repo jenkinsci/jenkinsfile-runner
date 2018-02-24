@@ -82,7 +82,7 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
 
     @Override
     public void before() throws Throwable {
-        setLogLevels();
+//        setLogLevels();
         super.before();
     }
 
