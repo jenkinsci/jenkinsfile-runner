@@ -45,6 +45,8 @@ public class Bootstrap {
         ClassLoader jenkins = createJenkinsWarClassLoader();
         ClassLoader setup = createSetupClassLoader(jenkins);
 
+        Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
+
         Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
         return (int)c.getMethod("run",File.class,File.class).invoke(
                 c.newInstance(), warDir, pluginsDir
