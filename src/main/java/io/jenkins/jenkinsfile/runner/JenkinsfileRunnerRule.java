@@ -1,5 +1,10 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
+import hudson.model.Hudson;
+import jenkins.model.Jenkins;
+import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -9,10 +14,13 @@ import org.jvnet.hudson.test.ThreadPoolImpl;
 import org.jvnet.hudson.test.WarExploder;
 
 import javax.servlet.ServletContext;
+import java.util.Collections;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Set up of Jenkins environment for executing a single Jenkinsfile.
@@ -20,6 +28,9 @@ import java.util.concurrent.TimeUnit;
  * @author Kohsuke Kawaguchi
  */
 public class JenkinsfileRunnerRule extends JenkinsRule {
+
+    private Logger l2;
+
     /**
      * Sets up Jetty without any actual TCP port serving HTTP.
      */
@@ -47,4 +58,26 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
 
         return context.getServletContext();
     }
+
+    @Override
+    public void before() throws Throwable {
+        setLogLevels();
+        super.before();
+    }
+
+    /**
+     * We don't want to clutter console with log messages, so kill of any unimportant ones.
+     */
+    private void setLogLevels() {
+        Logger.getLogger("").setLevel(Level.WARNING);
+        l2 = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
+        l2.setLevel(Level.OFF);
+    }
+
+    // Doesn't work as intended
+//    @Initializer(before= InitMilestone.PLUGINS_LISTED)
+//    public static void init() {
+//        // no external connectivity needed
+//        Jenkins.getInstance().setAgentProtocols(Collections.emptySet());
+//    }
 }
