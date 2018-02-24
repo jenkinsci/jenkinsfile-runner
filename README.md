@@ -46,6 +46,7 @@ pipeline {
         }
     }
 }
+
 # Usage: jenkinsfile-runner <path to war> <path to plugins> <path to ws>
 $ ./app/target/appassembler/jenkinsfile-runner /tmp/jenkins /tmp/plugins ~/foo
 Started
@@ -78,3 +79,4 @@ drwxrwxr-x 4 kohsuke kohsuke 4096 Feb 24 15:36 ..
 Finished: SUCCESS
 ```
 
+The exit code reflects the result of the build.
