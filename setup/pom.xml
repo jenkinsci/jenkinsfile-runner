@@ -26,7 +26,7 @@
          <configuration>
            <programs>
              <program>
-               <mainClass>io.jenkins.jenkinsfile.runner.App</mainClass>
+               <mainClass>io.jenkins.jenkinsfile.runner.Bootstrap</mainClass>
                <id>app</id>
              </program>
            </programs>
