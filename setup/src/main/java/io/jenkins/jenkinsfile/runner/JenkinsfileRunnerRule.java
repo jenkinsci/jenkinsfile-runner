@@ -1,6 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.LocalPluginManager;
+import hudson.security.ACL;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -8,9 +8,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.ThreadPoolImpl;
-import org.jvnet.hudson.test.WarExploder;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -106,6 +107,33 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         jenkins = null;
         super.after();
     }
+
+    /**
+     * No time out and no output message
+     */
+    @Override
+    public Statement apply(final Statement base, final Description description) {
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                testDescription = description;
+                Thread t = Thread.currentThread();
+                String o = t.getName();
+                t.setName("Executing "+ testDescription.getDisplayName());
+                before();
+                try {
+                    // so that test code has all the access to the system
+                    ACL.impersonate(ACL.SYSTEM);
+                    base.evaluate();
+                } finally {
+                    after();
+                    testDescription = null;
+                    t.setName(o);
+                }
+            }
+        };
+    }
+
 
     // Doesn't work as intended
 //    @Initializer(before= InitMilestone.PLUGINS_LISTED)
