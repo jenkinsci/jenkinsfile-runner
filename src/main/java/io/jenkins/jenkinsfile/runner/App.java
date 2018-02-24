@@ -34,7 +34,6 @@ public class App {
                 writeLogTo(System.out);
 
                 f.get();    // wait for the completion
-                System.out.println("Completed "+ b.getFullDisplayName()+" : "+ b.getResult());
                 returnCode[0] = b.getResult().ordinal;
             }
 
