@@ -41,7 +41,7 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
             }
         })));
 
-        WebAppContext context = new WebAppContext(WarExploder.getExplodedDir().getPath(), contextPath);
+        WebAppContext context = new WebAppContext(, contextPath);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));

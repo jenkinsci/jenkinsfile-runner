@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -18,24 +17,33 @@ public class Bootstrap {
      * This system property is set by the bootstrap script created by appassembler Maven plugin
      * to point to a local Maven repository.
      */
-    private File appRepo = new File(System.getProperty("app.repo"));
+    public final File appRepo = new File(System.getProperty("app.repo"));
 
-    public static void main(String[] args) throws Exception {
-        System.exit(new Bootstrap().run(new File(args[0])));
+    /**
+     * Exploded jenkins.war
+     */
+    public final File warDir;
+
+    public Bootstrap(File warDir) {
+        this.warDir = warDir;
     }
 
-    public int run(File war) throws Exception {
-        ClassLoader jenkins = createJenkinsWarClassLoader(war);
-        ClassLoader setup = createSetupClassLoader(jenkins);
-
-        Callable<Integer> r = (Callable<Integer>) setup.loadClass("io.jenkins.jenkinsfile.runner.App").newInstance();
-        return r.call();
-    }
-
-    public ClassLoader createJenkinsWarClassLoader(File war) throws IOException {
+    public static void main(String[] args) throws Throwable {
         // TODO: support exploding war. See WebInfConfiguration.unpack()
 
-        List<URL> jars = collectJars(new File(war,"WEB-INF/lib"),(File f)->true, new ArrayList<>());
+        System.exit(new Bootstrap(new File(args[0])).run());
+    }
+
+    public int run() throws Throwable {
+        ClassLoader jenkins = createJenkinsWarClassLoader();
+        ClassLoader setup = createSetupClassLoader(jenkins);
+
+        IApp r = (IApp) setup.loadClass("io.jenkins.jenkinsfile.runner.App").newInstance();
+        return r.run(this);
+    }
+
+    public ClassLoader createJenkinsWarClassLoader() throws IOException {
+        List<URL> jars = collectJars(new File(warDir,"WEB-INF/lib"),(File f)->true, new ArrayList<>());
         // servlet API needs to be visible to jenkins.war
         collectJars(new File(appRepo,"javax/servlet"),(File f)->true, jars);
 

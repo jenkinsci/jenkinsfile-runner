@@ -65,6 +65,13 @@ THE SOFTWARE.
   <build>
     <plugins>
       <plugin>
+        <!-- to treat executable-war type of artifact correctly -->
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>2.0</version>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>1.8</source>

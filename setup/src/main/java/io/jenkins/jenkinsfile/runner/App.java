@@ -16,9 +16,9 @@ import java.util.concurrent.Callable;
 /**
  * This code runs after Jetty and Jenkins classloaders are set up correctly.
  */
-public class App implements Callable<Integer> {
+public class App implements IApp {
     @Override
-    public Integer call() throws Exception {
+    public int run(Bootstrap bootstrap) throws Throwable {
         final int[] returnCode = new int[]{-1};
         JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule();
         Statement s = rule.apply(new Statement() {
@@ -62,13 +62,7 @@ public class App implements Callable<Integer> {
             }
         }, Description.createSuiteDescription("main"));
 
-        try {
-            s.evaluate();
-        } catch (Exception|Error e) {
-            throw e;
-        } catch (Throwable e) {
-            throw new Error(e);
-        }
+        s.evaluate();
 
         return returnCode[0];
     }
