@@ -1,6 +1,5 @@
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.AbortException;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.queue.QueueTaskFuture;
@@ -33,7 +32,6 @@ public class App {
                 b = f.getStartCondition().get();
 
                 writeLogTo(System.out);
-                b.writeWholeLogTo(System.out);
 
                 f.get();    // wait for the completion
                 System.out.println("Completed "+ b.getFullDisplayName()+" : "+ b.getResult());
