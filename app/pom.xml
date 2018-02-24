@@ -11,6 +11,7 @@
   <artifactId>jenkinsfile-runner</artifactId>
 
   <build>
+    <finalName>jenkinsfile-runner</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -87,8 +88,8 @@ and
             <configuration>
               <programs>
                 <program>
+                  <id>jenkinsfile-runner</id>
                   <mainClass>io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap</mainClass>
-                  <id>app</id>
                 </program>
               </programs>
             </configuration>
