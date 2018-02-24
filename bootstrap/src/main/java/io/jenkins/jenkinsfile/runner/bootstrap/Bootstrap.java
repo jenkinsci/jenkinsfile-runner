@@ -19,21 +19,30 @@ public class Bootstrap {
      */
     public final File warDir;
 
+    /**
+     * Where to load plugins from?
+     */
     public final File pluginsDir;
 
-    public Bootstrap(File warDir, File pluginsDir) {
+    /**
+     * Checked out copy of the working space.
+     */
+    public final File wsDir;
+
+    public Bootstrap(File warDir, File pluginsDir, File wsDir) {
         this.warDir = warDir;
         this.pluginsDir = pluginsDir;
+        this.wsDir = wsDir;
     }
 
     public static void main(String[] args) throws Throwable {
         // TODO: support exploding war. See WebInfConfiguration.unpack()
         if (args.length<2) {
-            System.err.println("Usage: jenkinsfilerunner <jenkins.war> <pluginsDir>");
+            System.err.println("Usage: jenkinsfilerunner <jenkins.war> <pluginsDir> <ws>");
             System.exit(1);
         }
 
-        System.exit(new Bootstrap(new File(args[0]), new File(args[1])).run());
+        System.exit(new Bootstrap(new File(args[0]), new File(args[1]), new File(args[2])).run());
     }
 
     public int run() throws Throwable {

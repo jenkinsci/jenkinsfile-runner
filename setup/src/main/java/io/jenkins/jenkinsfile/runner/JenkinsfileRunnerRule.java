@@ -66,7 +66,7 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
 
         localPort = -1;
 
-        setPluginManager(new LocalPluginManager(context.getServletContext(),pluginsDir));
+        setPluginManager(new PluginManagerImpl(context.getServletContext(),pluginsDir));
 
         return context.getServletContext();
     }

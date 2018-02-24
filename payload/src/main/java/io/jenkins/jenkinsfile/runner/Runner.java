@@ -1,7 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.model.queue.QueueTaskFuture;
-import hudson.scm.NullSCM;
+import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -21,12 +21,16 @@ import java.nio.file.NoSuchFileException;
 public class Runner {
     private WorkflowRun b;
 
-    public int run(File wsDir) throws Exception {
+    /**
+     * Main entry point invoked by the setup module
+     */
+    public int run(Bootstrap bootstrap) throws Exception {
         Jenkins j = Jenkins.getInstance();
         WorkflowJob w = j.createProject(WorkflowJob.class, "job");
         w.setDefinition(new CpsScmFlowDefinition(
-                new FileSystemSCM(wsDir),"Jenkinsfile"));
-        QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0,new SetJenkinsfileLocation(new File(wsDir,"Jenkinsfile")));
+                new FileSystemSCM(bootstrap.wsDir),"Jenkinsfile"));
+        QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0,
+                new SetJenkinsfileLocation(new File(bootstrap.wsDir,"Jenkinsfile")));
 
         b = f.getStartCondition().get();
 
