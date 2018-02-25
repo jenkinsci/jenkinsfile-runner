@@ -79,4 +79,5 @@ drwxrwxr-x 4 kohsuke kohsuke 4096 Feb 24 15:36 ..
 Finished: SUCCESS
 ```
 
-The exit code reflects the result of the build.
+The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
+example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
