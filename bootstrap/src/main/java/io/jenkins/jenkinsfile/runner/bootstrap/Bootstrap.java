@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 
@@ -36,6 +37,11 @@ public class Bootstrap {
     }
 
     public static void main(String[] args) throws Throwable {
+        // break for attaching profiler
+        if (Boolean.getBoolean("start.pause")) {
+            System.console().readLine();
+        }
+
         // TODO: support exploding war. See WebInfConfiguration.unpack()
         if (args.length<2) {
             System.err.println("Usage: jenkinsfilerunner <jenkins.war> <pluginsDir> <ws>");
