@@ -11,7 +11,9 @@ Currently there's no released distribution, so you must first build this code:
 ```
 mvn package
 ```
-This will produce the distribution in `app/target/appassembler`
+This will produce the distribution in `app/target/appassembler`.
+
+Alternatively, you build via [Docker](#docker).
 
 ## Preparation
 Find `jenkins.war` that represents the version of Jenkins that you'd like to use,
@@ -82,3 +84,9 @@ Finished: SUCCESS
 
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
+
+
+## Further reading
+
+* [Packaing into Docker image](DOCKER.md)
+* [Implementation Note](IMPLEMENTATION.md)
