@@ -16,4 +16,4 @@ COPY plugins /app/plugins
 COPY --from=jenkinsfilerunner-build /tmp/jenkins /app/jenkins
 COPY app/target/appassembler /app 
 
-ENTRYPOINT ["/app/bin/jenkinsfile-runner", "/app/jenkins", "/app/plugins"]
+ENTRYPOINT ["/app/bin/jenkinsfile-runner", "/app/jenkins", "/app/plugins","/workspace"]

@@ -84,26 +84,8 @@ Finished: SUCCESS
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
-## Docker
 
-There is a simple `Dockerfile` that allows for building jenkinsfile-runner. However, you still have
-to run the [Preparation](#preparation) steps as mentioned above and provide the `plugins` directory next to the `Dockerfile`. Then you can build the image like so:
+## Further reading
 
-```
-docker build -t jenkinsfile-runner:1.0-SNAPSHOT-2.108
-```
-
-Note that the build will take some minutes.
-
-### Usage of docker image
-
-You then just mount your directory `~/foo` that contains `Jenkinsfile` to a folder within the container and pass this folder as argument:
-
-```
-docker run -v~/foo:/workspace jenkinsfile-runner:1.0-SNAPSHOT-2.108 /workspace
-```
-
-If you need additional plugins later, you will have to perform the [Preparation](#preparation) steps again :-/. However, you can still use your exiting docker image by mounting the `jenkins` and `plugins` folder to the container:
-```
-docker run -v /your/jenkins:/app/jenkins -v /your/plugins:/app/plugins -v~/foo:/workspace jenkinsfile-runner:1.0-SNAPSHOT-2.108 /workspace
-```
+* [Packaing into Docker image](DOCKER.md)
+* [Implementation Note](IMPLEMENTATION.md)
