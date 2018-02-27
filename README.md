@@ -13,8 +13,6 @@ mvn package
 ```
 This will produce the distribution in `app/target/appassembler`.
 
-Alternatively, you build via [Docker](#docker).
-
 ## Preparation
 Find `jenkins.war` that represents the version of Jenkins that you'd like to use,
 then unzip it somewhere.
