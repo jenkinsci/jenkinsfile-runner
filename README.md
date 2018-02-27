@@ -4,6 +4,7 @@ The intend use cases include:
 
 * Use Jenkins in Function-as-a-Service context
 * Assist editing `Jenkinsfile` locally
+* Integration test shared libraries
 
 ## Build
 Currently there's no released distribution, so you must first build this code:
