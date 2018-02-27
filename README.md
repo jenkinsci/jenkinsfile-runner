@@ -48,7 +48,7 @@ pipeline {
 }
 
 # Usage: jenkinsfile-runner <path to war> <path to plugins> <path to ws>
-$ ./app/target/appassembler/jenkinsfile-runner /tmp/jenkins /tmp/plugins ~/foo
+$ ./app/target/appassembler/bin/jenkinsfile-runner /tmp/jenkins /tmp/plugins ~/foo
 Started
 Running in Durability level: PERFORMANCE_OPTIMIZED
 Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins8090792616816810094test/workspace/job
