@@ -31,7 +31,7 @@ JENKINS_HOME=/tmp/plugins java -jar jenkins.war
 ```
 
 ## Usage
-Say you have your Git repository checked out at ``~/foo` that contains `Jenkinsfile` and your source code.
+Say you have your Git repository checked out at `~/foo` that contains `Jenkinsfile` and your source code.
 You can now run Jenkinsfile Runner like this:
 
 ```
