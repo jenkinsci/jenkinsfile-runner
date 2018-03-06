@@ -86,5 +86,5 @@ example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
 ## Further reading
 
-* [Packaing into Docker image](DOCKER.md)
+* [Packaging into Docker image](DOCKER.md)
 * [Implementation Note](IMPLEMENTATION.md)
