@@ -17,7 +17,7 @@ This will produce the distribution in `app/target/appassembler`.
 Find `jenkins.war` that represents the version of Jenkins that you'd like to use,
 then unzip it somewhere.
 ```
-wget http://mirrors.jenkins.io/war/latest/jenkins.war
+wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
 unzip jenkins.war -d /tmp/jenkins
 ```
 
@@ -25,7 +25,7 @@ Next, create a directory and assembls all the plugins that you'd like to use wit
 One way to do this is to run Jenkins setup wizard and install the default set of plugins.
 This is a gap intended to be filled with [configuration as code](https://github.com/jenkinsci/configuration-as-code-plugin)
 ```
-JENKINS_HOME=/tmp/plugins java -jar jenkins.war
+JENKINS_HOME=/tmp/jenkins_home java -jar jenkins.war
 # go to http://localhost:8080/, follow the installation step
 # and install the recommended set of plugins
 ```
@@ -49,7 +49,7 @@ pipeline {
 }
 
 # Usage: jenkinsfile-runner <path to war> <path to plugins> <path to ws>
-$ ./app/target/appassembler/bin/jenkinsfile-runner /tmp/jenkins /tmp/plugins ~/foo
+$ ./app/target/appassembler/bin/jenkinsfile-runner /tmp/jenkins /tmp/jenkins_home/plugins ~/foo
 Started
 Running in Durability level: PERFORMANCE_OPTIMIZED
 Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins8090792616816810094test/workspace/job
