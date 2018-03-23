@@ -3,9 +3,9 @@ You can package Jenkinsfile Runner with a specific Jenkins image and turn that i
 This way, you can ensure people are running Jenkinsfile in the specific Jenkins environment, for example one that's identical to your production environment.
 
 ## Building
-First, follow [the preparation step in main README](README.md#preparation) and create a directory full of plugins. Name it `plugins` and put it next to `Dockerfile`.
+Edit the `plugins.txt` to to include any plugins you'd like to install. See [the Jenkins Docker README](https://github.com/jenkinsci/docker#preinstalling-plugins) for more information.
 
-Then build the Jenkinsfile Runner image like this:
+Then, build the Jenkinsfile Runner image like this:
 
 ```
 docker build -t jenkinsfile-runner:my-production-jenkins --build-arg JENKINS_VERSION=2.108 .
