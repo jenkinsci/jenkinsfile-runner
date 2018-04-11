@@ -11,7 +11,7 @@
   <artifactId>jenkinsfile-runner-payload-dependencies</artifactId>
 
   <!--
-    Payload needs to depend on the presnce of many other plugins,
+    Payload needs to depend on the presence of many other plugins,
     but they are only used during the compilation, and we don't ship them to runtime.
     Having all the dependencies under payload-dependencies makes it easier to exclude
     all such dependencies from assembly.
@@ -67,7 +67,7 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-support</artifactId>
-      <version>2.14</version>
+      <version>2.17</version>
     </dependency>
   </dependencies>
 
