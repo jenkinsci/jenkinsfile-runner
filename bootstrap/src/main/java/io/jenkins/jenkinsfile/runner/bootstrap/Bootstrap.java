@@ -1,6 +1,10 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
-import java.io.Console;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,23 +22,21 @@ public class Bootstrap {
     /**
      * Exploded jenkins.war
      */
-    public final File warDir;
+    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to jenkins.war or exploded jenkins war directory", required = true)
+    public File warDir;
 
     /**
      * Where to load plugins from?
      */
-    public final File pluginsDir;
+    @Option(name = "-p", aliases = { "--plugins" }, usage = "plugins directory, default to ./plugins")
+    public File pluginsDir;
 
     /**
      * Checked out copy of the working space.
      */
-    public final File wsDir;
+    @Option(name = "-f", aliases = { "--file" }, usage = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, default to ./Jenkinsfile.")
+    public File jenkinsfile;
 
-    public Bootstrap(File warDir, File pluginsDir, File wsDir) {
-        this.warDir = warDir;
-        this.pluginsDir = pluginsDir;
-        this.wsDir = wsDir;
-    }
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -42,14 +44,28 @@ public class Bootstrap {
             System.console().readLine();
         }
 
-        // TODO: support exploding war. See WebInfConfiguration.unpack()
-        if (args.length<2) {
-            System.err.println("Usage: jenkinsfilerunner <jenkins.war> <pluginsDir> <ws>");
-            System.exit(1);
+        final Bootstrap bootstrap = new Bootstrap();
+        CmdLineParser parser = new CmdLineParser(bootstrap);
+        try {
+            parser.parseArgument(args);
+            bootstrap.postConstruct();
+            final int status = bootstrap.run();
+            System.exit(status);
+        } catch (CmdLineException e) {
+            // handling of wrong arguments
+            System.err.println(e.getMessage());
+            parser.printUsage(System.err);
         }
-
-        System.exit(new Bootstrap(new File(args[0]), new File(args[1]), new File(args[2])).run());
     }
+
+    @PostConstruct
+    private void postConstruct() {
+        if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
+        if (this.jenkinsfile.isDirectory()) this.jenkinsfile = new File(this.jenkinsfile, "Jenkinsfile");
+
+        if (this.pluginsDir == null) this.pluginsDir = new File("plugins");
+    }
+
 
     public int run() throws Throwable {
         ClassLoader jenkins = createJenkinsWarClassLoader();

@@ -21,7 +21,7 @@ wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
 unzip jenkins.war -d /tmp/jenkins
 ```
 
-Next, create a directory and assembls all the plugins that you'd like to use with the build.
+Next, create a directory and assemble all the plugins that you'd like to use with the build.
 One way to do this is to run Jenkins setup wizard and install the default set of plugins.
 This is a gap intended to be filled with [configuration as code](https://github.com/jenkinsci/configuration-as-code-plugin)
 ```
@@ -48,8 +48,8 @@ pipeline {
     }
 }
 
-# Usage: jenkinsfile-runner <path to war> <path to plugins> <path to ws>
-$ ./app/target/appassembler/bin/jenkinsfile-runner /tmp/jenkins /tmp/jenkins_home/plugins ~/foo
+# Usage: jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile>
+$ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/
 Started
 Running in Durability level: PERFORMANCE_OPTIMIZED
 Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins8090792616816810094test/workspace/job
