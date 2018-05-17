@@ -6,6 +6,13 @@ The intend use cases include:
 * Assist editing `Jenkinsfile` locally
 * Integration test shared libraries
 
+## Install
+You can install from HEAD with brew:
+```
+brew tap kohsuke/jenkinsfile-runner https://github.com/kohsuke/jenkinsfile-runner.git
+brew install --HEAD kohsuke/jenkinsfile-runner/jenkinsfile-runner
+```
+
 ## Build
 Currently there's no released distribution, so you must first build this code:
 ```
