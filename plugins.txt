@@ -1,1 +1,1 @@
-workflow-aggregator:latest
+pipeline-model-definition:latest
