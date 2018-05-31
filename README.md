@@ -57,32 +57,39 @@ Advanced options:
 $ cat ~/foo/Jenkinsfile
 pipeline {
     agent any
+    parameters {
+        string(name: 'param1', defaultValue: '', description: 'Greeting message')
+        string(name: 'param2', defaultValue: '', description: '2nd parameter')
+    }
     stages {
         stage('Build') {
             steps {
                 echo 'Hello world!'
+                echo "message: ${params.param1}"
+                echo "param2: ${params.param2}"
                 sh 'ls -la'
             }
         }
     }
 }
 
-# Usage: jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile>
-$ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/
+
+# Usage: jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello&param2=value2"]
+$ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/ -a "param1=Hello&param2=value2"
 Started
 Running in Durability level: PERFORMANCE_OPTIMIZED
 Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins8090792616816810094test/workspace/job
 [Pipeline] node
 [Pipeline] {
-[Pipeline] stage
-[Pipeline] { (Declarative: Checkout SCM)
-[Pipeline] checkout
-[Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
 [Pipeline] { (Build)
 [Pipeline] echo
 Hello world!
+[Pipeline] echo
+message: Hello
+[Pipeline] echo
+param2: value2
 [Pipeline] sh
 [job] Running shell script
 + ls -la
@@ -101,6 +108,10 @@ Finished: SUCCESS
 
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
+
+Passing parameters defined within `parameters` section of the pipeline is optional. As parameters are ampersand separated,
+you can't pass a value containing ampersand itself as parameter value. 
+
 
 ## Demo
 

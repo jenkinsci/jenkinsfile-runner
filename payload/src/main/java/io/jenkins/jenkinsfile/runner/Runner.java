@@ -1,5 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.model.ParametersAction;
+import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
@@ -13,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.NoSuchFileException;
+import java.util.stream.Collectors;
 
 /**
  * This code runs with classloader setup to see all the pipeline plugins loaded
@@ -32,7 +35,12 @@ public class Runner {
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
         QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0,
-                new SetJenkinsfileLocation(bootstrap.jenkinsfile));
+                new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox),
+                new ParametersAction(bootstrap.workflowParameters
+                        .entrySet()
+                        .stream()
+                        .map(e -> new StringParameterValue(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList())));
 
         b = f.getStartCondition().get();
 
