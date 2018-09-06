@@ -4,7 +4,10 @@ import hudson.security.ACL;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
@@ -30,6 +33,9 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class JenkinsfileRunnerRule extends JenkinsRule {
+
+    private static final Logger LOGGER = Logger.getLogger(JenkinsfileRunnerRule.class.getName());
+
     private final File warDir;
     private final File pluginsDir;
     /**
@@ -63,9 +69,20 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         context.getSecurityHandler().setLoginService(configureUserRealm());
         context.setResourceBase(warDir.getPath());
 
+        if (System.getProperty("port")!=null) {
+            ServerConnector connector = new ServerConnector(server, 1, 1);
+            HttpConfiguration config = connector.getConnectionFactory(HttpConnectionFactory.class).getHttpConfiguration();
+            // use a bigger buffer as Stapler traces can get pretty large on deeply nested URL
+            config.setRequestHeaderSize(12 * 1024);
+            connector.setHost("localhost");
+            connector.setPort(Integer.parseInt(System.getProperty("port")));
+            localPort = connector.getLocalPort();
+            server.addConnector(connector);
+            LOGGER.log(Level.INFO, "Running on {0}", getURL());
+        } else {
+            localPort = -1;
+        }
         server.start();
-
-        localPort = -1;
 
         setPluginManager(new PluginManagerImpl(context.getServletContext(),pluginsDir));
 
