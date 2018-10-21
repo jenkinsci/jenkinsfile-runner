@@ -88,3 +88,5 @@ example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
 * [Packaging into Docker image](DOCKER.md)
 * [Implementation Note](IMPLEMENTATION.md)
+* [Building Jenkinsfile Runner images with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
+
