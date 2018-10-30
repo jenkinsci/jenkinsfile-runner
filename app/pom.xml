@@ -14,68 +14,6 @@
     <finalName>jenkinsfile-runner</finalName>
     <plugins>
       <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <!-- Bypassing problem like this:
-[INFO] - - - maven-enforcer-plugin:3.0.0-M1:enforce (display-info) @ jenkinsfile-runner - - -
-[WARNING] Rule 3: org.apache.maven.plugins.enforcer.RequireUpperBoundDeps failed with message:
-Failed while enforcing RequireUpperBoundDeps. The error(s) are [
-Require upper bound dependencies error for commons-collections:commons-collections:3.2.1 paths to dependency are:
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-test-harness:2.34
-      +-org.jenkins-ci.main:jenkins-test-harness-htmlunit:2.18-1
-        +-commons-collections:commons-collections:3.2.1
-and
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-war:2.89
-      +-org.jenkins-ci.main:jenkins-core:2.89
-        +-commons-collections:commons-collections:3.2.2
-and
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-war:2.89
-      +-org.jenkins-ci.main:jenkins-core:2.89
-        +-org.kohsuke.stapler:json-lib:2.4-jenkins-2
-          +-commons-collections:commons-collections:3.2.1
-and
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-war:2.89
-      +-org.jenkins-ci.main:jenkins-core:2.89
-        +-commons-jelly:commons-jelly-tags-xml:1.1
-          +-commons-collections:commons-collections:2.1
-and
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-war:2.89
-      +-org.jenkins-ci.main:jenkins-core:2.89
-        +-org.acegisecurity:acegi-security:1.0.7
-          +-commons-collections:commons-collections:3.1
-and
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-war:2.89
-      +-org.jenkins-ci.main:jenkins-core:2.89
-        +-org.kohsuke.stapler:stapler-groovy:1.253
-          +-org.kohsuke.stapler:stapler-jelly:1.253
-            +-commons-collections:commons-collections:3.2.2
-and
-+-io.jenkins:jenkinsfile-runner:1.0-SNAPSHOT
-  +-io.jenkins:jenkinsfile-runner-setup:1.0-SNAPSHOT
-    +-org.jenkins-ci.main:jenkins-war:2.89
-      +-org.jenkins-ci.main:jenkins-core:2.89
-        +-org.kohsuke.stapler:stapler-groovy:1.253
-          +-org.kohsuke.stapler:stapler-jelly:1.253
-            +-org.jenkins-ci:commons-jelly:1.1-jenkins-20120928
-              +-commons-collections:commons-collections:3.2
-]
-          -->
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
          <groupId>org.codehaus.mojo</groupId>
          <artifactId>appassembler-maven-plugin</artifactId>
          <version>1.10</version>
@@ -118,7 +56,18 @@ and
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-jdk14</artifactId>
-      <version>1.7.25</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>symbol-annotation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>annotation-indexer</artifactId>
     </dependency>
   </dependencies>
 </project>
