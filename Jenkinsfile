@@ -54,3 +54,21 @@ for (int i = 0; i < platforms.size(); ++i) {
 
 /* Execute our platforms in parallel */
 parallel(branches)
+
+
+stage('Verify demos')
+Map demos = [:]
+demos['cwp'] = {
+    node('docker') {
+        timestamps {
+            checkout scm
+            stage('CWP') {
+                dir('demo/cwp') {
+                    sh "make clean build run"
+                }
+            }
+        }
+    }
+}
+
+parallel(demos)
