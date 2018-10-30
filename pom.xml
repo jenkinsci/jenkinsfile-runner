@@ -60,7 +60,7 @@ THE SOFTWARE.
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
     <jenkins.version>2.89</jenkins.version>
-    <jenkins.testharness.version>2.34</jenkins.testharness.version>
+    <jenkins.testharness.version>2.38</jenkins.testharness.version>
   </properties>
 
   <build>
@@ -96,7 +96,7 @@ THE SOFTWARE.
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>https://repo.jenkins-ci.org/public/</url>
       <!-- allow snapshots -->
     </repository>
   </repositories>
@@ -104,7 +104,7 @@ THE SOFTWARE.
   <pluginRepositories>
     <pluginRepository>
       <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>https://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
 </project>
