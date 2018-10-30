@@ -63,6 +63,32 @@ THE SOFTWARE.
     <jenkins.testharness.version>2.34</jenkins.testharness.version>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jdk14</artifactId>
+        <version>1.7.25</version>
+      </dependency>
+      <!-- Annotation engine which we want to keep at recent versions instead of ones bundled in the core -->
+      <dependency>
+        <groupId>org.jenkins-ci</groupId>
+        <artifactId>symbol-annotation</artifactId>
+        <version>1.7</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jenkins-ci</groupId>
+        <artifactId>annotation-indexer</artifactId>
+        <version>1.12</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <plugins>
       <plugin>

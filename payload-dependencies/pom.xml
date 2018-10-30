@@ -69,6 +69,11 @@
       <artifactId>workflow-support</artifactId>
       <version>2.17</version>
     </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>script-security</artifactId>
+      <version>1.39</version>
+    </dependency>
   </dependencies>
 
   <build>
