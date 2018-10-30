@@ -37,14 +37,15 @@ for (int i = 0; i < platforms.size(); ++i) {
                     }
                 }
 
+               // TODO: Add some tests first
                 stage('Archive') {
                     /* Archive the test results */
-                    junit '**/target/surefire-reports/TEST-*.xml'
+                    // junit '**/target/surefire-reports/TEST-*.xml'
 
-                    if (label == 'linux') {
-                      archiveArtifacts artifacts: '**/target/**/*.jar'
-                      findbugs pattern: '**/target/findbugsXml.xml'
-                    }
+                    //if (label == 'linux') {
+                    //  archiveArtifacts artifacts: '**/target/**/*.jar'
+                    //  findbugs pattern: '**/target/findbugsXml.xml'
+                    //}
                 }
             }
         }
