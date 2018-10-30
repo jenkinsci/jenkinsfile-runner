@@ -4,6 +4,7 @@
 ARTIFACT_ID = jenkinsfile-runner-demo
 VERSION = 256.0-test
 CWP_VERSION = 1.3
+JENKINSFILE_RUNNER_TAG=jenkins-experimental/jenkinsfile-runner-demo
 
 all: clean build
 
@@ -19,6 +20,14 @@ build: .build/cwp-cli-${CWP_VERSION}.jar
 	java -jar .build/cwp-cli-${CWP_VERSION}.jar \
 	     -configPath packager-config.yml -version ${VERSION}
 
+# Slow, but it does not need anything except Docker
+buildInDocker:
+	docker run \
+	    -v $(shell pwd)/packager-config.yml:/app/packager-config.yml \
+	    -v $(shell pwd)/out:/app/out \
+	    jenkins/custom-war-packager:${CWP_VERSION} \
+	    -configPath /app/packager-config.yml -tmpDir /app/out/tmp -version ${VERSION}
+	docker build -t ${JENKINSFILE_RUNNER_TAG} -f $(shell pwd)/out/tmp/output/Dockerfile $(shell pwd)/out/tmp/output/
+
 run:
-	docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile \
-	    jenkins-experimental/jenkinsfile-runner-demo
+	docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_TAG}

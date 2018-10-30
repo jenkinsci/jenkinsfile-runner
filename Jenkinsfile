@@ -64,7 +64,7 @@ demos['cwp'] = {
             checkout scm
             stage('CWP') {
                 dir('demo/cwp') {
-                    sh "make clean build run"
+                    sh "make clean buildInDocker run"
                 }
             }
         }
