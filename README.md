@@ -83,6 +83,9 @@ Finished: SUCCESS
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
+## Demo
+
+* [Building Jenkinsfile Runner with Custom WAR Packager](demo/cwp)
 
 ## Further reading
 
