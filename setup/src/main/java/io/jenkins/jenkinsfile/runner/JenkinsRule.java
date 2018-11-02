@@ -28,50 +28,35 @@ import hudson.ClassicPluginStrategy;
 import hudson.CloseProofOutputStream;
 import hudson.DNSMultiCast;
 import hudson.DescriptorExtensionList;
-import hudson.EnvVars;
-import hudson.Extension;
+
 import hudson.ExtensionList;
 import hudson.Functions;
 import hudson.Launcher;
 import hudson.Main;
 import hudson.PluginManager;
-import hudson.Util;
 import hudson.WebAppMain;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
 import hudson.model.Computer;
-import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.DownloadService;
 import hudson.model.Executor;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Hudson;
-import hudson.model.Item;
 import hudson.model.JDK;
-import hudson.model.Label;
-import hudson.model.Node;
 import hudson.model.Queue;
 import hudson.model.Result;
 import hudson.model.RootAction;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.model.TopLevelItem;
 import hudson.model.UpdateSite;
 import hudson.model.User;
-import hudson.model.View;
 import hudson.remoting.Which;
 import hudson.security.ACL;
-import hudson.tasks.BuildWrapper;
-import hudson.tasks.BuildWrapperDescriptor;
 import hudson.tools.ToolProperty;
 import hudson.util.PersistedList;
-import hudson.util.ReflectionUtils;
 import hudson.util.StreamTaskListener;
 import hudson.util.jna.GNUCLibrary;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -79,65 +64,40 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.management.ThreadInfo;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import io.jenkins.jenkinsfile.runner.util.EndOfTestListener;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import io.jenkins.jenkinsfile.runner.util.JenkinsRecipe;
 import io.jenkins.jenkinsfile.runner.util.LenientRunnable;
-import io.jenkins.jenkinsfile.runner.util.MockFolder;
 import io.jenkins.jenkinsfile.runner.util.SupportLogFormatter;
 import io.jenkins.jenkinsfile.runner.util.TestEnvironment;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
-import net.sf.json.JSONObject;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
-import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.util.security.Password;
 import static org.junit.Assert.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -157,14 +117,9 @@ import jenkins.model.ParameterizedJobMixIn;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.rules.Timeout;
 import org.junit.runners.model.TestTimedOutException;
-import org.kohsuke.stapler.ClassDescriptor;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.Dispatcher;
 import org.kohsuke.stapler.MetaClass;
 import org.kohsuke.stapler.MetaClassLoader;
-import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Some code is inherited from JenkinsRule in Jenkins Test Harness
@@ -324,54 +279,48 @@ public abstract class JenkinsRule implements RootAction {
         }
     }
 
+    //TODO: JVM is going to die for Jenkinsfile Runner, the most of the code here is YAGNI
     /**
      * Override to tear down your specific external resource.
      */
     public void after() throws Exception {
+        jettyLevel(Level.WARNING);
         try {
-            if (jenkins!=null) {
-                for (EndOfTestListener tl : jenkins.getExtensionList(EndOfTestListener.class))
-                    tl.onTearDown();
-            }
+            server.stop();
+        } catch (Exception e) {
+            // ignore
         } finally {
-            jettyLevel(Level.WARNING);
+            jettyLevel(Level.INFO);
+        }
+        for (LenientRunnable r : tearDowns)
             try {
-                server.stop();
+                r.run();
             } catch (Exception e) {
                 // ignore
-            } finally {
-                jettyLevel(Level.INFO);
-            }
-            for (LenientRunnable r : tearDowns)
-                try {
-                    r.run();
-                } catch (Exception e) {
-                    // ignore
-                }
-
-            if (jenkins!=null)
-                jenkins.cleanUp();
-            ExtensionList.clearLegacyInstances();
-            DescriptorExtensionList.clearLegacyInstances();
-
-            try {
-                env.dispose();
-            } catch (Exception x) {
-                x.printStackTrace();
             }
 
-            // Hudson creates ClassLoaders for plugins that hold on to file descriptors of its jar files,
-            // but because there's no explicit dispose method on ClassLoader, they won't get GC-ed until
-            // at some later point, leading to possible file descriptor overflow. So encourage GC now.
-            // see http://bugs.sun.com/view_bug.do?bug_id=4950148
-            // TODO use URLClassLoader.close() in Java 7
-            System.gc();
-            
-            // restore defaultUseCache
-            if(Functions.isWindows()) {
-                URLConnection aConnection = new File(".").toURI().toURL().openConnection();
-                aConnection.setDefaultUseCaches(origDefaultUseCache);
-            }
+        if (jenkins!=null)
+            jenkins.cleanUp();
+        ExtensionList.clearLegacyInstances();
+        DescriptorExtensionList.clearLegacyInstances();
+
+        try {
+            env.dispose();
+        } catch (Exception x) {
+            x.printStackTrace();
+        }
+
+        // Hudson creates ClassLoaders for plugins that hold on to file descriptors of its jar files,
+        // but because there's no explicit dispose method on ClassLoader, they won't get GC-ed until
+        // at some later point, leading to possible file descriptor overflow. So encourage GC now.
+        // see http://bugs.sun.com/view_bug.do?bug_id=4950148
+        // TODO use URLClassLoader.close() in Java 7
+        System.gc();
+
+        // restore defaultUseCache
+        if(Functions.isWindows()) {
+            URLConnection aConnection = new File(".").toURI().toURL().openConnection();
+            aConnection.setDefaultUseCaches(origDefaultUseCache);
         }
     }
 
@@ -512,54 +461,6 @@ public abstract class JenkinsRule implements RootAction {
      * that we need for testing.
      */
     protected abstract ServletContext createWebServer() throws Exception;
-
-    /**
-     * Configures a security realm for a test.
-     */
-    protected LoginService configureUserRealm() {
-        HashLoginService realm = new HashLoginService();
-        realm.setName("default");   // this is the magic realm name to make it effective on everywhere
-        UserStore userStore = new UserStore();
-        realm.setUserStore( userStore );
-        userStore.addUser("alice", new Password("alice"), new String[]{"user","female"});
-        userStore.addUser("bob", new Password("bob"), new String[]{"user","male"});
-        userStore.addUser("charlie", new Password("charlie"), new String[]{"user","male"});
-
-        return realm;
-    }
-
-//
-// Convenience methods
-//
-
-    /**
-     * Creates a new job.
-     *
-     * @param type Top level item type.
-     * @param name Item name.
-     *
-     * @throws IllegalArgumentException if the project of the given name already exists.
-     */
-    public <T extends TopLevelItem> T createProject(Class<T> type, String name) throws IOException {
-        return jenkins.createProject(type, name);
-    }
-
-    /**
-     * Creates a new job with an unique name.
-     *
-     * @param type Top level item type.
-     */
-    public <T extends TopLevelItem> T createProject(Class<T> type) throws IOException {
-        return jenkins.createProject(type, createUniqueProjectName());
-    }
-
-    /**
-     * Creates a simple folder that other jobs can be placed in.
-     * @since 1.494
-     */
-    public MockFolder createFolder(String name) throws IOException {
-        return createProject(MockFolder.class, name);
-    }
 
     protected String createUniqueProjectName() {
         return "test"+jenkins.getItems().size();
@@ -702,29 +603,6 @@ public abstract class JenkinsRule implements RootAction {
         return r;
     }
 
-    public void assertStringContains(String message, String haystack, String needle) {
-        assertThat(message, haystack, containsString(needle));
-    }
-
-    public void assertStringContains(String haystack, String needle) {
-        assertThat(haystack, containsString(needle));
-    }
-
-    /**
-     * Tokenizes "foo,bar,zot,-bar" and returns "foo,zot" (the token that starts with '-' is handled as
-     * a cancellation.
-     */
-    private List<String> listProperties(String properties) {
-        List<String> props = new ArrayList<String>(Arrays.asList(properties.split(",")));
-        for (String p : props.toArray(new String[props.size()])) {
-            if (p.startsWith("-")) {
-                props.remove(p);
-                props.remove(p.substring(1));
-            }
-        }
-        return props;
-    }
-
     /**
      * Creates a {@link TaskListener} connected to stdout.
      */
@@ -732,200 +610,8 @@ public abstract class JenkinsRule implements RootAction {
         return new StreamTaskListener(new CloseProofOutputStream(System.out));
     }
 
-    /**
-     * Asserts that two JavaBeans are equal as far as the given list of properties are concerned.
-     *
-     * <p>
-     * This method takes two objects that have properties (getXyz, isXyz, or just the public xyz field),
-     * and makes sure that the property values for each given property are equals (by using {@link org.junit.Assert#assertThat(Object, org.hamcrest.Matcher)})
-     *
-     * <p>
-     * Property values can be null on both objects, and that is OK, but passing in a property that doesn't
-     * exist will fail an assertion.
-     *
-     * <p>
-     * This method is very convenient for comparing a large number of properties on two objects,
-     * for example to verify that the configuration is identical after a config screen roundtrip.
-     *
-     * @param lhs
-     *      One of the two objects to be compared.
-     * @param rhs
-     *      The other object to be compared
-     * @param properties
-     *      ','-separated list of property names that are compared.
-     * @since 1.297
-     */
-    public void assertEqualBeans(Object lhs, Object rhs, String properties) throws Exception {
-        assertThat("LHS", lhs, notNullValue());
-        assertThat("RHS", rhs, notNullValue());
-        for (String p : properties.split(",")) {
-            PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(lhs, p);
-            Object lp,rp;
-            if(pd==null) {
-                // field?
-                try {
-                    Field f = lhs.getClass().getField(p);
-                    lp = f.get(lhs);
-                    rp = f.get(rhs);
-                } catch (NoSuchFieldException e) {
-                    assertThat("No such property " + p + " on " + lhs.getClass(), pd, notNullValue());
-                    return;
-                }
-            } else {
-                lp = PropertyUtils.getProperty(lhs, p);
-                rp = PropertyUtils.getProperty(rhs, p);
-            }
-
-            if (lp!=null && rp!=null && lp.getClass().isArray() && rp.getClass().isArray()) {
-                // deep array equality comparison
-                int m = Array.getLength(lp);
-                int n = Array.getLength(rp);
-                assertThat("Array length is different for property " + p, n, is(m));
-                for (int i=0; i<m; i++)
-                    assertThat(p + "[" + i + "] is different", Array.get(rp, i), is(Array.get(lp,i)));
-                return;
-            }
-
-            assertThat("Property " + p + " is different", rp, is(lp));
-        }
-    }
-
     public void setQuietPeriod(int qp) throws IOException {
         jenkins.setQuietPeriod(qp);
-    }
-
-    /**
-     * Works like {@link #assertEqualBeans(Object, Object, String)} but figure out the properties
-     * via {@link org.kohsuke.stapler.DataBoundConstructor} and {@link org.kohsuke.stapler.DataBoundSetter}
-     */
-    public void assertEqualDataBoundBeans(Object lhs, Object rhs) throws Exception {
-        if (lhs==null && rhs==null)     return;
-        if (lhs==null)      fail("lhs is null while rhs="+rhs);
-        if (rhs==null)      fail("rhs is null while lhs="+lhs);
-
-        Constructor<?> lc = findDataBoundConstructor(lhs.getClass());
-        Constructor<?> rc = findDataBoundConstructor(rhs.getClass());
-        assertThat("Data bound constructor mismatch. Different type?", (Constructor)rc, is((Constructor)lc));
-
-        String[] names = ClassDescriptor.loadParameterNames(lc);
-        Class<?>[] types = lc.getParameterTypes();
-        assertThat(types.length, is(names.length));
-        assertEqualProperties(lhs, rhs, names, types);
-
-        Map<String, Class<?>> lprops = extractDataBoundSetterProperties(lhs.getClass());
-        Map<String, Class<?>> rprops = extractDataBoundSetterProperties(rhs.getClass());
-        assertThat("Data bound setters mismatch. Different type?", lprops, is(rprops));
-        List<String> setterNames = new ArrayList<String>();
-        List<Class<?>> setterTypes = new ArrayList<Class<?>>();
-        for (Map.Entry<String, Class<?>> e : lprops.entrySet()) {
-            setterNames.add(e.getKey());
-            setterTypes.add(e.getValue());
-        }
-        assertEqualProperties(lhs, rhs, setterNames.toArray(new String[0]), setterTypes.toArray(new Class<?>[0]));
-    }
-
-    private void assertEqualProperties(@Nonnull Object lhs, @Nonnull Object rhs, @Nonnull String[] names, @Nonnull Class<?>[] types) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, Exception {
-        List<String> primitiveProperties = new ArrayList<String>();
-
-        for (int i=0; i<types.length; i++) {
-            Object lv = ReflectionUtils.getPublicProperty(lhs, names[i]);
-            Object rv = ReflectionUtils.getPublicProperty(rhs, names[i]);
-
-            if (lv != null && rv != null && Iterable.class.isAssignableFrom(types[i])) {
-                Iterable lcol = (Iterable) lv;
-                Iterable rcol = (Iterable) rv;
-                Iterator ltr,rtr;
-                for (ltr=lcol.iterator(), rtr=rcol.iterator(); ltr.hasNext() && rtr.hasNext();) {
-                    Object litem = ltr.next();
-                    Object ritem = rtr.next();
-
-                    if (findDataBoundConstructor(litem.getClass())!=null) {
-                        assertEqualDataBoundBeans(litem,ritem);
-                    } else {
-                        assertThat(ritem, is(litem));
-                    }
-                }
-                assertThat("collection size mismatch between " + lhs + " and " + rhs, ltr.hasNext() ^ rtr.hasNext(),
-                        is(false));
-            } else
-            if (findDataBoundConstructor(types[i])!=null || (lv!=null && findDataBoundConstructor(lv.getClass())!=null) || (rv!=null && findDataBoundConstructor(rv.getClass())!=null)) {
-                // recurse into nested databound objects
-                assertEqualDataBoundBeans(lv,rv);
-            } else {
-                primitiveProperties.add(names[i]);
-            }
-        }
-
-        // compare shallow primitive properties
-        if (!primitiveProperties.isEmpty())
-            assertEqualBeans(lhs,rhs,Util.join(primitiveProperties,","));
-    }
-
-    @Nonnull
-    private Map<String, Class<?>> extractDataBoundSetterProperties(@Nonnull Class<?> c) {
-        Map<String, Class<?>> ret = new HashMap<String, Class<?>>();
-        for ( ;c != null; c = c.getSuperclass()) {
-
-            for (Field f: c.getDeclaredFields()) {
-                if (f.getAnnotation(DataBoundSetter.class) == null) {
-                    continue;
-                }
-                f.setAccessible(true);
-                ret.put(f.getName(), f.getType());
-           }
-
-            for (Method m: c.getDeclaredMethods()) {
-                AbstractMap.SimpleEntry<String, Class<?>> nameAndType = extractDataBoundSetter(m);
-                if (nameAndType == null) {
-                    continue;
-                }
-                if (ret.containsKey(nameAndType.getKey())) {
-                    continue;
-                }
-                ret.put(nameAndType.getKey(),  nameAndType.getValue());
-            }
-        }
-        return ret;
-    }
-
-    @CheckForNull
-    private AbstractMap.SimpleEntry<String, Class<?>> extractDataBoundSetter(@Nonnull Method m) {
-        // See org.kohsuke.stapler.RequestImpl::findDataBoundSetter
-        if (!Modifier.isPublic(m.getModifiers())) {
-            return null;
-        }
-        if (!m.getName().startsWith("set")) {
-            return null;
-        }
-        if (m.getParameterTypes().length != 1) {
-            return null;
-        }
-        if (!m.isAnnotationPresent(DataBoundSetter.class)) {
-            return null;
-        }
-        
-        // setXyz -> xyz
-        return new AbstractMap.SimpleEntry<String, Class<?>>(
-                Introspector.decapitalize(m.getName().substring(3)),
-                m.getParameterTypes()[0]
-        );
-    }
-
-    /**
-     * Makes sure that two collections are identical via {@link #assertEqualDataBoundBeans(Object, Object)}
-     */
-    public void assertEqualDataBoundBeans(List<?> lhs, List<?> rhs) throws Exception {
-        assertThat(rhs.size(), is(lhs.size()));
-        for (int i=0; i<lhs.size(); i++)
-            assertEqualDataBoundBeans(lhs.get(i),rhs.get(i));
-    }
-
-    public Constructor<?> findDataBoundConstructor(Class<?> c) {
-        for (Constructor<?> m : c.getConstructors()) {
-            if (m.getAnnotation(DataBoundConstructor.class)!=null)
-                return m;
-        }
-        return null;
     }
 
     /**
@@ -934,7 +620,6 @@ public abstract class JenkinsRule implements RootAction {
     public <T extends Descriptor<?>> T get(Class<T> d) {
         return jenkins.getDescriptorByType(d);
     }
-
 
     /**
      * Returns true if Hudson is building something or going to build something.
@@ -1237,40 +922,11 @@ public abstract class JenkinsRule implements RootAction {
         }
     }
 
-    public static class TestBuildWrapper extends BuildWrapper {
-        public Result buildResultInTearDown;
-
-        @Override
-        public Environment setUp(AbstractBuild build, Launcher launcher, BuildListener listener) throws IOException, InterruptedException {
-            return new BuildWrapper.Environment() {
-                @Override
-                public boolean tearDown(AbstractBuild build, BuildListener listener) throws IOException, InterruptedException {
-                    buildResultInTearDown = build.getResult();
-                    return true;
-                }
-            };
-        }
-
-        @Extension
-        public static class TestBuildWrapperDescriptor extends BuildWrapperDescriptor {
-            @Override
-            public boolean isApplicable(AbstractProject<?, ?> project) {
-                return true;
-            }
-
-            @Override
-            public BuildWrapper newInstance(StaplerRequest req, JSONObject formData) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public String getDisplayName() {
-                return "TestBuildWrapper";
-            }
-        }
-    }
-
     public Description getTestDescription() {
         return testDescription;
     }
+
+    //TODO: remove?
+    protected abstract LoginService configureUserRealm();
+
 }
