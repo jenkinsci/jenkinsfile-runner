@@ -1,6 +1,8 @@
 package io.jenkins.jenkinsfile.runner;
 
+import com.sun.org.apache.bcel.internal.util.ClassLoader;
 import hudson.security.ACL;
+import io.jenkins.jenkinsfile.runner.util.JoinClassLoader;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -14,6 +16,7 @@ import org.junit.runners.model.Statement;
 
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -37,6 +40,11 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         this.pluginsDir = pluginsDir;
     }
 
+    private static boolean isPostJava8() {
+        String javaVersion = System.getProperty("java.version");
+        return !javaVersion.startsWith("1.");
+    }
+
     /**
      * Sets up Jetty without any actual TCP port serving HTTP.
      */
@@ -46,7 +54,16 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         server = new Server(queuedThreadPool);
 
         WebAppContext context = new WebAppContext(warDir.getPath(), contextPath);
-        context.setClassLoader(getClass().getClassLoader());
+        String javaVersion = System.getProperty("java.version");
+
+//        if (javaVersion.startsWith("1.")) {
+//            context.setClassLoader(getClass().getClassLoader());
+//        } else {
+            ClassLoader platform = (ClassLoader) ClassLoader.class.getMethod("getPlatformClassLoader").invoke(null);
+        java.lang.ClassLoader cl = new JoinClassLoader(getClass().getClassLoader(), platform);
+            context.setClassLoader(cl);
+//        }
+
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
