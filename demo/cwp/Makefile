@@ -21,4 +21,5 @@ build: .build/cwp-cli-${CWP_VERSION}.jar
 
 run:
 	docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile \
+	    -e JAVA_OPTS="--add-modules java.sql" \
 	    jenkins-experimental/jenkinsfile-runner-demo

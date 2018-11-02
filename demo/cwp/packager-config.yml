@@ -12,16 +12,16 @@ buildSettings:
       build:
         noCache: true
       source:
-        dir: ..
+        dir: ../..
     docker:
-      base: "jenkins/jenkins:2.138.2"
+      base: "jenkins/jenkins-experimental:latest-jdk11"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
       build: true
 war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.138.2"
+    version: "2.149"
 plugins:
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-job"
