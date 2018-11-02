@@ -5,22 +5,17 @@ import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.ThreadPoolImpl;
 
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,13 +42,8 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
      */
     @Override
     protected ServletContext createWebServer() throws Exception {
-        server = new Server(new ThreadPoolImpl(new ThreadPoolExecutor(10, 10, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(),new ThreadFactory() {
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setName("Jetty Thread Pool");
-                return t;
-            }
-        })));
+        QueuedThreadPool queuedThreadPool = new QueuedThreadPool(10);
+        server = new Server(queuedThreadPool);
 
         WebAppContext context = new WebAppContext(warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
