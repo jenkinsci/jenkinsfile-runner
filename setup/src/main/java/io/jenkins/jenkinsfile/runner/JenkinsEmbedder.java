@@ -47,7 +47,6 @@ import hudson.model.TaskListener;
 import hudson.model.UpdateSite;
 import hudson.model.User;
 import hudson.remoting.Which;
-import hudson.security.ACL;
 import hudson.tools.ToolProperty;
 import hudson.util.PersistedList;
 import hudson.util.StreamTaskListener;
@@ -92,26 +91,22 @@ import org.eclipse.jetty.server.Server;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.runner.Description;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
 import hudson.init.InitMilestone;
 
 import java.nio.channels.ClosedByInterruptException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
-import org.junit.rules.Timeout;
-import org.junit.runners.model.TestTimedOutException;
 import org.kohsuke.stapler.Dispatcher;
 import org.kohsuke.stapler.MetaClass;
 import org.kohsuke.stapler.MetaClassLoader;
 
 /**
- * Some code is inherited from JenkinsRule in Jenkins Test Harness
+ * Some code is inherited from JenkinsEmbedder in Jenkins Test Harness
  * @author Stephen Connolly
  * @author Oleg Nenashev
  */
 @SuppressWarnings({"deprecation","rawtypes"})
-public abstract class JenkinsRule implements RootAction {
+public abstract class JenkinsEmbedder implements RootAction {
 
     protected TestEnvironment env;
 
@@ -312,73 +307,6 @@ public abstract class JenkinsRule implements RootAction {
         Logger.getLogger("org.eclipse.jetty").setLevel(level);
     }
 
-    /**
-     * Backward compatibility with JUnit 4.8.
-     */
-    public Statement apply(Statement base, FrameworkMethod method, Object target) {
-        return apply(base,Description.createTestDescription(method.getMethod().getDeclaringClass(), method.getName(), method.getAnnotations()));
-    }
-
-    public Statement apply(final Statement base, final Description description) {
-
-        Statement wrapped = new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                testDescription = description;
-                Thread t = Thread.currentThread();
-                String o = t.getName();
-                t.setName("Executing "+ testDescription.getDisplayName());
-                System.out.println("=== Starting " + testDescription.getDisplayName());
-                before();
-                try {
-                    // so that test code has all the access to the system
-                    ACL.impersonate(ACL.SYSTEM);
-                    try {
-                        base.evaluate();
-                    } catch (Throwable th) {
-                        // allow the late attachment of a debugger in case of a failure. Useful
-                        // for diagnosing a rare failure
-                        try {
-                            throw new BreakException();
-                        } catch (BreakException e) {}
-
-                        throw th;
-                    }
-                } finally {
-                    after();
-                    testDescription = null;
-                    t.setName(o);
-                }
-            }
-        };
-
-        // TODO: Support passing timeout as a Jenkinsfile Runner arg
-        // testTimeout = getTestTimeoutOverride(description);
-        final int testTimeout = 0;
-        if (testTimeout <= 0) {
-            System.out.println("Test timeout disabled.");
-            return wrapped;
-        } else {
-            final Statement timeoutStatement = Timeout.seconds(testTimeout).apply(wrapped, description);
-            return new Statement() {
-                @Override
-                public void evaluate() throws Throwable {
-                    try {
-                        timeoutStatement.evaluate();
-                    } catch (TestTimedOutException x) {
-                        // withLookingForStuckThread does not work well; better to just have a full thread dump.
-                        LOGGER.warning(String.format("Test timed out (after %d seconds).", testTimeout));
-                        dumpThreads();
-                        throw x;
-                    }
-                }
-            };
-        }
-    }
-
-    @SuppressWarnings("serial")
-    public static class BreakException extends Exception {}
-
     public String getIconFileName() {
         return null;
     }
@@ -431,7 +359,7 @@ public abstract class JenkinsRule implements RootAction {
             throw new IllegalStateException("Too late to override the plugin manager");
     }
 
-    public JenkinsRule with(PluginManager pluginManager) {
+    public JenkinsEmbedder with(PluginManager pluginManager) {
         setPluginManager(pluginManager);
         return this;
     }
@@ -570,7 +498,7 @@ public abstract class JenkinsRule implements RootAction {
                 recipes.add(runner);
                 tearDowns.add(new LenientRunnable() {
                     public void run() throws Exception {
-                        runner.tearDown(JenkinsRule.this,a);
+                        runner.tearDown(JenkinsEmbedder.this,a);
                     }
                 });
                 runner.setup(this,a);
@@ -696,11 +624,11 @@ public abstract class JenkinsRule implements RootAction {
             
     }
 
-    public JenkinsRule withNewHome() {
+    public JenkinsEmbedder withNewHome() {
         return with(HudsonHomeLoader.NEW);
     }
 
-    public JenkinsRule withExistingHome(File source) throws Exception {
+    public JenkinsEmbedder withExistingHome(File source) throws Exception {
         return with(new HudsonHomeLoader.CopyExisting(source));
     }
 
@@ -709,7 +637,7 @@ public abstract class JenkinsRule implements RootAction {
      * See {@code test/src/main/preset-data/}
      * for available datasets and what they mean.
      */
-    public JenkinsRule withPresetData(String name) {
+    public JenkinsEmbedder withPresetData(String name) {
         name = "/" + name + ".zip";
         URL res = getClass().getResource(name);
         if(res==null)   throw new IllegalArgumentException("No such data set found: "+name);
@@ -717,7 +645,7 @@ public abstract class JenkinsRule implements RootAction {
         return with(new HudsonHomeLoader.CopyExisting(res));
     }
 
-    public JenkinsRule with(HudsonHomeLoader homeLoader) {
+    public JenkinsEmbedder with(HudsonHomeLoader homeLoader) {
         this.homeLoader = homeLoader;
         return this;
     }
@@ -727,7 +655,7 @@ public abstract class JenkinsRule implements RootAction {
      * so detect that and flag that as an error.
      */
     private Object writeReplace() {
-        throw new AssertionError("JenkinsRule " + testDescription.getDisplayName() + " is not supposed to be serialized");
+        throw new AssertionError("JenkinsEmbedder " + testDescription.getDisplayName() + " is not supposed to be serialized");
     }
 
     // needs to keep reference, or it gets GC-ed.
@@ -763,7 +691,7 @@ public abstract class JenkinsRule implements RootAction {
         System.setProperty("org.mortbay.jetty.Request.maxFormContentSize","-1");
     }
 
-    private static final Logger LOGGER = Logger.getLogger(JenkinsRule.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JenkinsEmbedder.class.getName());
 
     public static final List<ToolProperty<?>> NO_PROPERTIES = Collections.<ToolProperty<?>>emptyList();
 

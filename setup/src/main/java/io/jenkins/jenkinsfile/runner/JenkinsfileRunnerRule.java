@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  *
  * @author Kohsuke Kawaguchi
  */
-public class JenkinsfileRunnerRule extends JenkinsRule {
+public class JenkinsfileRunnerRule extends JenkinsEmbedder {
     private final File warDir;
     private final File pluginsDir;
     /**
@@ -98,10 +98,10 @@ public class JenkinsfileRunnerRule extends JenkinsRule {
         super.after();
     }
 
+    //TODO: add support of timeout
     /**
      * No time out and no output message
      */
-    @Override
     public Statement apply(final Statement base, final Description description) {
         return new Statement() {
             @Override
