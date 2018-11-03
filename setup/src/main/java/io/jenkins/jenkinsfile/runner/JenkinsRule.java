@@ -37,17 +37,12 @@ import hudson.PluginManager;
 import hudson.WebAppMain;
 import hudson.model.AbstractProject;
 import hudson.model.Computer;
-import hudson.model.Descriptor;
 import hudson.model.DownloadService;
 import hudson.model.Executor;
-import hudson.model.FreeStyleBuild;
-import hudson.model.FreeStyleProject;
 import hudson.model.Hudson;
 import hudson.model.JDK;
 import hudson.model.Queue;
-import hudson.model.Result;
 import hudson.model.RootAction;
-import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.UpdateSite;
 import hudson.model.User;
@@ -58,9 +53,7 @@ import hudson.util.PersistedList;
 import hudson.util.StreamTaskListener;
 import hudson.util.jna.GNUCLibrary;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -78,7 +71,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Future;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,26 +87,18 @@ import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.http.MimeTypes;
-import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
-import static org.junit.Assert.*;
 
-import static org.hamcrest.CoreMatchers.*;
 import org.junit.internal.AssumptionViolatedException;
-import static org.junit.matchers.JUnitMatchers.containsString;
 import org.junit.runner.Description;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import hudson.init.InitMilestone;
-import hudson.model.Job;
-import hudson.model.queue.QueueTaskFuture;
 
 import java.nio.channels.ClosedByInterruptException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
-import jenkins.model.ParameterizedJobMixIn;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.rules.Timeout;
 import org.junit.runners.model.TestTimedOutException;
 import org.kohsuke.stapler.Dispatcher;
@@ -501,109 +485,6 @@ public abstract class JenkinsRule implements RootAction {
     }
 
     /**
-     * Asserts that the outcome of the build is a specific outcome.
-     */
-    public <R extends Run> R assertBuildStatus(Result status, R r) throws Exception {
-        if(status==r.getResult())
-            return r;
-
-        // dump the build output in failure message (in case BuildWatcher is not being used)
-        String msg = "unexpected build status; build log was:\n------\n" + getLog(r) + "\n------\n";
-        assertThat(msg, r.getResult(), is(status));
-        return r;
-    }
-
-    public <R extends Run> R assertBuildStatus(Result status, Future<? extends R> r) throws Exception {
-        assertThat("build was actually scheduled", r, notNullValue());
-        return assertBuildStatus(status, r.get());
-    }
-
-    public <R extends Run> R assertBuildStatusSuccess(R r) throws Exception {
-        assertBuildStatus(Result.SUCCESS, r);
-        return r;
-    }
-
-    public <R extends Run> R assertBuildStatusSuccess(Future<? extends R> r) throws Exception {
-        return assertBuildStatus(Result.SUCCESS, r);
-    }
-
-    public <J extends Job<J,R>,R extends Run<J,R>> R buildAndAssertSuccess(final J job) throws Exception {
-        assertThat(job, IsInstanceOf.instanceOf(ParameterizedJobMixIn.ParameterizedJob.class));
-        QueueTaskFuture f = new ParameterizedJobMixIn() {
-            @Override protected Job asJob() {
-                return job;
-            }
-        }.scheduleBuild2(0);
-        @SuppressWarnings("unchecked") // no way to make this compile checked
-        Future<R> f2 = f;
-        return assertBuildStatusSuccess(f2);
-    }
-
-    /**
-     * Avoids need for cumbersome {@code this.<J,R>buildAndAssertSuccess(...)} type hints under JDK 7 javac (and supposedly also IntelliJ).
-     */
-    public FreeStyleBuild buildAndAssertSuccess(FreeStyleProject job) throws Exception {
-        return assertBuildStatusSuccess(job.scheduleBuild2(0));
-    }
-
-    /**
-     * Asserts that the console output of the build contains the given substring.
-     */
-    public void assertLogContains(String substring, Run run) throws IOException {
-        assertThat(getLog(run), containsString(substring));
-    }
-
-    /**
-     * Asserts that the console output of the build does not contain the given substring.
-     */
-    public void assertLogNotContains(String substring, Run run) throws IOException {
-        assertThat(getLog(run), not(containsString(substring)));
-    }
-
-    /**
-     * Get entire log file as plain text.
-     * {@link Run#getLog()} is deprecated for reasons that are irrelevant in tests,
-     * and also does not strip console annotations which are a distraction in test output.
-     */
-    public static String getLog(Run run) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            run.getLogText().writeLogTo(0, baos);
-        } catch (FileNotFoundException x) {
-            return ""; // log file not yet created, OK
-        }
-        return baos.toString(run.getCharset().name());
-    }
-
-    /**
-     * Waits for a build to complete.
-     * @return the same build, once done
-     * @since 1.607
-     */
-    public <R extends Run<?,?>> R waitForCompletion(R r) throws InterruptedException {
-        // Could be using com.jayway.awaitility:awaitility but it seems like overkill here.
-        while (r.isBuilding()) {
-            Thread.sleep(100);
-        }
-        return r;
-    }
-
-    /**
-     * Waits for a build log to contain a specified string.
-     * @return the same build, once it does
-     * @since 1.607
-     */
-    public <R extends Run<?,?>> R waitForMessage(String message, R r) throws IOException, InterruptedException {
-        while (!getLog(r).contains(message)) {
-            if (!r.isLogUpdated()) {
-                assertLogContains(message, r); // should now fail
-            }
-            Thread.sleep(100);
-        }
-        return r;
-    }
-
-    /**
      * Creates a {@link TaskListener} connected to stdout.
      */
     public TaskListener createTaskListener() {
@@ -612,13 +493,6 @@ public abstract class JenkinsRule implements RootAction {
 
     public void setQuietPeriod(int qp) throws IOException {
         jenkins.setQuietPeriod(qp);
-    }
-
-    /**
-     * Gets the descriptor instance of the current Hudson by its type.
-     */
-    public <T extends Descriptor<?>> T get(Class<T> d) {
-        return jenkins.getDescriptorByType(d);
     }
 
     /**
