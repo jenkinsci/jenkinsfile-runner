@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.Annotation;
 import java.io.File;
 
-import io.jenkins.jenkinsfile.runner.JenkinsRule;
+import io.jenkins.jenkinsfile.runner.JenkinsEmbedder;
 import junit.framework.TestCase;
 
 
@@ -41,17 +41,17 @@ public @interface JenkinsRecipe {
         /**
          * Called during {@link TestCase#setUp()} to prepare the test environment.
          */
-        public void setup(JenkinsRule jenkinsRule, T recipe) throws Exception {}
+        public void setup(JenkinsEmbedder embedder, T recipe) throws Exception {}
 
         /**
          * Called right before {@link jenkins.model.Jenkins#Jenkins(java.io.File, javax.servlet.ServletContext)} is invoked
          * to decorate the hudson home directory.
          */
-        public void decorateHome(JenkinsRule jenkinsRule, File home) throws Exception {}
+        public void decorateHome(JenkinsEmbedder embedder, File home) throws Exception {}
 
         /**
          * Called during {@link TestCase#tearDown()} to shut down the test environment.
          */
-        public void tearDown(JenkinsRule jenkinsRule, T recipe) throws Exception {}
+        public void tearDown(JenkinsEmbedder embedder, T recipe) throws Exception {}
     }
 }

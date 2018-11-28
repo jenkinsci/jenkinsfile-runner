@@ -10,6 +10,7 @@ import hudson.scm.NullChangeLogParser;
 import hudson.scm.PollingResult;
 import hudson.scm.SCM;
 import hudson.scm.SCMRevisionState;
+import hudson.util.DirScanner;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ public class FileSystemSCM extends SCM {
 
     @Override
     public void checkout(@Nonnull Run<?, ?> build, @Nonnull Launcher launcher, @Nonnull FilePath workspace, @Nonnull TaskListener listener, @CheckForNull File changelogFile, @CheckForNull SCMRevisionState baseline) throws IOException, InterruptedException {
-        new FilePath(dir).copyRecursiveTo(workspace);
+        new FilePath(dir).copyRecursiveTo(new DirScanner.Glob("**/*", null, false), workspace, "**/*");
     }
 
     /**
