@@ -1,1 +1,2 @@
 pipeline-model-definition:latest
+workflow-support:incrementals;org.jenkins-ci.plugins.workflow;2.21-rc591.43d37d4d080a
