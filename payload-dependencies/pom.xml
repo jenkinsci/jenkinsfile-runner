@@ -21,16 +21,6 @@
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-core</artifactId>
       <version>${jenkins.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-io</groupId>
-          <artifactId>commons-io</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>args4j</groupId>
-          <artifactId>args4j</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
