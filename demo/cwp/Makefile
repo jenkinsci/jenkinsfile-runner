@@ -40,16 +40,8 @@ clean:
 
 build: .copySource .build .buildImage
 
-buildInDocker: .copySource .buildInDocker .buildImage
-
 # Slow, but it does not need anything except Docker
-buildInDocker:
-	docker run \
-	    -v $(shell pwd)/packager-config.yml:/app/packager-config.yml \
-	    -v $(shell pwd)/out:/app/out \
-	    jenkins/custom-war-packager:${CWP_VERSION} \
-	    -configPath /app/packager-config.yml -tmpDir /app/out/tmp -version ${VERSION}
-	docker build -t ${JENKINSFILE_RUNNER_TAG} -f $(shell pwd)/out/tmp/output/Dockerfile $(shell pwd)/out/tmp/output/
+buildInDocker: .copySource .buildInDocker .buildImage
 
 run:
 	docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_TAG}
