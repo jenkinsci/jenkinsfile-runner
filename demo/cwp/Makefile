@@ -36,7 +36,7 @@ clean:
 	    -configPath /app/packager-config.yml -tmpDir /app/out/tmp -version ${VERSION}
 
 .buildImage:
-	docker build -t jenkins-experimental/jenkinsfile-runner-demo -f $(shell pwd)/out/tmp/output/Dockerfile $(shell pwd)/out/tmp/output/	
+	docker build -t ${JENKINSFILE_RUNNER_TAG} -f $(shell pwd)/out/tmp/output/Dockerfile $(shell pwd)/out/tmp/output/	
 
 build: .copySource .build .buildImage
 
