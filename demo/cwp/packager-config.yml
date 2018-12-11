@@ -12,11 +12,11 @@ buildSettings:
       build:
         noCache: true
       source:
-        dir: ../..
+        dir: ./source
     docker:
       base: "jenkins/jenkins:2.138.2"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
-      build: true
+      build: false
 war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
