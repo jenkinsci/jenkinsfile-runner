@@ -10,7 +10,6 @@ all: clean build
 
 clean:
 	rm -rf tmp
-	rm -rf out
 	rm -rf .build
 	rm -rf source
 
