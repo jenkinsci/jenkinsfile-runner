@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.jenkins</groupId>
-    <artifactId>jenkinsfile-runner-parent</artifactId>
+    <groupId>io.jenkins.jenkinsfile-runner</groupId>
+    <artifactId>parent</artifactId>
     <version>1.0-beta-1-SNAPSHOT</version>
   </parent>
 
@@ -34,23 +34,41 @@
           </execution>
         </executions>
        </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/resources/assembly/zip.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>jenkinsfile-runner-bootstrap</artifactId>
+      <artifactId>bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>jenkinsfile-runner-setup</artifactId>
+      <artifactId>setup</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>jenkinsfile-runner-payload</artifactId>
+      <artifactId>payload</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

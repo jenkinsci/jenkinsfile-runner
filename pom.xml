@@ -32,8 +32,8 @@ THE SOFTWARE.
     <relativePath />
   </parent>
 
-  <groupId>io.jenkins</groupId>
-  <artifactId>jenkinsfile-runner-parent</artifactId>
+  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+  <artifactId>parent</artifactId>
   <version>1.0-beta-1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
