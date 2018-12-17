@@ -140,6 +140,9 @@ THE SOFTWARE.
   </pluginRepositories>
 
   <scm>
-    <tag>parent-1.0-beta-1</tag>
+    <connection>scm:git:git://github.com/jenkinsci/jenkinsfile-runner.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/jenkinsfile-runner.git</developerConnection>
+    <url>https://github.com/jenkinsci/jenkinsfile-runner</url>
+    <tag>HEAD</tag>
   </scm>
 </project>
