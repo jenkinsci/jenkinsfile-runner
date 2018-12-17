@@ -34,7 +34,7 @@ THE SOFTWARE.
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-beta-1-SNAPSHOT</version>
+  <version>1.0-beta-1</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
@@ -138,4 +138,8 @@ THE SOFTWARE.
       <url>https://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  <scm>
+    <tag>parent-1.0-beta-1</tag>
+  </scm>
 </project>
