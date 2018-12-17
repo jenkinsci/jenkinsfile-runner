@@ -36,7 +36,7 @@ import java.net.URL;
 import javax.annotation.CheckForNull;
 
 /**
- * Controls how a {@link HudsonTestCase} initializes <tt>JENKINS_HOME</tt>.
+ * Controls how <tt>JENKINS_HOME</tt> is initialized.
  *
  * @author Kohsuke Kawaguchi
  */
