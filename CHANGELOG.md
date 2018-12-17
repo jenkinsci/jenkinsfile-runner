@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0-beta-3] - 2018-12-17
+- [[JENKINS-54375](https://issues.jenkins-ci.org/browse/JENKINS-54375)] Exclude Javadoc generation in build.
+
 ## [1.0-beta-2] - 2018-12-17
 - [[JENKINS-54375](https://issues.jenkins-ci.org/browse/JENKINS-54375)] Fix Javadoc error and include Javadoc generation in build.
 
