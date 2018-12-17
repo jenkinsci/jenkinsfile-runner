@@ -32,9 +32,9 @@ THE SOFTWARE.
     <relativePath />
   </parent>
 
-  <groupId>io.jenkins</groupId>
-  <artifactId>jenkinsfile-runner-parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+  <artifactId>parent</artifactId>
+  <version>1.0-beta-1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Jenkins main module</name>

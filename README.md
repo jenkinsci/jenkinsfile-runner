@@ -6,6 +6,8 @@ The intend use cases include:
 * Assist editing `Jenkinsfile` locally
 * Integration test shared libraries
 
+[CHANGELOG](./CHANGELOG.md)
+
 ## Build
 Currently there's no released distribution, so you must first build this code:
 ```
