@@ -21,7 +21,7 @@ public class App implements IApp {
             public void evaluate() throws Throwable {
                 // insert the payload
                 ClassLoader cl = new ClassLoaderBuilder(rule.jenkins.getPluginManager().uberClassLoader)
-                        .collectJars(new File(bootstrap.appRepo, "io/jenkins/jenkinsfile-runner-payload"))
+                        .collectJars(new File(bootstrap.appRepo, "io/jenkins/jenkinsfile-runner/payload"))
                         .make();
 
                 Class<?> c = cl.loadClass("io.jenkins.jenkinsfile.runner.Runner");
