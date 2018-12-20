@@ -80,7 +80,7 @@ public class JenkinsfileRunnerRule extends JenkinsEmbedder {
      * We don't want to clutter console with log messages, so kill of any unimportant ones.
      */
     private void setLogLevels() {
-        Logger.getLogger("").setLevel(Level.WARNING);
+        Logger.getLogger("").setLevel(Level.SEVERE);
         Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
         l.setLevel(Level.OFF);
         noGc.add(l);    // the configuration will be lost if Logger gets GCed.
