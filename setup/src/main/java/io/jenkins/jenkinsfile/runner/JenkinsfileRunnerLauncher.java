@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.ClassicPluginStrategy;
 import hudson.security.ACL;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
@@ -86,6 +87,8 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
      */
     private void setLogLevels() {
         Logger.getLogger("").setLevel(Level.WARNING);
+        // Prevent warnings for plugins with old plugin POM (JENKINS-54425)
+        Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
         Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
         l.setLevel(Level.OFF);
         noGc.add(l);    // the configuration will be lost if Logger gets GCed.
