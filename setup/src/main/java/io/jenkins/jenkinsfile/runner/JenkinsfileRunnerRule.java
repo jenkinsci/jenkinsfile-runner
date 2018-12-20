@@ -82,6 +82,7 @@ public class JenkinsfileRunnerRule extends JenkinsEmbedder {
      */
     private void setLogLevels() {
         Logger.getLogger("").setLevel(Level.WARNING);
+        // Prevent warnings for plugins with old plugin POM (JENKINS-54425)
         Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
         Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
         l.setLevel(Level.OFF);
