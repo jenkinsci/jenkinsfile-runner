@@ -54,7 +54,7 @@ public interface HudsonHomeLoader {
      */
     HudsonHomeLoader NEW = new HudsonHomeLoader() {
         public File allocate() throws IOException {
-            return TestEnvironment.get().temporaryDirectoryAllocator.allocate();
+            return ExecutionEnvironment.get().temporaryDirectoryAllocator.allocate();
         }
     };
 

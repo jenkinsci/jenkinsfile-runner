@@ -162,7 +162,7 @@ public class Bootstrap {
 
         Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
 
-        Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
+        Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.AppTest");
         return ((IApp)c.newInstance()).run(this);
     }
 

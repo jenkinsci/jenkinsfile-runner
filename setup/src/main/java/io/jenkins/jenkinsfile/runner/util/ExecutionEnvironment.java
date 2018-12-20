@@ -35,28 +35,11 @@ import org.junit.runner.Description;
 /**
  * @author Kohsuke Kawaguchi
  */
-public class TestEnvironment {
+public class ExecutionEnvironment {
 
-    private static final Logger LOGGER = Logger.getLogger(TestEnvironment.class.getName());
-
-    /**
-     * Current test case being run (null for a JUnit 3 test).
-     */
-    private final @CheckForNull Description description;
+    private static final Logger LOGGER = Logger.getLogger(ExecutionEnvironment.class.getName());
 
     public final TemporaryDirectoryAllocator temporaryDirectoryAllocator = new TemporaryDirectoryAllocator();
-
-    public TestEnvironment(@Nonnull Description description) {
-        this.description = description;
-    }
-
-    /**
-     * Current test case being run (works for JUnit 3 or 4).
-     * Warning: {@link Description#getTestClass} is currently broken in some environments (claimed fixed in JUnit 4.11). Use {@link Description#getClassName} instead.
-     */
-    public @Nonnull Description description() {
-        return description;
-    }
 
     public void pin() {
         CURRENT = this;
@@ -75,7 +58,11 @@ public class TestEnvironment {
 
     @Override
     public String toString() {
-        return "TestEnvironment:" + description();
+        return "ExecutionEnvironment: " + displayName();
+    }
+
+    public String displayName() {
+        return "main";
     }
 
     /**
@@ -87,9 +74,9 @@ public class TestEnvironment {
      * Since the rest of Hudson still relies on static {@link jenkins.model.Jenkins#theInstance}, changing this
      * to a static field for now shouldn't cause any problem. 
      */
-    private static TestEnvironment CURRENT;
+    private static ExecutionEnvironment CURRENT;
 
-    public static TestEnvironment get() {
+    public static ExecutionEnvironment get() {
         return CURRENT;
     }
 }

@@ -23,6 +23,7 @@
               <goal>assemble</goal>
             </goals>
             <configuration>
+              <extraJvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dstart.pause=true</extraJvmArguments>
               <programs>
                 <program>
                   <id>jenkinsfile-runner</id>
@@ -68,6 +69,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>payload</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>test</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

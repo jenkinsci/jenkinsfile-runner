@@ -9,12 +9,11 @@ import java.lang.annotation.Annotation;
 import java.io.File;
 
 import io.jenkins.jenkinsfile.runner.JenkinsEmbedder;
-import junit.framework.TestCase;
 
 
 /**
  * Meta-annotation for recipe annotations, which controls
- * the test environment set up.
+ * the execution environment set up.
  *
  * @author Kohsuke Kawaguchi
  * @since 1.436
@@ -39,7 +38,7 @@ public @interface JenkinsRecipe {
      */
     abstract class Runner<T extends Annotation> {
         /**
-         * Called during {@link TestCase#setUp()} to prepare the test environment.
+         * Called to prepare the execution environment.
          */
         public void setup(JenkinsEmbedder embedder, T recipe) throws Exception {}
 
@@ -50,7 +49,7 @@ public @interface JenkinsRecipe {
         public void decorateHome(JenkinsEmbedder embedder, File home) throws Exception {}
 
         /**
-         * Called during {@link TestCase#tearDown()} to shut down the test environment.
+         * Called to shut down the execution environment.
          */
         public void tearDown(JenkinsEmbedder embedder, T recipe) throws Exception {}
     }

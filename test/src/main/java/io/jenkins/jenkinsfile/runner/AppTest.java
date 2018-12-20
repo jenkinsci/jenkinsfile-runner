@@ -11,11 +11,11 @@ import java.io.File;
 /**
  * This code runs after Jetty and Jenkins classloaders are set up correctly.
  */
-public class App implements IApp {
+public class AppTest implements IApp {
     @Override
     public int run(Bootstrap bootstrap) throws Throwable {
         final int[] returnCode = new int[]{-1};
-/*        JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule(bootstrap.warDir, bootstrap.pluginsDir);
+        JenkinsfileRunnerRule rule = new JenkinsfileRunnerRule(bootstrap.warDir, bootstrap.pluginsDir);
         Statement s = rule.apply(new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -29,7 +29,7 @@ public class App implements IApp {
             }
         }, Description.createSuiteDescription("main"));
 
-        s.evaluate();*/
+        s.evaluate();
 
         return returnCode[0];
     }
