@@ -28,9 +28,6 @@ import hudson.model.Computer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import org.junit.runner.Description;
 
 /**
  * @author Kohsuke Kawaguchi

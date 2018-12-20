@@ -23,7 +23,6 @@
               <goal>assemble</goal>
             </goals>
             <configuration>
-              <extraJvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dstart.pause=true</extraJvmArguments>
               <programs>
                 <program>
                   <id>jenkinsfile-runner</id>

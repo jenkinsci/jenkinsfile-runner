@@ -88,7 +88,6 @@ import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
 
-import org.junit.internal.AssumptionViolatedException;
 import hudson.init.InitMilestone;
 
 import java.nio.channels.ClosedByInterruptException;
@@ -106,7 +105,7 @@ import org.kohsuke.stapler.MetaClassLoader;
 @SuppressWarnings({"deprecation","rawtypes"})
 public abstract class JenkinsEmbedder implements RootAction {
 
-    protected ExecutionEnvironment env;
+    protected ExecutionEnvironment env = new ExecutionEnvironment();
 
     public Jenkins jenkins;
 
@@ -169,9 +168,6 @@ public abstract class JenkinsEmbedder implements RootAction {
             aConnection.setDefaultUseCaches(false);
         }
 
-        if (env == null) {
-            env = new ExecutionEnvironment();
-        }
         env.pin();
         recipe();
         AbstractProject.WORKSPACE.toString();
@@ -326,7 +322,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         try {
             return new Hudson(home, webServer, getPluginManager());
         } catch (InterruptedException x) {
-            throw new AssumptionViolatedException("Jenkins startup interrupted", x);
+            throw new Exception("Jenkins startup interrupted", x);
         } finally {
             jettyLevel(Level.INFO);
         }
@@ -550,7 +546,7 @@ public abstract class JenkinsEmbedder implements RootAction {
                                 try {
                                     FileUtils.copyFile(dependencyJar, dst);
                                 } catch (ClosedByInterruptException x) {
-                                    throw new AssumptionViolatedException("copying dependencies was interrupted", x);
+                                    throw new Exception("copying dependencies was interrupted", x);
                                 }
                             }
                         }
