@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.ClassicPluginStrategy;
 import hudson.security.ACL;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
@@ -80,7 +81,8 @@ public class JenkinsfileRunnerRule extends JenkinsEmbedder {
      * We don't want to clutter console with log messages, so kill of any unimportant ones.
      */
     private void setLogLevels() {
-        Logger.getLogger("").setLevel(Level.SEVERE);
+        Logger.getLogger("").setLevel(Level.WARNING);
+        Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
         Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
         l.setLevel(Level.OFF);
         noGc.add(l);    // the configuration will be lost if Logger gets GCed.
