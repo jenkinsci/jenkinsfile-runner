@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.ClassicPluginStrategy;
 import hudson.security.ACL;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
@@ -81,6 +82,8 @@ public class JenkinsfileRunnerRule extends JenkinsEmbedder {
      */
     private void setLogLevels() {
         Logger.getLogger("").setLevel(Level.WARNING);
+        // Prevent warnings for plugins with old plugin POM (JENKINS-54425)
+        Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
         Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
         l.setLevel(Level.OFF);
         noGc.add(l);    // the configuration will be lost if Logger gets GCed.
