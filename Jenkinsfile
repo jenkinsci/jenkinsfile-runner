@@ -70,5 +70,17 @@ demos['cwp'] = {
         }
     }
 }
+demos['databound'] = {
+    node('docker') {
+        timestamps {
+            checkout scm
+            stage('Databound') {
+                dir('demo/databound') {
+                    sh "make clean buildInDocker run"
+                }
+            }
+        }
+    }
+}
 
 parallel(demos)
