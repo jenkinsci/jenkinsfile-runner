@@ -5,7 +5,7 @@ This demo demonstrates building of Jenkinsfile Runner Docker images
 with [Custom WAR Packager](https://github.com/jenkinsci/custom-war-packager/).
 This demo bundles some plugins so that it demonstrates a Pipeline execution.
 
-To build the, run `make clean build`
+To build the Docker image, run `make clean build`
 
 You can experiment with other `Jenkinsfile`s if needed.
 Once the Docker image is built, the demo Jenkinsfile Runner can be started simply as...

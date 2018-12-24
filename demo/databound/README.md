@@ -7,7 +7,7 @@ This demo bundles some plugins so that it demonstrates a Pipeline execution
 that uses checkout scm step so that we can verify that no warning is raised
 due to FileSystemSCM.
 
-To build the, run `make clean build`
+To build the Docker image, run `make clean build`
 
 You can experiment with other `Jenkinsfile`s if needed.
 Once the Docker image is built, the demo Jenkinsfile Runner can be started simply as...
