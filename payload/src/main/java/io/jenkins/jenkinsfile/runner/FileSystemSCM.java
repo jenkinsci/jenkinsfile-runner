@@ -68,7 +68,7 @@ public class FileSystemSCM extends SCM {
     }
 
     public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl) Jenkins.getInstance().getDescriptorOrDie(FileSystemSCM.class);
+        return new DescriptorImpl();
     }
 
     @Extension
@@ -79,6 +79,7 @@ public class FileSystemSCM extends SCM {
             load();
         }
 
+        @Override
         public String getDisplayName() {
             return "FileSystemSCM";
         }
