@@ -26,16 +26,14 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
-    private final File warDir;
-    private final File pluginsDir;
+    private final Bootstrap bootstrap;
     /**
      * Keep the reference around to prevent them from getting GCed.
      */
     private final Set<Object> noGc = new HashSet<>();
 
-    public JenkinsfileRunnerLauncher(File warDir, File pluginsDir) {
-        this.warDir = warDir;
-        this.pluginsDir = pluginsDir;
+    public JenkinsfileRunnerLauncher(Bootstrap bootstrap) {
+        this.bootstrap = bootstrap;
     }
 
     /**
@@ -46,26 +44,26 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
         QueuedThreadPool queuedThreadPool = new QueuedThreadPool(10);
         server = new Server(queuedThreadPool);
 
-        WebAppContext context = new WebAppContext(warDir.getPath(), contextPath);
+        WebAppContext context = new WebAppContext(bootstrap.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
         context.getSecurityHandler().setLoginService(configureUserRealm());
-        context.setResourceBase(warDir.getPath());
+        context.setResourceBase(bootstrap.warDir.getPath());
 
         server.start();
 
         localPort = -1;
 
-        setPluginManager(new PluginManagerImpl(context.getServletContext(),pluginsDir));
+        setPluginManager(new PluginManagerImpl(context.getServletContext(), bootstrap.pluginsDir));
 
         return context.getServletContext();
     }
 
     @Override
     public void recipe() throws Exception {
-        // TODO
+        // Not action needed so far
     }
 
     /**
@@ -111,10 +109,10 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
      * Launch the Jenkins instance
      * No time out and no output message
      */
-    public int launch(Bootstrap bootstrap) throws Throwable {
+    public int launch() throws Throwable {
         int returnCode = -1;
         Thread t = Thread.currentThread();
-        String o = t.getName();
+        String currentThreadName = t.getName();
         t.setName("Executing "+ env.displayName());
         before();
         try {
@@ -125,10 +123,10 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
                     .make();
 
             Class<?> c = cl.loadClass("io.jenkins.jenkinsfile.runner.Runner");
-            returnCode = (int)c.getMethod("run", Bootstrap.class).invoke(c.newInstance(),bootstrap);
+            returnCode = (int)c.getMethod("run", Bootstrap.class).invoke(c.newInstance(), bootstrap);
         } finally {
             after();
-            t.setName(o);
+            t.setName(currentThreadName);
         }
 
         return returnCode;
