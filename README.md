@@ -137,3 +137,10 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 * [Implementation Note](IMPLEMENTATION.md)
 * [Building Jenkinsfile Runner images with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
 
+# Docker build
+
+    docker build -t jenkins/jenkinsfile-runner .
+
+During development you can reuse the local machine build instead of doing a full build from scratch
+
+    docker build -t jenkins/jenkinsfile-runner:dev -f Dockerfile-dev .
