@@ -30,7 +30,7 @@ public class Runner {
         WorkflowJob w = j.createProject(WorkflowJob.class, "job");
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
         w.setDefinition(new CpsScmFlowDefinition(
-                new FileSystemSCM(bootstrap.jenkinsfile.getParentFile().getAbsolutePath()),bootstrap.jenkinsfile.getName()));
+                new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
         QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0,
                 new SetJenkinsfileLocation(bootstrap.jenkinsfile));
 
