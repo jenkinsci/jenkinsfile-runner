@@ -67,6 +67,7 @@ public class FileSystemSCM extends SCM {
         return PollingResult.NO_CHANGES;
     }
 
+    // TO-DO: Remove once JENKINS-55323 is fixed
     public DescriptorImpl getDescriptor() {
         return new DescriptorImpl();
     }
