@@ -56,7 +56,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.annotation.Annotation;
 import java.lang.management.ThreadInfo;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -77,11 +76,11 @@ import javax.annotation.CheckForNull;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
+import io.jenkins.jenkinsfile.runner.util.ExecutionEnvironment;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import io.jenkins.jenkinsfile.runner.util.JenkinsRecipe;
 import io.jenkins.jenkinsfile.runner.util.LenientRunnable;
 import io.jenkins.jenkinsfile.runner.util.SupportLogFormatter;
-import io.jenkins.jenkinsfile.runner.util.TestEnvironment;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
@@ -89,8 +88,6 @@ import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
 
-import org.junit.internal.AssumptionViolatedException;
-import org.junit.runner.Description;
 import hudson.init.InitMilestone;
 
 import java.nio.channels.ClosedByInterruptException;
@@ -108,9 +105,7 @@ import org.kohsuke.stapler.MetaClassLoader;
 @SuppressWarnings({"deprecation","rawtypes"})
 public abstract class JenkinsEmbedder implements RootAction {
 
-    protected TestEnvironment env;
-
-    protected Description testDescription;
+    protected ExecutionEnvironment env = new ExecutionEnvironment();
 
     public Jenkins jenkins;
 
@@ -135,11 +130,6 @@ public abstract class JenkinsEmbedder implements RootAction {
     protected List<LenientRunnable> tearDowns = new ArrayList<LenientRunnable>();
 
     protected List<JenkinsRecipe.Runner> recipes = new ArrayList<JenkinsRecipe.Runner>();
-
-    /**
-     * Number of seconds until the test times out.
-     */
-    public int timeout = Integer.getInteger("jenkins.test.timeout", System.getProperty("maven.surefire.debug") == null ? 180 : 0);
 
     private PluginManager pluginManager = null;
 
@@ -178,7 +168,6 @@ public abstract class JenkinsEmbedder implements RootAction {
             aConnection.setDefaultUseCaches(false);
         }
 
-        env = new TestEnvironment(testDescription);
         env.pin();
         recipe();
         AbstractProject.WORKSPACE.toString();
@@ -333,7 +322,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         try {
             return new Hudson(home, webServer, getPluginManager());
         } catch (InterruptedException x) {
-            throw new AssumptionViolatedException("Jenkins startup interrupted", x);
+            throw new Exception("Jenkins startup interrupted", x);
         } finally {
             jettyLevel(Level.INFO);
         }
@@ -484,29 +473,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 // recipe methods. Control the test environments.
 //
 
-    /**
-     * Called during the {@link #before()} to give a test case an opportunity to
-     * control the test environment in which Hudson is run.
-     */
-    public void recipe() throws Exception {
-        // look for recipe meta-annotation
-        try {
-            for (final Annotation a : testDescription.getAnnotations()) {
-                JenkinsRecipe r = a.annotationType().getAnnotation(JenkinsRecipe.class);
-                if(r==null)     continue;
-                final JenkinsRecipe.Runner runner = r.value().newInstance();
-                recipes.add(runner);
-                tearDowns.add(new LenientRunnable() {
-                    public void run() throws Exception {
-                        runner.tearDown(JenkinsEmbedder.this,a);
-                    }
-                });
-                runner.setup(this,a);
-            }
-        } catch (NoSuchMethodException e) {
-            // not a plain JUnit test.
-        }
-    }
+    public abstract void recipe() throws Exception;
 
     static void decorateHomeFor(File home, List<URL> all) throws Exception {
         List<Jpl> jpls = new ArrayList<Jpl>();
@@ -579,7 +546,7 @@ public abstract class JenkinsEmbedder implements RootAction {
                                 try {
                                     FileUtils.copyFile(dependencyJar, dst);
                                 } catch (ClosedByInterruptException x) {
-                                    throw new AssumptionViolatedException("copying dependencies was interrupted", x);
+                                    throw new Exception("copying dependencies was interrupted", x);
                                 }
                             }
                         }
@@ -655,7 +622,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * so detect that and flag that as an error.
      */
     private Object writeReplace() {
-        throw new AssertionError("JenkinsEmbedder " + testDescription.getDisplayName() + " is not supposed to be serialized");
+        throw new AssertionError("JenkinsEmbedder " + env.displayName() + " is not supposed to be serialized");
     }
 
     // needs to keep reference, or it gets GC-ed.
@@ -722,10 +689,6 @@ public abstract class JenkinsEmbedder implements RootAction {
         } catch (Exception e) {
             LOGGER.log(Level.WARNING,"Failed to cancel out MAVEN_OPTS",e);
         }
-    }
-
-    public Description getTestDescription() {
-        return testDescription;
     }
 
     //TODO: remove?

@@ -9,7 +9,7 @@ import javax.servlet.ServletContextListener;
  * Kills off {@link ServletContextListener}s loaded from web.xml.
  *
  * <p>
- * This is so that the harness can create the {@link jenkins.model.Jenkins} object.
+ * This is so that the launcher can create the {@link jenkins.model.Jenkins} object.
  * with the home directory of our choice.
  *
  * @author Kohsuke Kawaguchi

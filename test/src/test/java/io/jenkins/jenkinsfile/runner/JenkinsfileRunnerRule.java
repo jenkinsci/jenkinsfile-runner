@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author Kohsuke Kawaguchi
  */
-public class JenkinsfileRunnerRule extends JenkinsEmbedder {
+public class JenkinsfileRunnerRule extends JenkinsTestEmbedder {
     private final File warDir;
     private final File pluginsDir;
     /**
@@ -109,7 +109,7 @@ public class JenkinsfileRunnerRule extends JenkinsEmbedder {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                testDescription = description;
+                with(description);
                 Thread t = Thread.currentThread();
                 String o = t.getName();
                 t.setName("Executing "+ testDescription.getDisplayName());
@@ -127,11 +127,4 @@ public class JenkinsfileRunnerRule extends JenkinsEmbedder {
         };
     }
 
-
-    // Doesn't work as intended
-//    @Initializer(before= InitMilestone.PLUGINS_LISTED)
-//    public static void init() {
-//        // no external connectivity needed
-//        Jenkins.getInstance().setAgentProtocols(Collections.emptySet());
-//    }
 }
