@@ -3,7 +3,9 @@ Jenkinsfile Runner demo
 
 This demo demonstrates building of Jenkinsfile Runner Docker images
 with [Custom WAR Packager](https://github.com/jenkinsci/custom-war-packager/).
-This demo bundles some plugins so that it demonstrates a Pipeline execution.
+This demo bundles some plugins so that it demonstrates a Pipeline execution
+that uses checkout scm step so that we can verify that no warning is raised
+due to FileSystemSCM.
 
 To build the Docker image, run `make clean build`
 
