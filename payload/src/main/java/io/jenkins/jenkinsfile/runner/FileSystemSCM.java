@@ -69,8 +69,10 @@ public class FileSystemSCM extends SCM {
 
     // TO-DO: Remove once JENKINS-55323 is fixed
     public DescriptorImpl getDescriptor() {
-        return new DescriptorImpl();
+        return DESCRIPTOR_INSTANCE;
     }
+
+    private final static DescriptorImpl DESCRIPTOR_INSTANCE = new DescriptorImpl();
 
     @Extension
     public static final class DescriptorImpl extends SCMDescriptor<FileSystemSCM> {
