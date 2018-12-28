@@ -51,6 +51,7 @@ THE SOFTWARE.
   <modules>
     <module>bootstrap</module>
     <module>setup</module>
+    <module>test</module>
     <module>payload-dependencies</module>
     <module>payload</module>
     <module>app</module>
@@ -119,6 +120,13 @@ THE SOFTWARE.
               <Jenkins-ClassFilter-Whitelisted>true</Jenkins-ClassFilter-Whitelisted>
             </manifestEntries>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration combine.children="append">
+          <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
     </plugins>
