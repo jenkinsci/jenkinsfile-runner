@@ -1,0 +1,9 @@
+
+stage('Read Evergreen YAML') {
+    node {
+        // Discover core version using Pipeline utility steps
+        sh 'wget https://raw.githubusercontent.com/jenkins-infra/evergreen/master/services/essentials.yaml'
+        def essentialsYaml = readYaml(file: "essentials.yaml")
+        echo "Jenkins Evergreen uses the following Core version: ${essentialsYaml.spec.core.version}"
+    }
+}
