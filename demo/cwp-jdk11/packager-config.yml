@@ -42,7 +42,7 @@ plugins:
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-support"
     source:
-      version: "3.0" # TO-DO: Maybe this should be to payload-dependencies ?
+      version: "3.0" # TO-DO: Maybe this should be into payload-dependencies ?
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "pipeline-utility-steps"
     source:
