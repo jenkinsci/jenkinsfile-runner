@@ -1,21 +1,16 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
@@ -166,8 +161,8 @@ public class Bootstrap {
         return ((IApp)c.newInstance()).run(this);
     }
 
-    public ClassLoader createJenkinsWarClassLoader() throws IOException {
-        return new ClassLoaderBuilder(new SideClassLoader(null))
+    public ClassLoader createJenkinsWarClassLoader() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        return new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
                 .collectJars(new File(warDir,"WEB-INF/lib"))
                 // servlet API needs to be visible to jenkins.war
                 .collectJars(new File(appRepo,"javax/servlet"))
@@ -179,4 +174,21 @@ public class Bootstrap {
                 .collectJars(appRepo)
                 .make();
     }
+
+    /**
+     * In JDK 11, platform classes are not accessible by default but through the platform classloader.
+     */
+    private ClassLoader getPlatformClassloader() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (isPostJava8()) {
+            return (ClassLoader) ClassLoader.class.getMethod("getPlatformClassLoader").invoke(null);
+        }
+
+        return null;
+    }
+
+    private static boolean isPostJava8() {
+        String javaVersion = System.getProperty("java.version");
+        return !javaVersion.startsWith("1.");
+    }
+
 }
