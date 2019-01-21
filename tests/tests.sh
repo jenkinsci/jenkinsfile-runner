@@ -16,7 +16,6 @@ downloaded_cwp_jar="to_update"
 
 oneTimeSetUp() {
   downloaded_cwp_jar=$(download_cwp "$test_framework_directory" "$CWP_version")
-  downloaded_cwp_jar=$(remove_string "$downloaded_cwp_jar" "CWP downloaded as ")
 }
 
 setUp() {
@@ -24,7 +23,7 @@ setUp() {
 }
 
 test_with_tag() {
-  jfr_tag=$(generate_docker_image_from_cwp_jar "$test_framework_directory" "$downloaded_cwp_jar" "$version" "$current_directory/test_resources/test_with_tag/packager-config.yml" "$jenkinsfile_runner_tag" | grep 'Successfully tagged')
+  jfr_tag=$(execute_cwp_jar_and_generate_docker_image "$test_framework_directory" "$downloaded_cwp_jar" "$version" "$current_directory/test_resources/test_with_tag/packager-config.yml" "$jenkinsfile_runner_tag" | grep 'Successfully tagged')
   assertEquals "Should retrieve exit code 0" "0" "$?"
   assertContains "Should contain the given tag" "$jfr_tag" "$jenkinsfile_runner_tag"
 
@@ -39,13 +38,13 @@ test_with_tag() {
 }
 
 test_with_default_tag() {
-  jfr_tag=$(generate_docker_image_from_cwp_jar "$test_framework_directory" "$downloaded_cwp_jar" "$version" "$current_directory/test_resources/test_with_tag/packager-config.yml" | grep 'Successfully tagged')
+  jfr_tag=$(execute_cwp_jar_and_generate_docker_image "$test_framework_directory" "$downloaded_cwp_jar" "$version" "$current_directory/test_resources/test_with_tag/packager-config.yml" | grep 'Successfully tagged')
   assertEquals "Should retrieve exit code 0" "0" "$?"
   assertNotContains "Should not contain the given tag" "$jfr_tag" "$jenkinsfile_runner_tag"
 }
 
 test_missing_params() {
-  jfr_tag=$(generate_docker_image_from_cwp_jar "$test_framework_directory" "$downloaded_cwp_jar" "$version")
+  jfr_tag=$(execute_cwp_jar_and_generate_docker_image "$test_framework_directory" "$downloaded_cwp_jar" "$version")
   assertNotEquals "Should not retrieve exit code 0" "0" "$?"
   assertContains "Should retrieve an error message" "$jfr_tag" "Missing parameters"
 }
