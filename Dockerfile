@@ -29,7 +29,10 @@ COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
 
+VOLUME /build
+
 ENTRYPOINT ["/app/bin/jenkinsfile-runner", \
             "-w", "/app/jenkins",\
             "-p", "/usr/share/jenkins/ref/plugins",\
-            "-f", "/workspace"]
+            "-f", "/workspace", \
+            "--runWorkspace", "/build"]

@@ -36,6 +36,23 @@ JENKINS_HOME=/tmp/jenkins_home java -jar jenkins.war
 Say you have your Git repository checked out at `~/foo` that contains `Jenkinsfile` and your source code.
 You can now run Jenkinsfile Runner like this:
 
+### Usage in Docker
+
+See the demos.
+Once Docker image is built, Jenkinsfile Runner can be launched simply as...
+
+```
+    docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_IMAGE}
+```
+
+Advanced options:
+
+* `JAVA_OPTS` environment variable can be passed to pass extra options to the image
+* In the suggested `Dockerfile` the master workspace is mapped to `/build`.
+  This directory can be exposed as a volume.
+
+### Usage in command-line
+
 ```
 $ cat ~/foo/Jenkinsfile
 pipeline {

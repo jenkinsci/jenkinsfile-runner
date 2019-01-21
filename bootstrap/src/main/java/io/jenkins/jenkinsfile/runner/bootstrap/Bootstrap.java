@@ -5,6 +5,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,15 @@ public class Bootstrap {
      */
     @Option(name = "-f", aliases = { "--file" }, usage = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, default to ./Jenkinsfile.")
     public File jenkinsfile;
+
+    /**
+     * Workspace for the Run
+     */
+    @CheckForNull
+    @Option(name = "--runWorkspace", usage = "Path to the workspace of the run to be used within the node{} context. " +
+            "It applies to both Jenkins master and agents (or side containers) if any. " +
+            "Requires Jenkins 2.119 or above")
+    public File runWorkspace;
 
 
     public static void main(String[] args) throws Throwable {
@@ -107,6 +117,15 @@ public class Bootstrap {
                 String shortname = line.substring(0,i);
                 String version = line.substring(i+1);
                 installPlugin(shortname, version);
+            }
+        }
+
+        if (this.runWorkspace != null){
+            if (System.getProperty("jenkins.model.Jenkins.workspacesDir") != null) {
+                //TODO(oleg_nenashev): It would have been better to keep it other way, but made it as is to retain compatibility
+                System.out.println("Ignoring the --runWorkspace argument, because an explicit System property is set");
+            } else {
+                System.setProperty("jenkins.model.Jenkins.workspacesDir", this.runWorkspace.getAbsolutePath());
             }
         }
     }
