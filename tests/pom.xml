@@ -9,14 +9,6 @@
 
   <artifactId>tests</artifactId>
 
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>setup</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
-
   <profiles>
     <profile>
       <id>launch-test</id>
