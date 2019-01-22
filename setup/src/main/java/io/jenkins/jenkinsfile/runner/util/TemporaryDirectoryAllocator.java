@@ -27,6 +27,7 @@ import hudson.FilePath;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public class TemporaryDirectoryAllocator {
     }
 
     public TemporaryDirectoryAllocator() {
-        this.base = new File(System.getProperty("java.io.tmpdir"), "jenkinsTests.tmp");
+        this.base = new File(System.getProperty("java.io.tmpdir"), "jenkinsfileRunner.tmp");
         base.mkdirs();
     }
 
@@ -62,9 +63,11 @@ public class TemporaryDirectoryAllocator {
      */
     public synchronized File allocate() throws IOException {
         try {
-            File f = File.createTempFile("jenkins", "test", base);
-            f.delete();
-            f.mkdirs();
+            File f = File.createTempFile("jfr", ".run", base);
+            if (f.exists()) {
+                Files.delete(f.toPath());
+            }
+            Files.createDirectories(f.toPath());
             tmpDirectories.add(f);
             return f;
         } catch (IOException e) {
