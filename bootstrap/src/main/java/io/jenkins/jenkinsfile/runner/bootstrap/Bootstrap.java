@@ -23,6 +23,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class Bootstrap {
 
     public static final long CACHE_EXPIRE = System.currentTimeMillis() - 24 * 3600 * 1000;
+    private static final String WORKSPACES_DIR_SYSTEM_PROPERTY = "jenkins.model.Jenkins.workspacesDir";
+
     /**
      * This system property is set by the bootstrap script created by appassembler Maven plugin
      * to point to a local Maven repository.
@@ -121,11 +123,11 @@ public class Bootstrap {
         }
 
         if (this.runWorkspace != null){
-            if (System.getProperty("jenkins.model.Jenkins.workspacesDir") != null) {
+            if (System.getProperty(WORKSPACES_DIR_SYSTEM_PROPERTY) != null) {
                 //TODO(oleg_nenashev): It would have been better to keep it other way, but made it as is to retain compatibility
-                System.out.println("Ignoring the --runWorkspace argument, because an explicit System property is set");
+                System.out.println("Ignoring the --runWorkspace argument, because an explicit System property is set (-D" + WORKSPACES_DIR_SYSTEM_PROPERTY + ")");
             } else {
-                System.setProperty("jenkins.model.Jenkins.workspacesDir", this.runWorkspace.getAbsolutePath());
+                System.setProperty(WORKSPACES_DIR_SYSTEM_PROPERTY, this.runWorkspace.getAbsolutePath());
             }
         }
     }
