@@ -95,6 +95,14 @@ THE SOFTWARE.
     </dependencies>
   </dependencyManagement>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
