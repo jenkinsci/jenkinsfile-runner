@@ -10,7 +10,7 @@ ADD bootstrap/pom.xml /src/bootstrap/pom.xml
 ADD setup/pom.xml /src/setup/pom.xml
 ADD payload/pom.xml /src/payload/pom.xml
 ADD payload-dependencies/pom.xml /src/payload-dependencies/pom.xml
-ADD test/pom.xml /src/test/pom.xml
+ADD tests/pom.xml /src/tests/pom.xml
 
 WORKDIR /src
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
