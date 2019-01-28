@@ -5,15 +5,7 @@ current_directory=$(pwd)
 test_framework_directory="$current_directory/jenkinsfile-runner-test-framework"
 sh_unit_directory="$test_framework_directory/shunit2"
 
-version="256.0-test"
-CWP_version="1.3"
-jenkinsfile_runner_tag="jenkins-experimental/jenkinsfile-runner-test-image"
-
-downloaded_cwp_jar="to_update"
-
-. $test_framework_directory/utilities/utils.inc
-. $test_framework_directory/utilities/cwp/custom-war-packager.inc
-. $test_framework_directory/utilities/jfr/jenkinsfile-runner.inc
+. $test_framework_directory/init-jfr-test-framework.inc
 
 oneTimeSetUp() {
   echo "Initializing the test suit. Ignoring so far"
