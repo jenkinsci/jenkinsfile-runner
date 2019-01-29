@@ -1,6 +1,6 @@
 # Jenkinsfile Runner Tests
 
-## Running the testst on macOS
+## Running the tests on macOS
 The version of shUnit2 we are using does not work with the default bash shell on macOS.  In order to get the tests to run, we recommend upgrading your bash shell to a more modern version by following the instructions below.
 
 + Use [Homebrew](https://brew.sh/) to install the latest version of bash with the command `brew install bash`
