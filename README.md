@@ -109,8 +109,23 @@ Finished: SUCCESS
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
+### Passing parameters
+
+Any parameter values, for parameters defined on workflow job within `parameters` statement
+can be passed to the Jenkinsfile Runner using `-a` or `--arg` switches in key=value format. 
+
 Passing parameters defined within `parameters` section of the pipeline is optional. 
 
+
+```
+$ ./app/target/appassembler/bin/jenkinsfile-runner \
+  -w /tmp/jenkins \
+  -p /tmp/jenkins_home/plugins \
+  -f ~/foo/ \
+  # pipeline has two parameters param1 and param2
+  -a "param1=Hello" \
+  -a "param2=value2"
+```
 
 ## Demo
 
