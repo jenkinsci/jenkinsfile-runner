@@ -74,7 +74,7 @@ pipeline {
 }
 
 
-# Usage: jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello&param2=value2"]
+# Usage: jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello" -a "param2=value2"]
 $ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/ -a "param1=Hello&param2=value2"
 Started
 Running in Durability level: PERFORMANCE_OPTIMIZED
@@ -109,8 +109,7 @@ Finished: SUCCESS
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
-Passing parameters defined within `parameters` section of the pipeline is optional. As parameters are ampersand separated,
-you can't pass a value containing ampersand itself as parameter value. 
+Passing parameters defined within `parameters` section of the pipeline is optional. 
 
 
 ## Demo
