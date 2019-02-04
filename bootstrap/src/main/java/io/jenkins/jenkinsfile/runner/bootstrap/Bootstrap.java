@@ -66,6 +66,7 @@ public class Bootstrap {
 
 
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
+    @CheckForNull
     public Map<String,String> workflowParameters;
 
     @Option(name = "-ns", aliases = { "--no-sandbox" }, usage = "Disable workflow job execution within sandbox environment")
@@ -139,6 +140,10 @@ public class Bootstrap {
             } else {
                 System.setProperty(WORKSPACES_DIR_SYSTEM_PROPERTY, this.runWorkspace.getAbsolutePath());
             }
+        }
+
+        if (this.workflowParameters == null){
+            this.workflowParameters = new HashMap<>();
         }
     }
 
