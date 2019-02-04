@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.model.Action;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
@@ -34,13 +35,17 @@ public class Runner {
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
-        QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0,
-                new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox),
+
+        Action[] workflowActions = bootstrap.workflowParameters.size() > 0 ?
+                new Action[] { new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox),
                 new ParametersAction(bootstrap.workflowParameters
-                        .entrySet()
-                        .stream()
-                        .map(e -> new StringParameterValue(e.getKey(), e.getValue()))
-                        .collect(Collectors.toList())));
+                                     .entrySet()
+                                     .stream()
+                                     .map(e -> new StringParameterValue(e.getKey(), e.getValue()))
+                                     .collect(Collectors.toList())) } :
+                new Action[] { new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox) };
+
+        QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0, workflowActions);
 
         b = f.getStartCondition().get();
 
