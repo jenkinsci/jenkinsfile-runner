@@ -19,13 +19,15 @@ import java.util.List;
  */
 public class SetJenkinsfileLocation extends InvisibleAction implements CpsFlowFactoryAction2 {
     private final File jenkinsfile;
+    private final Boolean sandboxedExecution;
 
-    public SetJenkinsfileLocation(File jenkinsfile) {
+    public SetJenkinsfileLocation(File jenkinsfile, Boolean sandbox) {
         this.jenkinsfile = jenkinsfile;
+        this.sandboxedExecution = sandbox;
     }
 
     @Override
     public CpsFlowExecution create(FlowDefinition def, FlowExecutionOwner owner, List<? extends Action> actions) throws IOException {
-        return new CpsFlowExecution(FileUtils.readFileToString(jenkinsfile), true, owner);
+        return new CpsFlowExecution(FileUtils.readFileToString(jenkinsfile), this.sandboxedExecution, owner);
     }
 }

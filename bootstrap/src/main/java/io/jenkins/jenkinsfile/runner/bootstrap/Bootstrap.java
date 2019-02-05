@@ -14,6 +14,10 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -60,6 +64,13 @@ public class Bootstrap {
             "Requires Jenkins 2.119 or above")
     public File runWorkspace;
 
+
+    @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
+    @CheckForNull
+    public Map<String,String> workflowParameters;
+
+    @Option(name = "-ns", aliases = { "--no-sandbox" }, usage = "Disable workflow job execution within sandbox environment")
+    public boolean noSandBox;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -129,6 +140,10 @@ public class Bootstrap {
             } else {
                 System.setProperty(WORKSPACES_DIR_SYSTEM_PROPERTY, this.runWorkspace.getAbsolutePath());
             }
+        }
+
+        if (this.workflowParameters == null){
+            this.workflowParameters = new HashMap<>();
         }
     }
 
