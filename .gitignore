@@ -37,3 +37,6 @@ setup/.settings/
 tests/.classpath
 tests/.project
 tests/.settings/
+demo/cwp-jdk11/out/
+demo/cwp-jdk11/source/
+
