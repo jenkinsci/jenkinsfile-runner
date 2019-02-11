@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -193,8 +193,18 @@ public class Bootstrap {
 
         Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
 
-        Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
-        return ((IApp)c.newInstance()).run(this);
+        try {
+            Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
+            return ((IApp) c.newInstance()).run(this);
+        } catch (ClassNotFoundException e) {
+            if (setup instanceof URLClassLoader) {
+                throw new ClassNotFoundException(e.getMessage() + " not found in " + appRepo + ","
+                        + new File(warDir, "WEB-INF/lib") + " " + Arrays.toString(((URLClassLoader) setup).getURLs()),
+                        e);
+            } else {
+                throw e;
+            }
+        }
     }
 
     public ClassLoader createJenkinsWarClassLoader() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
