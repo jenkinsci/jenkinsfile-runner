@@ -14,3 +14,4 @@ init:
 
 test:
 	./tests.sh
+	./tests-jdk11.sh
