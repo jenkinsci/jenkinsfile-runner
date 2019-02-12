@@ -3,7 +3,7 @@ set -e
 
 current_directory=$(pwd)
 test_framework_directory="$current_directory/.jenkinsfile-runner-test-framework"
-working_directory="$test_framework_directory/work"
+working_directory="$test_framework_directory/work-cwp"
 
 version="256.0-test"
 jenkinsfile_runner_tag="jenkins-experimental/jenkinsfile-runner-test-image"
@@ -26,11 +26,6 @@ test_cwp() {
 
 test_databound() {
   run_jfr_docker_image "$jenkinsfile_runner_tag" "$current_directory/test_resources/cwp-produced-images/test_databound/Jenkinsfile"
-  jenkinsfile_execution_should_succeed "$?"
-}
-
-test_parameters() {
-  run_jfr_docker_image "$jenkinsfile_runner_tag" "$current_directory/test_resources/cwp-produced-images/test_parameters/Jenkinsfile"
   jenkinsfile_execution_should_succeed "$?"
 }
 

@@ -13,5 +13,6 @@ init:
 	$(MAKE) -C .jenkinsfile-runner-test-framework
 
 test:
-	./tests.sh
-	./tests-jdk11.sh
+	./tests-cwp.sh
+	./tests-cwp-jdk11.sh
+	./tests-vanilla.sh
