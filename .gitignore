@@ -10,6 +10,7 @@ demo/cwp/tmp/output
 demo/cwp/tmp/prebuild
 demo/cwp/out
 demo/databound/out
+demo/databound/source
 demo/cwp/source
 .idea
 *.iml
@@ -37,3 +38,6 @@ setup/.settings/
 tests/.classpath
 tests/.project
 tests/.settings/
+demo/cwp-jdk11/out/
+demo/cwp-jdk11/source/
+
