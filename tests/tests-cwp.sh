@@ -22,6 +22,7 @@ oneTimeSetUp() {
 test_cwp() {
   run_jfr_docker_image "$jenkinsfile_runner_tag" "$current_directory/test_resources/cwp-produced-images/test_cwp/Jenkinsfile"
   jenkinsfile_execution_should_succeed "$?"
+  logs_contains "Jenkins Evergreen"
 }
 
 test_databound() {

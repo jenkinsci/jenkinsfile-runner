@@ -22,6 +22,7 @@ oneTimeSetUp() {
 test_cwp-jdk11() {
   run_jfr_docker_image "$jenkinsfile_runner_tag" "$current_directory/test_resources/cwp-produced-images/test_cwp-jdk11/Jenkinsfile"
   jenkinsfile_execution_should_succeed "$?"
+  logs_contains "Jenkins Evergreen"
 }
 
 init_framework
