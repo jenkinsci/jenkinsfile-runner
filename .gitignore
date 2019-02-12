@@ -37,3 +37,4 @@ setup/.settings/
 tests/.classpath
 tests/.project
 tests/.settings/
+tests/*.log

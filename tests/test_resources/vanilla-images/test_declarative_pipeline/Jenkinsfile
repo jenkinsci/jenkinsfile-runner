@@ -8,9 +8,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Hello world!'
-                echo "message: ${params.param1}"
-                echo "param2: ${params.param2}"
-                sh 'ls -la'
+                echo "Value for param1: ${params.param1}"
+                echo "Value for param2: ${params.param2}"
             }
         }
     }

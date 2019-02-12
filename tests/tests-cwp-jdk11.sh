@@ -3,7 +3,7 @@ set -e
 
 current_directory=$(pwd)
 test_framework_directory="$current_directory/.jenkinsfile-runner-test-framework"
-working_directory="$test_framework_directory/work11"
+working_directory="$test_framework_directory/work-jdk11"
 
 version="256.0-test"
 jenkinsfile_runner_tag="jenkins-experimental/jenkinsfile-runner-test-image-jdk11"
