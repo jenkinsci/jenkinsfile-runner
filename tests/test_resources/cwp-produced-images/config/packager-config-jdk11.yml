@@ -12,16 +12,16 @@ buildSettings:
       build:
         noCache: true
       source:
-        dir: ./source
+        dir: ./.jenkinsfile-runner-test-framework/source
     docker:
-      base: "jenkins/jenkins:2.150.2"
+      base: "jenkins/jenkins:2.164-jdk11"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
       build: false
 war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.150.2"
+    version: "2.164"
 plugins:
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-job"
@@ -34,11 +34,15 @@ plugins:
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-api"
     source:
-      version: "2.27"
+      version: "2.30"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-step-api"
     source:
       version: "2.14"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-support"
+    source:
+      version: "3.0" # TO-DO: Maybe this should be into payload-dependencies ?
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "pipeline-utility-steps"
     source:

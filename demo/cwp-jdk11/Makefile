@@ -45,6 +45,4 @@ build: .copySource .build .buildImage
 buildInDocker: .copySource .buildInDocker .buildImage
 
 run:
-	docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile \
-	-e JAVA_OPTS="-p /usr/share/jenkins/ref/java_cp/jaxb-api.jar:/usr/share/jenkins/ref/java_cp/javax.activation.jar --add-modules java.xml.bind,java.activation,java.sql -cp /usr/share/jenkins/ref/java_cp/jaxb-impl.jar:/usr/share/jenkins/ref/java_cp/jaxb-core.jar" \
-	${JENKINSFILE_RUNNER_TAG}
+	docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_TAG}

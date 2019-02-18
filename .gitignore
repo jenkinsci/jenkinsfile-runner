@@ -4,12 +4,13 @@ payload-dependencies/target/
 payload/target/
 setup/target/
 tests/target/
-tests/jenkinsfile-runner-test-framework/
+tests/.jenkinsfile-runner-test-framework/
 cwp-cli-1.3.jar
 demo/cwp/tmp/output
 demo/cwp/tmp/prebuild
 demo/cwp/out
 demo/databound/out
+demo/databound/source
 demo/cwp/source
 .idea
 *.iml
@@ -37,3 +38,6 @@ setup/.settings/
 tests/.classpath
 tests/.project
 tests/.settings/
+tests/*.log
+demo/cwp-jdk11/out/
+demo/cwp-jdk11/source/

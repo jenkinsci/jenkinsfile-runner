@@ -12,7 +12,7 @@ buildSettings:
       build:
         noCache: true
       source:
-        dir: ./source
+        dir: "./.jenkinsfile-runner-test-framework/source"
     docker:
       base: "jenkins/jenkins:2.150.2"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
