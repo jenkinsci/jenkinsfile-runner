@@ -1,4 +1,4 @@
-ARG JENKINS_VERSION=2.121.1
+ARG JENKINS_VERSION=2.150.3
 
 # Define maven version for other stages
 FROM maven:3.5.2 as maven
@@ -36,8 +36,7 @@ COPY --from=jenkins /app/jenkins /app/jenkins
 COPY --from=jenkins /usr/local/bin/install-plugins.sh /usr/local/bin/install-plugins.sh
 COPY --from=jenkins /usr/local/bin/jenkins-support /usr/local/bin/jenkins-support
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-# empty war file to workaround https://github.com/jenkinsci/docker/pull/786
-RUN echo UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA== | base64 -d > /usr/share/jenkins/jenkins.war && /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt && rm -f /usr/share/jenkins/jenkins.war
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
 
 VOLUME /build
