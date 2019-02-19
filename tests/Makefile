@@ -8,7 +8,7 @@ clean:
 
 init:
 	# TODO replace with first version of the test framework
-	git clone https://github.com/jenkinsci/jenkinsfile-runner-test-framework .jenkinsfile-runner-test-framework && cd .jenkinsfile-runner-test-framework && git checkout 0ed9ea7a43161ad97764db566d52412dd2dab621
+	git clone https://github.com/jenkinsci/jenkinsfile-runner-test-framework .jenkinsfile-runner-test-framework && cd .jenkinsfile-runner-test-framework && git checkout 4ed3c35650fe880345b77ee4776b29bd00944fb3
 	rsync -avq --exclude-from='exclude-rsync.txt' $(shell pwd)/../ $(shell pwd)/.jenkinsfile-runner-test-framework/source
 	$(MAKE) -C .jenkinsfile-runner-test-framework
 
@@ -16,3 +16,4 @@ test:
 	./tests-cwp.sh
 	./tests-cwp-jdk11.sh
 	./tests-vanilla.sh
+	./tests-negative-scenarios.sh
