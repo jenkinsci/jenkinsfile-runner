@@ -1,9 +1,4 @@
-
-stage('Read Evergreen YAML') {
-    node {
-        // Discover core version using Pipeline utility steps
-        sh 'wget https://raw.githubusercontent.com/jenkins-infra/evergreen/master/services/essentials.yaml'
-        def essentialsYaml = readYaml(file: "essentials.yaml")
-        echo "Jenkins Evergreen uses the following Core version: ${essentialsYaml.spec.core.version}"
-    }
+// This Jenkinsfile will not be executed because this tests has a conflict in CWP configuration. Using the simplest one
+node {
+    currentBuild.result = 'SUCCESS'
 }

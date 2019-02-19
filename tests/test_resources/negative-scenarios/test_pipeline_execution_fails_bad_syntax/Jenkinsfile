@@ -6,6 +6,7 @@ pipeline {
     }
     stages {
         stage('Build') {
+            // Missing steps, then it fails
             echo 'Hello world!'
             echo "Value for param1: ${params.param1}"
             echo "Value for param2: ${params.param2}"
