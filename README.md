@@ -131,6 +131,13 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 
 * [Building Jenkinsfile Runner with Custom WAR Packager](demo/cwp)
 
+## Reporting issues
+
+Jenkinsfile Runner uses [Jenkins JIRA](https://issues.jenkins-ci.org) for btracking of tasks and defects.
+(project=`JENKINS`, component=`jenkinsfile-runner).
+Please follow [these guidelines](https://wiki.jenkins.io/display/JENKINS/How+to+report+an+issue) when reporting issues.
+If you see a security issue in the component, please follow the [vulnarebility reporting guidelines](https://jenkins.io/security/#reporting-vulnerabilities).
+
 ## Further reading
 
 * [Packaging into Docker image](DOCKER.md)
