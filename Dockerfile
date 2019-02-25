@@ -28,6 +28,7 @@ RUN mkdir /app && unzip /usr/share/jenkins/jenkins.war -d /app/jenkins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
+COPY jenkinsfile-runner /app/bin
 
 VOLUME /build
 

@@ -31,3 +31,12 @@ $ docker run --rm -it -v $PWD/test:/workspace --entrypoint bash jenkinsfile-runn
 root@dec4c0f12478:/src# cp -r /app/jenkins /tmp/jenkins
 root@dec4c0f12478:/src# /app/bin/jenkinsfile-runner -w /tmp/jenkins -p /usr/share/jenkins/ref/plugins -f /workspace
 ```
+
+## Debug
+In case you want to debug Jenkinsfile Runner the recommendation is to use the image built following the steps mentioned in the section above.
+
+Then, set the `DEBUG` environment variable and expose the port where to connect the remote debug
+
+```bash
+docker run --rm -e DEBUG=y -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
+```
