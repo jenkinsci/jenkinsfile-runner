@@ -85,6 +85,11 @@ private_execution_after_timeout() {
 
 oneTimeTearDown() {
   # force docker termination in case it is still executing
+  docker_id=$(docker ps -aqf "name=$jenkinsfile_runner_valid_tag")
+  if [ ! -z "$docker_id" ]
+  then
+    docker stop -t 1 "$docker_id"
+  fi
   docker_id=$(docker ps -aqf "name=$jenkinsfile_runner_invalid_tag")
   if [ ! -z "$docker_id" ]
   then
@@ -92,6 +97,11 @@ oneTimeTearDown() {
   fi
 
   # remove docker with invalid configuration
+  docker_id=$(docker images -q "$jenkinsfile_runner_valid_tag")
+  if [ ! -z "$docker_id" ]
+  then
+    docker rmi -f "$docker_id"
+  fi
   docker_id=$(docker images -q "$jenkinsfile_runner_invalid_tag")
   if [ ! -z "$docker_id" ]
   then
