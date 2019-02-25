@@ -133,7 +133,7 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 
 ## Reporting issues
 
-Jenkinsfile Runner uses [Jenkins JIRA](https://issues.jenkins-ci.org) for btracking of tasks and defects.
+Jenkinsfile Runner uses [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects.
 (project=`JENKINS`, component=`jenkinsfile-runner).
 Please follow [these guidelines](https://wiki.jenkins.io/display/JENKINS/How+to+report+an+issue) when reporting issues.
 If you see a security issue in the component, please follow the [vulnarebility reporting guidelines](https://jenkins.io/security/#reporting-vulnerabilities).
