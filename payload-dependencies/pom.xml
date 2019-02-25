@@ -45,12 +45,12 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-scm-step</artifactId>
-      <version>2.6</version>
+      <version>2.7</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-scm-step</artifactId>
-      <version>2.4</version>
+      <version>2.7</version>
       <classifier>tests</classifier>
     </dependency>
     <dependency>
