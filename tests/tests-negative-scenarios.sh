@@ -82,10 +82,4 @@ private_execution_after_timeout() {
   set -e
 }
 
-oneTimeTearDown() {
-  # remove docker with invalid configuration
-  docker_id=$(docker images -q "$jenkinsfile_runner_invalid_tag")
-  docker rmi -f "$docker_id"
-}
-
 init_framework
