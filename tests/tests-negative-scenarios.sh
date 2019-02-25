@@ -53,7 +53,8 @@ test_pipeline_execution_fails() {
 
 test_pipeline_execution_is_unstable() {
   run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_is_unstable/Jenkinsfile"
-  jenkinsfile_execution_should_be_unstable "$?"
+  execution_success "$?"
+  logs_contains "Finished: UNSTABLE"
 }
 
 test_pipeline_execution_hangs() {
@@ -80,6 +81,22 @@ private_execution_after_timeout() {
     return 1
   fi
   set -e
+}
+
+oneTimeTearDown() {
+  # force docker termination in case it is still executing
+  docker_id=$(docker ps -aqf "name=$jenkinsfile_runner_invalid_tag")
+  if [ ! -z "$docker_id" ]
+  then
+    docker stop -t 1 "$docker_id"
+  fi
+
+  # remove docker with invalid configuration
+  docker_id=$(docker images -q "$jenkinsfile_runner_invalid_tag")
+  if [ ! -z "$docker_id" ]
+  then
+    docker rmi -f "$docker_id"
+  fi
 }
 
 init_framework
