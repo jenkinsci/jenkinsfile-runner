@@ -5,13 +5,12 @@
 Bugfixes and improvements:
 
 - [[JENKINS-54352](https://issues.jenkins-ci.org/browse/JENKINS-54352)] Add functional tests
-- [[JENKINS-56079](https://issues.jenkins-ci.org/browse/JENKINS-56079)] Print the classpath in case of passing the wrong directories to Bootstrap
+- [[JENKINS-56079](https://issues.jenkins-ci.org/browse/JENKINS-56079)] Print the classpath in case the wrong directories are provided to Bootstrap
 
 Internal changes:
 
 * [[PR #26](https://github.com/jenkinsci/jenkinsfile-runner/pull/26)] Allow to pass worfklow job parameters
 * [[PR #64](https://github.com/jenkinsci/jenkinsfile-runner/pull/64)] Add README with instructions for running tests on macOS
-* [[PR #69](https://github.com/jenkinsci/jenkinsfile-runner/pull/6)] Check for null in workflow parameters
 
 ## [1.0-beta-6] - 2019-01-28
 
