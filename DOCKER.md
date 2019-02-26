@@ -38,5 +38,5 @@ In case you want to debug Jenkinsfile Runner the recommendation is to use the im
 Then, set the `DEBUG` environment variable and expose the port where to connect the remote debug
 
 ```bash
-docker run --rm -e DEBUG=y -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
+docker run --rm -e DEBUG=true -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
 ```
