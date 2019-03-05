@@ -6,7 +6,7 @@ The intend use cases include:
 * Assist editing `Jenkinsfile` locally
 * Integration test shared libraries
 
-[CHANGELOG](./CHANGELOG.md)
+[CHANGELOG](CHANGELOG.md)
 
 ## Build
 Currently there's no released distribution, so you must first build this code:
@@ -143,4 +143,5 @@ If you see a security issue in the component, please follow the [vulnerability r
 * [Packaging into Docker image](DOCKER.md)
 * [Implementation Note](IMPLEMENTATION.md)
 * [Building Jenkinsfile Runner images with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
-
+* [Contributing to Jenkinsfile Runner](CONTRIBUTING.md)
+* [Architecture overview](DEVELOPER.md)
