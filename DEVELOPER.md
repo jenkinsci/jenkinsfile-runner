@@ -8,8 +8,9 @@ There are 6 modules:
   * `payload`
   * `payload-dependencies`
   * `setup`
-  * `tests`: contains the integration tests powered by the [Jenkinsfile Runner Test Framework](https://github.com/jenkinsci/jenkinsfile-runner-test-framework).
-plus the `demo` folder, which contains some examples, especially demonstrating the
+  * `tests`
+
+The `demo` folder contains some examples, especially demonstrating the
 integration with [Custom WAR Packer](https://github.com/jenkinsci/custom-war-packager/).
 
 ## `app` module
@@ -50,3 +51,7 @@ execution engine, configuring the classloader properly.
 
 It also contains classes to implement or configure this "environment", such as a custom implementation for the Plugin Manager
 or a WAR exploder in charge of exploding the WAR file and fully initialising an instance.
+
+## `tests` module
+
+Contains the integration tests powered by the [Jenkinsfile Runner Test Framework](https://github.com/jenkinsci/jenkinsfile-runner-test-framework).
