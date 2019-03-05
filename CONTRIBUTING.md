@@ -35,6 +35,8 @@ These tests (`tests` module) take a while even on server-grade machines.
 All of them will be launched by the continuous integration instance,
 so there is no strict need to run them before proposing a pull request.
 
+In case you want to run them, see the previous section. You could also enter the `tests` directory and execute the `make` command
+
 ## Proposing Changes
 
 All proposed changes are submitted and code reviewed using the _GitHub Pull Request_ process.
