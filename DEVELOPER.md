@@ -38,7 +38,7 @@ Contains the configuration for the "real" pipeline job to be configured and run 
 
 ## `payload-dependencies` module
 
-The `payload` module needs to depend on the presence of many other plugins,
+The `payload` module depends on the presence of many other plugins,
 but they are only used during the compilation and therefore are not shipped to runtime.
 
 Having all the dependencies under payload-dependencies makes it easier to exclude
