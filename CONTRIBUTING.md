@@ -9,7 +9,7 @@ This page provides information about contributing code to the Jenkinsfile Runner
 3. Install the development tools. In order to develop Jenkinsfile Runner, you need the following tools:
   * Java Development Kit (JDK) 8.
      - We usually use [OpenJDK](http://openjdk.java.net/) but you can use other JDKs as well.
-  * Maven 3.5.3 or above.
+  * Maven 3.5.4 or above.
   * Any IDE which supports importing Maven projects.
   * Docker.
   * Make.
