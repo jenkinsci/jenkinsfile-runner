@@ -2,15 +2,20 @@
 
 ## [1.0-beta-7] - 2019-02-20
 
-Bugfixes and improvements:
+New features and bugfixes:
 
-- [[JENKINS-54352](https://issues.jenkins-ci.org/browse/JENKINS-54352)] Add functional tests
+- [[PR #26](https://github.com/jenkinsci/jenkinsfile-runner/pull/26)]
+  Allow passing Pipeline job parameters from CLI 
+  * Example: `java -jar jfr-cli.jar ... -a "param1=Hello" -a "param2=value2"`
+- [[PR #26](https://github.com/jenkinsci/jenkinsfile-runner/pull/26)]
+  Allow disabling [Script Security](https://jenkins.io/doc/book/managing/script-approval/) to allow unrestricted Pipelines and improved performance... at your own risk
+  * Example: `java -jar jfr-cli.jar ... --no-sandbox`
 - [[JENKINS-56079](https://issues.jenkins-ci.org/browse/JENKINS-56079)] Print the classpath in case the wrong directories are provided to Bootstrap
 
 Internal changes:
 
-* [[PR #26](https://github.com/jenkinsci/jenkinsfile-runner/pull/26)] Allow to pass worfklow job parameters
-* [[PR #64](https://github.com/jenkinsci/jenkinsfile-runner/pull/64)] Add README with instructions for running tests on macOS
+- [[JENKINS-54352](https://issues.jenkins-ci.org/browse/JENKINS-54352)] Add functional tests
+- [[PR #64](https://github.com/jenkinsci/jenkinsfile-runner/pull/64)] Add README with instructions for running tests on macOS
 
 ## [1.0-beta-6] - 2019-01-28
 
