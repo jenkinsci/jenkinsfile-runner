@@ -1,0 +1,4 @@
+// This Jenkinsfile will not be executed because this test has a conflict in CWP configuration. Using the simplest one
+node {
+    currentBuild.result = 'SUCCESS'
+}

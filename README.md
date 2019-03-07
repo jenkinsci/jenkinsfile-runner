@@ -6,7 +6,7 @@ The intend use cases include:
 * Assist editing `Jenkinsfile` locally
 * Integration test shared libraries
 
-[CHANGELOG](./CHANGELOG.md)
+[CHANGELOG](CHANGELOG.md)
 
 ## Build
 Currently there's no released distribution, so you must first build this code:
@@ -131,16 +131,26 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 
 * [Building Jenkinsfile Runner with Custom WAR Packager](demo/cwp)
 
-## Further reading
-
-* [Packaging into Docker image](DOCKER.md)
-* [Implementation Note](IMPLEMENTATION.md)
-* [Building Jenkinsfile Runner images with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
-
-# Docker build
+## Docker build
 
     docker build -t jenkins/jenkinsfile-runner .
 
 During development you can reuse the local machine build instead of doing a full build from scratch
 
     docker build -t jenkins/jenkinsfile-runner:dev -f Dockerfile-dev .
+
+## Reporting issues
+
+Jenkinsfile Runner uses [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects.
+(project=`JENKINS`, component=`jenkinsfile-runner).
+Please follow [these guidelines](https://wiki.jenkins.io/display/JENKINS/How+to+report+an+issue) when reporting issues.
+If you see a security issue in the component, please follow the [vulnerability reporting guidelines](https://jenkins.io/security/#reporting-vulnerabilities).
+
+## Further reading
+
+* [Packaging into Docker image](DOCKER.md)
+* [Implementation Note](IMPLEMENTATION.md)
+* [Building Jenkinsfile Runner images with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
+* [Contributing to Jenkinsfile Runner](CONTRIBUTING.md)
+* [Architecture overview](DEVELOPER.md)
+

@@ -34,7 +34,7 @@ THE SOFTWARE.
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-beta-7-SNAPSHOT</version>
+  <version>1.0-beta-8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
