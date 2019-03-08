@@ -3,7 +3,7 @@ You can package Jenkinsfile Runner with a specific Jenkins image and turn that i
 This way, you can ensure people are running Jenkinsfile in the specific Jenkins environment, for example one that's identical to your production environment.
 
 ## Building the Vanilla image
-This repository offers a Dockerfile to generate your docker image.
+This repository offers a Dockerfile to generate a Jenkinsfile Runner docker image.
 
 Edit the `plugins.txt` to include any plugins you'd like to install. See [the Jenkins Docker README](https://github.com/jenkinsci/docker#preinstalling-plugins) for more information.
 
@@ -36,7 +36,7 @@ It can be done passing the `JAVA_OPTS` environment variable.
 docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
 ```
 
-Also is possible to pass arguments to the Jenkinsfile or to execute it outside a sandbox environment with the `-ns` and `-a` options.
+It is also possible to pass arguments to the Jenkinsfile or to execute it outside a sandbox environment with the `-ns` and `-a` options.
 
 ```bash
 docker run --rm -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins -ns -a "my_param=any_value"
