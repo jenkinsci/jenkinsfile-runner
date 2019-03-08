@@ -156,7 +156,8 @@ Advanced options:
 * `JAVA_OPTS` environment variable can be passed to pass extra options to the image
 * In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
   This directory can be exposed as a volume.
-  To map a volume in the docker image generated with Custom War Packager, both the the -v docker option and the --runworkspace options needs to be specified
+  The docker image generated with Custom War Packager maps the workspace to `/build` by default and it can be exposed as well.
+  However it is possible to override that directory if both the `-v` docker option and the `--runworkspace` Jenkinsfile Runner option are specified.
 * The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
 
 ## Reporting issues

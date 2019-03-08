@@ -65,7 +65,7 @@ There is an alternative to Vanilla Dockerfile that gives a huge versatility when
 See the demo for a better understanding on [how to build Jenkinsfile Runner with Custom WAR Packager](demo/cwp).
 
 Once the docker image is generated you can execute it in the same way as a Vanilla image with the only exception of the master workspace.
-If you are interested in mapping a volume and having access to it, both the -v docker option and the --runworkspace options needs to be specified.
+The default directory is `/build` as well but it can be overridden using the `--runworkspace` Jenkinsfile Runner option.
 
 A special case worth mentioning is the joint use of Custom War Packager and [Dependabot](https://dependabot.com) to maintain your docker image up to date.
 Custom War Packager offers the capability to [generate the Jenkinsfile Runner docker image through a pom file](https://github.com/jenkinsci/custom-war-packager/tree/master/demo/artifact-manager-s3-pom).
