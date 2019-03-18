@@ -43,7 +43,7 @@ docker run --rm -e DEBUG=true -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-r
 ```
 
 In case you are having issues when the Docker image is generated in another way (for example through [Custom WAR Packager](https://github.com/jenkinsci/custom-war-packager/)),
-you can directly pass `JAVA_OPTS` to the Docker run arguments:
+you can directly pass `JAVA_OPTS` using the Docker run arguments:
 
 ```bash
 docker run --rm -e JAVA_OPTS='-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005' -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
