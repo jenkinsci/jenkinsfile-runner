@@ -47,3 +47,5 @@ you can directly pass `JAVA_OPTS` to the Docker run arguments:
 
 ```bash
 docker run --rm -e JAVA_OPTS='-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005' -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
+```
+
