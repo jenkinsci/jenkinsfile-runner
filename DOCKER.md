@@ -33,7 +33,7 @@ root@dec4c0f12478:/src# /app/bin/jenkinsfile-runner -w /tmp/jenkins -p /usr/shar
 ```
 
 ## Debug
-In case you want to debug Jenkinsfile Runner, you need to use the Vanilla Docker image built following the steps mentioned in the section above.
+In case you want to debug Jenkinsfile Runner, you need to use the "Vanilla" Docker image built following the steps mentioned in the section above.
 
 Then, set the `DEBUG` environment variable and expose the port where to connect the remote debug. Note Jenkinsfile Runner itself
 considers 5005 as debugging port but you can map such port to whatever value you prefer through Docker port mapping.
