@@ -160,6 +160,14 @@ Advanced options:
   However it is possible to override that directory if both the `-v` docker option and the `--runworkspace` Jenkinsfile Runner option are specified.
 * The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
 
+## Docker build
+
+    docker build -t jenkins/jenkinsfile-runner .
+
+During development you can reuse the local machine build instead of doing a full build from scratch
+
+    docker build -t jenkins/jenkinsfile-runner:dev -f Dockerfile-dev .
+
 ## Reporting issues
 
 Jenkinsfile Runner uses [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects.
@@ -172,3 +180,4 @@ If you see a security issue in the component, please follow the [vulnerability r
 * [Implementation Note](IMPLEMENTATION.md)
 * [Contributing to Jenkinsfile Runner](CONTRIBUTING.md)
 * [Architecture overview](DEVELOPER.md)
+

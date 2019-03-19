@@ -1,4 +1,4 @@
-ARG JENKINS_VERSION=2.121.1
+ARG JENKINS_VERSION=2.150.3
 
 # Define maven version for other stages
 FROM maven:3.5.2 as maven
@@ -22,9 +22,19 @@ COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
 ADD . /jenkinsfile-runner
 RUN cd /jenkinsfile-runner && mvn package
 
-FROM jenkins/jenkins:${JENKINS_VERSION}
+FROM jenkins/jenkins:${JENKINS_VERSION} as jenkins
 USER root
-RUN mkdir /app && unzip /usr/share/jenkins/jenkins.war -d /app/jenkins
+# Delete big files not needed
+RUN mkdir /app && unzip /usr/share/jenkins/jenkins.war -d /app/jenkins && \
+  rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
+
+FROM openjdk:8-jdk
+ENV JENKINS_UC https://updates.jenkins.io
+USER root
+RUN mkdir -p /app /usr/share/jenkins/ref/plugins
+COPY --from=jenkins /app/jenkins /app/jenkins
+COPY --from=jenkins /usr/local/bin/install-plugins.sh /usr/local/bin/install-plugins.sh
+COPY --from=jenkins /usr/local/bin/jenkins-support /usr/local/bin/jenkins-support
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
