@@ -84,28 +84,30 @@ demos['databound'] = {
 
 parallel(demos)
 
-node('docker') {
-    def image
-    def imageName = 'jenkins/jenkinsfile-runner-experimental'
-    def imageTag
+def branchName = currentBuild.projectName
+if (!branchName.startsWith('PR-')) {
+    node('docker') {
+        def image
+        def imageName = 'jenkins/jenkinsfile-runner-experimental'
+        def imageTag
 
-    stage('Checkout') {
-        timestamps {
-            deleteDir()
-            checkout scm
-
-            sh 'git rev-parse HEAD > GIT_COMMIT'
-            shortCommit = readFile('GIT_COMMIT').take(6)
-            def imageTag = "${env.BUILD_ID}-build${shortCommit}"
-            echo "Creating the container ${imageName}:${imageTag}"
-            image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
-        }
-    }
-    
-    stage('Publish container') {
-        infra.withDockerCredentials {
+        stage('Checkout') {
             timestamps {
-                image.push();
+                deleteDir()
+                def scmVars = checkout scm
+
+                def shortCommit = scmVars.GIT_COMMIT
+                imageTag = "${env.BUILD_ID}-build${shortCommit}"
+                echo "Creating the container ${imageName}:${imageTag}"
+                image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+            }
+        }
+    
+        stage('Publish container') {
+            infra.withDockerCredentials {
+                timestamps {
+                    image.push();
+                }
             }
         }
     }
