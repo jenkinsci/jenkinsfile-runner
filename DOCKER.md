@@ -37,6 +37,8 @@ docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkinsfile-run
 ```
 
 It is also possible to pass arguments to the Jenkinsfile or to execute it outside a sandbox environment with the `-ns` and `-a` options.
+Using a non-sandbox environment may pose potential security risks.
+we strongly encourage you not to use this mode unless it is strictly necessary and always with extreme care and at your own risk.
 
 ```bash
 docker run --rm -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins -ns -a "my_param=any_value"
@@ -78,4 +80,4 @@ The default directory is `/build` as well but it can be overridden using the `--
 A special case worth mentioning is the joint use of Custom War Packager and [Dependabot](https://dependabot.com) to maintain your docker image up to date.
 Custom War Packager offers the capability to [generate the Jenkinsfile Runner docker image through a pom file](https://github.com/jenkinsci/custom-war-packager/tree/master/demo/artifact-manager-s3-pom).
 Setting the plugins as dependencies and configuring Dependabot to scan that pom.xml will keep the plugins for the image updated to their latest versions.
-This very one repository has Dependabot configured, so it could be used as reference. See [here](.dependabot)
+Both the [ci.jenkins.io-runner repository](https://github.com/jenkinsci/ci.jenkins.io-runner) and this very one repository has [Dependabot configured]](.dependabot), so they could be used as reference.

@@ -120,9 +120,9 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
                            directory. Defaults to plugins.txt.
  -v (--version) VAL      : jenkins version to use. Defaults to latest LTS.
  -w (--jenkins-war) FILE : path to jenkins.war or exploded jenkins war directory
-```
 
-where `--runWorkspace`, `-ns` and `-a` are optional.
+where `-a`, `-ns`, `--runWorkspace` and `-v` are optional.
+```
 
 ###  Passing parameters
 Any parameter values, for parameters defined on workflow job within `parameters` statement
