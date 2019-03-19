@@ -55,7 +55,6 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
-
 stage('Verify demos')
 Map demos = [:]
 demos['cwp'] = {
@@ -84,3 +83,30 @@ demos['databound'] = {
 }
 
 parallel(demos)
+
+node('docker') {
+    def image
+    def imageName = 'jenkins/jenkinsfile-runner-experimental'
+    def imageTag
+
+    stage('Checkout') {
+        timestamps {
+            deleteDir()
+            checkout scm
+
+            sh 'git rev-parse HEAD > GIT_COMMIT'
+            shortCommit = readFile('GIT_COMMIT').take(6)
+            def imageTag = "${env.BUILD_ID}-build${shortCommit}"
+            echo "Creating the container ${imageName}:${imageTag}"
+            image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+        }
+    }
+    
+    stage('Publish container') {
+        infra.withDockerCredentials {
+            timestamps {
+                image.push();
+            }
+        }
+    }
+}
