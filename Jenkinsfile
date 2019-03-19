@@ -91,7 +91,7 @@ if (!branchName.startsWith('PR-')) {
         def imageName = 'jenkins/jenkinsfile-runner-experimental'
         def imageTag
 
-        stage('Checkout') {
+        stage('Build container') {
             timestamps {
                 deleteDir()
                 def scmVars = checkout scm
