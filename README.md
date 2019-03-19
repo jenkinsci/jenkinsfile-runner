@@ -8,14 +8,22 @@ The intend use cases include:
 
 [CHANGELOG](CHANGELOG.md)
 
-## Build
-Currently there's no released distribution, so you must first build this code:
+## Usage in command-line
+Jenkinsfile Runner can be run in command line or in Docker.
+In case you want to run it in command line just follow these steps:
+
+1. Download the jar file available in [artifactory](https://repo.jenkins-ci.org/webapp/#/home) or build the source code from this repository
+2. Prepare the execution environment
+3. Run the command
+
+### Build
+To build this code just use maven as follows:
 ```
 mvn package
 ```
 This will produce the distribution in `app/target/appassembler`.
 
-## Preparation
+### Preparation
 Find `jenkins.war` that represents the version of Jenkins that you'd like to use,
 then unzip it somewhere.
 ```
@@ -32,26 +40,9 @@ JENKINS_HOME=/tmp/jenkins_home java -jar jenkins.war
 # and install the recommended set of plugins
 ```
 
-## Usage
+### Execution
 Say you have your Git repository checked out at `~/foo` that contains `Jenkinsfile` and your source code.
 You can now run Jenkinsfile Runner like this:
-
-### Usage in Docker
-
-See the demos.
-Once Docker image is built, Jenkinsfile Runner can be launched simply as...
-
-```
-    docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_IMAGE}
-```
-
-Advanced options:
-
-* `JAVA_OPTS` environment variable can be passed to pass extra options to the image
-* In the suggested `Dockerfile` the master workspace is mapped to `/build`.
-  This directory can be exposed as a volume.
-
-### Usage in command-line
 
 ```
 $ cat ~/foo/Jenkinsfile
@@ -109,13 +100,33 @@ Finished: SUCCESS
 The exit code reflects the result of the build. The `test` directory of this workspace includes a very simple
 example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 
-### Passing parameters
+### CLI options
+The executable of Jenkinsfile Runner allows its invocation with these cli options:
 
+```
+ # Usage: jenkinsfile-runner -w [warPath] -p [pluginsDirPath] -f [jenkinsfilePath] [other options]
+ --runWorkspace FILE     : Path to the workspace of the run to be used within
+                           the node{} context. It applies to both Jenkins
+                           master and agents (or side containers) if any.
+                           Requires Jenkins 2.119 or above
+ -a (--arg)              : Parameters to be passed to workflow job. Use
+                           multiple -a switches for multiple params
+ -f (--file) FILE        : Path to Jenkinsfile (or directory containing a
+                           Jenkinsfile) to run, default to ./Jenkinsfile.
+ -ns (--no-sandbox)      : Disable workflow job execution within sandbox
+                           environment
+ -p (--plugins) FILE     : plugins required to run pipeline. Either a
+                           plugins.txt file or a /plugins installation
+                           directory. Defaults to plugins.txt.
+ -v (--version) VAL      : jenkins version to use. Defaults to latest LTS.
+ -w (--jenkins-war) FILE : path to jenkins.war or exploded jenkins war directory
+
+where `-a`, `-ns`, `--runWorkspace` and `-v` are optional.
+```
+
+###  Passing parameters
 Any parameter values, for parameters defined on workflow job within `parameters` statement
 can be passed to the Jenkinsfile Runner using `-a` or `--arg` switches in key=value format. 
-
-Passing parameters defined within `parameters` section of the pipeline is optional. 
-
 
 ```
 $ ./app/target/appassembler/bin/jenkinsfile-runner \
@@ -127,9 +138,27 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
   -a "param2=value2"
 ```
 
-## Demo
+## Usage in Docker
+See the demos and the [Packaging into Docker image](DOCKER.md) page for further detail.
 
-* [Building Jenkinsfile Runner with Custom WAR Packager](demo/cwp)
+### Build the docker image
+You can build your customized Jenkinsfile Runner image using the Vanilla Dockerfile included in this repository or [with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
+
+### Execution
+Once the Docker image is built, Jenkinsfile Runner can be launched simply as...
+
+```
+    docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_IMAGE}
+```
+
+Advanced options:
+
+* `JAVA_OPTS` environment variable can be passed to pass extra options to the image
+* In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
+  This directory can be exposed as a volume.
+  The docker image generated with Custom War Packager maps the workspace to `/build` by default and it can be exposed as well.
+  However it is possible to override that directory if both the `-v` docker option and the `--runworkspace` Jenkinsfile Runner option are specified.
+* The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
 
 ## Docker build
 
@@ -148,9 +177,7 @@ If you see a security issue in the component, please follow the [vulnerability r
 
 ## Further reading
 
-* [Packaging into Docker image](DOCKER.md)
 * [Implementation Note](IMPLEMENTATION.md)
-* [Building Jenkinsfile Runner images with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
 * [Contributing to Jenkinsfile Runner](CONTRIBUTING.md)
 * [Architecture overview](DEVELOPER.md)
 
