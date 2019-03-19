@@ -18,7 +18,7 @@ to avoid using stale layers
 
 The optional `JENKINS_VERSION` specifies the version of Jenkins core.
 
-Notice that the master workspace is mapped to `/build`.
+Note that the master workspace is mapped to `/build` by default.
 This directory can be exposed as a volume.
 
 
@@ -29,8 +29,8 @@ Run the image by providing path to `Jenkinsfile` . For example,
 docker run --rm -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
 ```
 
-In same cases you can be interested in passing extra options.
-It can be done passing the `JAVA_OPTS` environment variable.
+In same cases you may be interested in passing extra options.
+Use the `JAVA_OPTS` environment variable to do that.
 
 ```bash
 docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins

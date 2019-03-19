@@ -104,7 +104,7 @@ example of Jenkinsfile that can be used to demo Jenkinsfile Runner.
 The executable of Jenkinsfile Runner allows its invocation with these cli options:
 
 ```
- # Usage: jenkinsfile-runner
+ # Usage: jenkinsfile-runner -w [warPath] -p [pluginsDirPath] -f [jenkinsfilePath] [other options]
  --runWorkspace FILE     : Path to the workspace of the run to be used within
                            the node{} context. It applies to both Jenkins
                            master and agents (or side containers) if any.
@@ -145,7 +145,7 @@ See the demos and the [Packaging into Docker image](DOCKER.md) page for further 
 You can build your customized Jenkinsfile Runner image using the Vanilla Dockerfile included in this repository or [with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
 
 ### Execution
-Once Docker image is built, Jenkinsfile Runner can be launched simply as...
+Once the Docker image is built, Jenkinsfile Runner can be launched simply as...
 
 ```
     docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_IMAGE}
