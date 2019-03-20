@@ -102,6 +102,7 @@ node('docker') {
     }
 
     def branchName = currentBuild.projectName
+    // TODO: Update when PR-99 is merged
     if (branchName.startsWith('master') || branchName.startsWith('PR-99')) {    
         stage('Publish container') {
             infra.withDockerCredentials {
