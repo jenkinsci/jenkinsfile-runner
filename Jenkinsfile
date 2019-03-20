@@ -54,7 +54,8 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
-stage('Verify demos')
+// TODO Restore once JENKINS-56632 is done
+/*stage('Verify demos')
 Map demos = [:]
 demos['cwp'] = {
     node('docker') {
@@ -81,7 +82,7 @@ demos['databound'] = {
     }
 }
 
-parallel(demos)
+parallel(demos)*/
 
 node('docker') {
     def image
