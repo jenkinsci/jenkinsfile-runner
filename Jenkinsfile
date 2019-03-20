@@ -84,25 +84,25 @@ demos['databound'] = {
 
 parallel(demos)
 
-def branchName = currentBuild.projectName
-if (!branchName.startsWith('PR-')) {
-    node('docker') {
-        def image
-        def imageName = 'jenkins/jenkinsfile-runner-experimental'
-        def imageTag
+node('docker') {
+    def image
+    def imageName = '${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner'
+    def imageTag
 
-        stage('Build container') {
-            timestamps {
-                deleteDir()
-                def scmVars = checkout scm
+    stage('Build container') {
+        timestamps {
+            deleteDir()
+            def scmVars = checkout scm
 
-                def shortCommit = scmVars.GIT_COMMIT
-                imageTag = branchName.equals("master") ? "latest" : branchName
-                echo "Creating the container ${imageName}:${imageTag}"
-                image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
-            }
+            def shortCommit = scmVars.GIT_COMMIT
+            imageTag = branchName.equals("master") ? "latest" : branchName
+            echo "Creating the container ${imageName}:${imageTag}"
+            image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
         }
-    
+    }
+
+    def branchName = currentBuild.projectName
+    if (branchName.startsWith('master') || branchName.startsWith('PR-99')) {    
         stage('Publish container') {
             infra.withDockerCredentials {
                 timestamps {
