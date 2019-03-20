@@ -97,7 +97,7 @@ if (!branchName.startsWith('PR-')) {
                 def scmVars = checkout scm
 
                 def shortCommit = scmVars.GIT_COMMIT
-                imageTag = "${env.BUILD_ID}-build${shortCommit}"
+                imageTag = branchName.equals("master") ? "latest" : branchName
                 echo "Creating the container ${imageName}:${imageTag}"
                 image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
             }
