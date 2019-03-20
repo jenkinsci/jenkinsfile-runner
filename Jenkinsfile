@@ -26,11 +26,10 @@ for (int i = 0; i < platforms.size(); ++i) {
                         'PATH+JDK=$JAVA_HOME/bin',
                     ]) {
                         timeout(30) {
-                            String command = 'mvn --batch-mode clean install -Dmaven.test.failure.ignore=true -Denvironment=test'
+                            String command = 'mvn --batch-mode clean package -Dmaven.test.failure.ignore=true -Denvironment=test'
                             if (isUnix()) {
                                 sh command
-                            }
-                            else {
+                            } else {
                                 bat command
                             }
                         }
