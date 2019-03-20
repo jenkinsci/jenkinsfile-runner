@@ -86,7 +86,7 @@ parallel(demos)*/
 
 node('docker') {
     def image
-    def imageName = '${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner'
+    def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
     def imageTag
     def branchName = currentBuild.projectName
 
