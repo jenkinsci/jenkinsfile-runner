@@ -88,6 +88,7 @@ node('docker') {
     def image
     def imageName = '${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner'
     def imageTag
+    def branchName = currentBuild.projectName
 
     stage('Build container') {
         timestamps {
@@ -101,7 +102,6 @@ node('docker') {
         }
     }
 
-    def branchName = currentBuild.projectName
     // TODO: Update when PR-99 is merged
     if (branchName.startsWith('master') || branchName.startsWith('PR-99')) {    
         stage('Publish container') {
