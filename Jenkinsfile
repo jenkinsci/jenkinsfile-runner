@@ -85,27 +85,27 @@ demos['databound'] = {
 parallel(demos)*/
 
 node('docker') {
-    def image
-    def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
-    def imageTag
-    def branchName = currentBuild.projectName
+    infra.withDockerCredentials {
+        def image
+        def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
+        def imageTag
+        def branchName = currentBuild.projectName
 
-    stage('Build container') {
-        timestamps {
-            deleteDir()
-            def scmVars = checkout scm
+        stage('Build container') {
+            timestamps {
+                deleteDir()
+                def scmVars = checkout scm
 
-            def shortCommit = scmVars.GIT_COMMIT
-            imageTag = branchName.equals("master") ? "latest" : branchName
-            echo "Creating the container ${imageName}:${imageTag}"
-            image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+                def shortCommit = scmVars.GIT_COMMIT
+                imageTag = branchName.equals("master") ? "latest" : branchName
+                echo "Creating the container ${imageName}:${imageTag}"
+                image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+            }
         }
-    }
 
-    // TODO: Update when PR-99 is merged
-    if (branchName.startsWith('master') || branchName.startsWith('PR-99')) {    
-        stage('Publish container') {
-            infra.withDockerCredentials {
+        // TODO: Update when PR-99 is merged
+        if (branchName.startsWith('master') || branchName.startsWith('PR-99')) {    
+            stage('Publish container') {
                 timestamps {
                     image.push();
                 }
