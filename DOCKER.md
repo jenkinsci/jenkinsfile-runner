@@ -80,11 +80,11 @@ The default directory is `/build` as well but it can be overridden using the `--
 A special case worth mentioning is the joint use of Custom War Packager and [Dependabot](https://dependabot.com) to maintain your docker image up to date.
 Custom War Packager offers the capability to [generate the Jenkinsfile Runner docker image through a pom file](https://github.com/jenkinsci/custom-war-packager/tree/master/demo/artifact-manager-s3-pom).
 Setting the plugins as dependencies and configuring Dependabot to scan that pom.xml will keep the plugins for the image updated to their latest versions.
-The [ci.jenkins.io-runner repository](https://github.com/jenkinsci/ci.jenkins.io-runner) can be used as reference:
+The [ci.jenkins.io-runner project](https://github.com/jenkinsci/ci.jenkins.io-runner) can be used as reference:
 
-* The ci.jenkins.io-runner repository makes use of Custom War Packager to build its own docker image.
+* The ci.jenkins.io-runner project makes use of Custom War Packager to build its own Jenkinsfile Runner image.
 See the [Makefile](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/master/Makefile#L39-L42).
-* The [packager-config.yml](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/master/packager-config.yml#L7-L9) file configures the build settings so the `dependencies` section from the pom file in the repository is used as source of the list of plugins to install in the Jenkinsfile Runner image that will be built and run later.
+* The [packager-config.yml](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/master/packager-config.yml#L7-L9) file configures the build settings so that the list of plugins to install in the Jenkinsfile Runner image is gathered from the`dependencies` section in the pom file in the repository.
 * Dependabot is configured to scan all the dependencies in pom.xml and Dockerfile files so it will open one pull request per each dependency susceptible to be updated.
 
 This very one repository has Dependabot configured as well and it could be used as another reference.
