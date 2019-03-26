@@ -83,8 +83,8 @@ Setting the plugins as dependencies and configuring Dependabot to scan that pom.
 The [ci.jenkins.io-runner project](https://github.com/jenkinsci/ci.jenkins.io-runner) can be used as reference:
 
 * The ci.jenkins.io-runner project makes use of Custom War Packager to build its own Jenkinsfile Runner image.
-See the [Makefile](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/master/Makefile#L39-L42).
-* The [packager-config.yml](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/master/packager-config.yml#L7-L9) file configures the build settings so that the list of plugins to install in the Jenkinsfile Runner image is gathered from the`dependencies` section in the pom file in the repository.
+See the [Makefile](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/66c959ca68aa3379d8eb2bdae39c884adf1fe908/Makefile#L39-L42).
+* The [packager-config.yml](https://github.com/jenkinsci/ci.jenkins.io-runner/blob/eb571f5594708c3fbad167032326765257398354/packager-config.yml#L7-L9) file configures the build settings so that the list of plugins to install in the Jenkinsfile Runner image is gathered from the`dependencies` section in the pom file in the repository.
 * Dependabot is configured to scan all the dependencies in pom.xml and Dockerfile files so it will open one pull request per each dependency susceptible to be updated.
 
 This very one repository has Dependabot configured as well and it could be used as another reference.
