@@ -1,0 +1,17 @@
+
+stage('Execute with JDK11') {
+    node {
+        // Simple program to demonstrate JDK 11 features can be used
+        def jdk11SourceCode = 'public class Java10Compatible{public static void main(String[] args){var message = "Hello world";System.out.println(message);}}'
+        writeFile file: 'simpleProgram.java', text: jdk11SourceCode
+
+        sh 'java simpleProgram.java'
+
+        // Demonstrate CPU and memory limitations are taken into account
+        jdk11SourceCode = 'public class Processors{public static void main(String[] args){System.out.println(String.format("Processors - %d", Runtime.getRuntime().availableProcessors()));}}'
+        writeFile file: 'processors.java', text: jdk11SourceCode
+
+        sh 'java processors.java'
+        sh 'java -XX:+PrintFlagsFinal -version | grep MaxHeapSize'
+    }
+}
