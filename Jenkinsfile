@@ -89,7 +89,6 @@ demos['databound'] = {
         }
     }
 }
-
 parallel(demos)
 
 node('docker') {
