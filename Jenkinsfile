@@ -50,8 +50,6 @@ for (int i = 0; i < platforms.size(); ++i) {
                         //  findbugs pattern: '**/target/findbugsXml.xml'
                         //}
                     }
-
-                    deleteDir()
                 }
             }
         }
@@ -73,8 +71,6 @@ demos['cwp'] = {
                         sh "make clean buildInDocker run"
                     }
                 }
-
-                deleteDir()
             }
         }
     }
@@ -89,8 +85,6 @@ demos['databound'] = {
                         sh "make clean buildInDocker run"
                     }
                 }
-
-                deleteDir()
             }
         }
     }
@@ -124,8 +118,6 @@ node('docker') {
                 }
             }
         }
-
-        deleteDir()
     }
 }
 
