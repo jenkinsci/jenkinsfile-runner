@@ -18,37 +18,41 @@ for (int i = 0; i < platforms.size(); ++i) {
     branches[label] = {
         node(label) {
             timestamps {
-                dir("platform_${label}_${branchName}_${buildNumber}") {
-                    stage('Checkout') {
-                        checkout scm
-                    }
+                ws("platform_${label}_${branchName}_${buildNumber}") {
+                    try {
+                        stage('Checkout') {
+                            checkout scm
+                        }
 
-                    stage('Build') {
-                        withEnv([
-                            "JAVA_HOME=${tool 'jdk8'}",
-                            "PATH+MVN=${tool 'mvn'}/bin",
-                            'PATH+JDK=$JAVA_HOME/bin',
-                        ]) {
-                            timeout(30) {
-                                String command = 'mvn --batch-mode clean package -Dmaven.test.failure.ignore=true -Denvironment=test'
-                                if (isUnix()) {
-                                    sh command
-                                } else {
-                                    bat command
+                        stage('Build') {
+                            withEnv([
+                                "JAVA_HOME=${tool 'jdk8'}",
+                                "PATH+MVN=${tool 'mvn'}/bin",
+                                'PATH+JDK=$JAVA_HOME/bin',
+                            ]) {
+                                timeout(30) {
+                                    String command = 'mvn --batch-mode clean package -Dmaven.test.failure.ignore=true -Denvironment=test'
+                                    if (isUnix()) {
+                                        sh command
+                                    } else {
+                                        bat command
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    // TODO: Add some tests first
-                    stage('Archive') {
-                        /* Archive the test results */
-                        // junit '**/target/surefire-reports/TEST-*.xml'
+                        // TODO: Add some tests first
+                        stage('Archive') {
+                            /* Archive the test results */
+                            // junit '**/target/surefire-reports/TEST-*.xml'
 
-                        //if (label == 'linux') {
-                        //  archiveArtifacts artifacts: '**/target/**/*.jar'
-                        //  findbugs pattern: '**/target/findbugsXml.xml'
-                        //}
+                            //if (label == 'linux') {
+                            //  archiveArtifacts artifacts: '**/target/**/*.jar'
+                            //  findbugs pattern: '**/target/findbugsXml.xml'
+                            //}
+                        }
+                    } finally {
+                        cleanWs()
                     }
                 }
             }
@@ -64,12 +68,16 @@ Map demos = [:]
 demos['cwp'] = {
     node('docker') {
         timestamps {
-            dir("cwp_${branchName}_${buildNumber}") {
-                checkout scm
-                stage('CWP') {
-                    dir('demo/cwp') {
-                        sh "make clean buildInDocker run"
+            ws("cwp_${branchName}_${buildNumber}") {
+                try {
+                    checkout scm
+                    stage('CWP') {
+                        dir('demo/cwp') {
+                            sh "make clean buildInDocker run"
+                        }
                     }
+                } finally {
+                    cleanWs()
                 }
             }
         }
@@ -78,12 +86,16 @@ demos['cwp'] = {
 demos['databound'] = {
     node('docker') {
         timestamps {
-            dir("databound_${branchName}_${buildNumber}") {
-                checkout scm
-                stage('Databound') {
-                    dir('demo/databound') {
-                        sh "make clean buildInDocker run"
+            ws("databound_${branchName}_${buildNumber}") {
+                try {
+                    checkout scm
+                    stage('Databound') {
+                        dir('demo/databound') {
+                            sh "make clean buildInDocker run"
+                        }
                     }
+                } finally {
+                    cleanWs()
                 }
             }
         }
@@ -92,30 +104,34 @@ demos['databound'] = {
 parallel(demos)
 
 node('docker') {
-    dir("container_${branchName}_${buildNumber}") {
-        infra.withDockerCredentials {
-            def image
-            def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
-            def imageTag
+    ws("container_${branchName}_${buildNumber}") {
+        try {
+            infra.withDockerCredentials {
+                def image
+                def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
+                def imageTag
 
-            stage('Build container') {
-                timestamps {
-                    def scmVars = checkout scm
-
-                    def shortCommit = scmVars.GIT_COMMIT
-                    imageTag = branchName.equals("master") ? "latest" : branchName
-                    echo "Creating the container ${imageName}:${imageTag}"
-                    image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
-                }
-            }
-
-            if (branchName.startsWith('master')) {
-                stage('Publish container') {
+                stage('Build container') {
                     timestamps {
-                        image.push();
+                        def scmVars = checkout scm
+
+                        def shortCommit = scmVars.GIT_COMMIT
+                        imageTag = branchName.equals("master") ? "latest" : branchName
+                        echo "Creating the container ${imageName}:${imageTag}"
+                        image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+                    }
+                }
+
+                if (branchName.startsWith('master')) {
+                    stage('Publish container') {
+                        timestamps {
+                            image.push();
+                        }
                     }
                 }
             }
+        } finally {
+            cleanWs()
         }
     }
 }
