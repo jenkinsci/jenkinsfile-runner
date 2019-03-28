@@ -26,11 +26,10 @@ for (int i = 0; i < platforms.size(); ++i) {
                         'PATH+JDK=$JAVA_HOME/bin',
                     ]) {
                         timeout(30) {
-                            String command = 'mvn --batch-mode clean install -Dmaven.test.failure.ignore=true -Denvironment=test'
+                            String command = 'mvn --batch-mode clean package -Dmaven.test.failure.ignore=true -Denvironment=test'
                             if (isUnix()) {
                                 sh command
-                            }
-                            else {
+                            } else {
                                 bat command
                             }
                         }
@@ -55,8 +54,8 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
-
-stage('Verify demos')
+// TODO Restore once JENKINS-56632 is done
+/*stage('Verify demos')
 Map demos = [:]
 demos['cwp'] = {
     node('docker') {
@@ -83,4 +82,35 @@ demos['databound'] = {
     }
 }
 
-parallel(demos)
+parallel(demos)*/
+
+node('docker') {
+    infra.withDockerCredentials {
+        def image
+        def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
+        def imageTag
+        def branchName = currentBuild.projectName
+
+        stage('Build container') {
+            timestamps {
+                deleteDir()
+                def scmVars = checkout scm
+
+                def shortCommit = scmVars.GIT_COMMIT
+                imageTag = branchName.equals("master") ? "latest" : branchName
+                echo "Creating the container ${imageName}:${imageTag}"
+                image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+            }
+        }
+
+        // TODO: Update when PR-99 is merged
+        if (branchName.startsWith('master') || branchName.startsWith('PR-99')) {    
+            stage('Publish container') {
+                timestamps {
+                    image.push();
+                }
+            }
+        }
+    }
+}
+
