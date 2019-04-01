@@ -28,7 +28,7 @@ USER root
 RUN mkdir /app && unzip /usr/share/jenkins/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 
-FROM openjdk:8-jdk
+FROM openjdk:12-jdk
 ENV JENKINS_UC https://updates.jenkins.io
 USER root
 RUN mkdir -p /app /usr/share/jenkins/ref/plugins
