@@ -41,7 +41,7 @@ public class Bootstrap {
     @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-v" })
     public File warDir;
 
-    @Option(name = "-v", aliases = { "--version"}, usage = "jenkins version to use (only in case 'warDir' is null). Defaults to latest LTS.")
+    @Option(name = "-v", aliases = { "--version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
     public String version;
     /**
      * Where to load plugins from?
