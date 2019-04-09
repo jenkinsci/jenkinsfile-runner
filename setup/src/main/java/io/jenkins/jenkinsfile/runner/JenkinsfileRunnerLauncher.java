@@ -4,6 +4,7 @@ import hudson.ClassicPluginStrategy;
 import hudson.security.ACL;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
+import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -34,6 +35,12 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
 
     public JenkinsfileRunnerLauncher(Bootstrap bootstrap) {
         this.bootstrap = bootstrap;
+        if(bootstrap.runHome != null) {
+            if(!bootstrap.runHome.isDirectory()) throw new IllegalArgumentException("--runHome is not a directory: " + bootstrap.runHome.getAbsolutePath());
+            if(bootstrap.runHome.list().length > 0) throw new IllegalArgumentException("--runHome directory is not empty: " + bootstrap.runHome.getAbsolutePath());
+            //Override homeLoader to use existing directory instead of creating temporary one
+            this.homeLoader = new HudsonHomeLoader.UseExisting(bootstrap.runHome);
+        }
     }
 
     /**
