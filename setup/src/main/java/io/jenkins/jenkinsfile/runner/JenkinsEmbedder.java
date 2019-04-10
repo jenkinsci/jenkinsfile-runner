@@ -80,7 +80,7 @@ import io.jenkins.jenkinsfile.runner.util.ExecutionEnvironment;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import io.jenkins.jenkinsfile.runner.util.JenkinsRecipe;
 import io.jenkins.jenkinsfile.runner.util.LenientRunnable;
-import io.jenkins.jenkinsfile.runner.util.SupportLogFormatter;
+import io.jenkins.lib.support_log_formatter.SupportLogFormatter;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
