@@ -162,7 +162,12 @@ Advanced options:
 * In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
   This directory can be exposed as a volume.
   The docker image generated with Custom War Packager maps the workspace to `/build` by default and it can be exposed as well.
-  However it is possible to override that directory if both the `-v` docker option and the `--runworkspace` Jenkinsfile Runner option are specified.
+  However it is possible to override that directory if both the `-v` docker option and the `--runWorkspace` Jenkinsfile Runner option are specified.
+* By default the JENKINS_HOME folder is randomly created and disposed afterwards. With the `--runHome` parameter in combination with the `-v` docker option it is possible to specify a folder.   
+  e.g. `docker run -v /local/Jenkinsfile:/workspace/Jenkinsfile -v /local/jenkinsHome:/jenkinsHome ${JENKINSFILE_RUNNER_IMAGE} --runHome /jenkinsHome`
+
+  This way you can access the build metadata in `<jenkinsHome>/jobs/job/builds/1`, like the build.xml, logs, and workflow data, even after the container finished.
+
 * The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
 
 ## Docker build
