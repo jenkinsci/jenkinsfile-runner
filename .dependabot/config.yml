@@ -11,7 +11,7 @@ update_configs:
 
   ignored_updates:
     - match:
-        dependency_name: "jenkins.version"
+        dependency_name: "org.jenkins-ci.main:jenkins-core"
 
 - package_manager: "docker"
   directory: "/"
