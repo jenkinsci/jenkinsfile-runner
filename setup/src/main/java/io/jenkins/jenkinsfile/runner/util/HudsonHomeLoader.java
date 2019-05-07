@@ -105,6 +105,22 @@ public interface HudsonHomeLoader {
     }
 
     /**
+     * Does not allocate a new directory but uses the specified one.
+     * Since TemporaryDirectoryAllocator is not used this folder will not be affected by the dispose() at the end.
+     */
+    final class UseExisting implements HudsonHomeLoader {
+        private final File source;
+
+        public UseExisting(File source) {
+            this.source = source;
+        }
+
+        public File allocate() throws Exception {
+            return source;
+        }
+    }
+
+    /**
      * Allocates a new directory by copying from a test resource
      */
     final class Local implements HudsonHomeLoader {

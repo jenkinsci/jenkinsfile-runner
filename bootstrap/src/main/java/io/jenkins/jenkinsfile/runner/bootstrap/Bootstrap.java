@@ -64,6 +64,14 @@ public class Bootstrap {
             "Requires Jenkins 2.119 or above")
     public File runWorkspace;
 
+    /**
+     * Jenkins Home for the Run.
+     */
+    @CheckForNull
+    @Option(name = "--runHome", usage = "Path to the empty Jenkins Home directory to use for this run. If not specified a temporary directory will be created. " +
+            "Note that the folder specified via --runHome will not be disposed after the run.")
+    public File runHome;
+
 
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull

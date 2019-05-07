@@ -105,6 +105,10 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
 
 ```
  # Usage: jenkinsfile-runner -w [warPath] -p [pluginsDirPath] -f [jenkinsfilePath] [other options]
+ --runHome FILE          : Path to the empty Jenkins Home directory to use for
+                           this run. If not specified a temporary directory
+                           will be created. Note that the folder specified via
+                           --runHome will not be disposed after the run.
  --runWorkspace FILE     : Path to the workspace of the run to be used within
                            the node{} context. It applies to both Jenkins
                            master and agents (or side containers) if any.
@@ -118,10 +122,11 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
  -p (--plugins) FILE     : plugins required to run pipeline. Either a
                            plugins.txt file or a /plugins installation
                            directory. Defaults to plugins.txt.
- -v (--version) VAL      : jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.
- -w (--jenkins-war) FILE : path to exploded jenkins war directory
+ -v (--version) VAL      : jenkins version to use (only in case 'warDir' is not
+                           specified). Defaults to latest LTS.
+ -w (--jenkins-war) FILE : path to exploded jenkins war directory.
 
-where `-a`, `-ns`, `--runWorkspace` and `-v` are optional.
+where `-a`, `-ns`, `--runHome`, `--runWorkspace` and `-v` are optional.
 ```
 
 ###  Passing parameters
@@ -157,7 +162,12 @@ Advanced options:
 * In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
   This directory can be exposed as a volume.
   The docker image generated with Custom War Packager maps the workspace to `/build` by default and it can be exposed as well.
-  However it is possible to override that directory if both the `-v` docker option and the `--runworkspace` Jenkinsfile Runner option are specified.
+  However it is possible to override that directory if both the `-v` docker option and the `--runWorkspace` Jenkinsfile Runner option are specified.
+* By default the JENKINS_HOME folder is randomly created and disposed afterwards. With the `--runHome` parameter in combination with the `-v` docker option it is possible to specify a folder.   
+  e.g. `docker run -v /local/Jenkinsfile:/workspace/Jenkinsfile -v /local/jenkinsHome:/jenkinsHome ${JENKINSFILE_RUNNER_IMAGE} --runHome /jenkinsHome`
+
+  This way you can access the build metadata in `<jenkinsHome>/jobs/job/builds/1`, like the build.xml, logs, and workflow data, even after the container finished.
+
 * The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
 
 ## Docker build
