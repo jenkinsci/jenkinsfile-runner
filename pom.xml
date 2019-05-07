@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.39</version>
+    <version>1.51</version>
     <relativePath />
   </parent>
 
@@ -60,8 +60,10 @@ THE SOFTWARE.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.89</jenkins.version>
-    <jetty.version>9.4.5.v20170502</jetty.version>
+    <jenkins.version>2.164.2</jenkins.version>
+    <jetty.version>9.4.12.v20180830</jetty.version>
+    <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
+    <findbugs.failOnError>false</findbugs.failOnError>
   </properties>
 
   <dependencyManagement>
@@ -85,12 +87,17 @@ THE SOFTWARE.
       <dependency>
         <groupId>org.jenkins-ci</groupId>
         <artifactId>symbol-annotation</artifactId>
-        <version>1.7</version>
+        <version>1.17</version>
       </dependency>
       <dependency>
         <groupId>org.jenkins-ci</groupId>
         <artifactId>annotation-indexer</artifactId>
         <version>1.12</version>
+      </dependency>
+      <dependency>
+        <groupId>args4j</groupId>
+        <artifactId>args4j</artifactId>
+        <version>2.33</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
