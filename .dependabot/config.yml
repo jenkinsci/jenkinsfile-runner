@@ -21,3 +21,7 @@ update_configs:
     - "varyvol"
     - "fcojfernandez"
     - "oleg-nenashev"
+    
+  ignored_updates:
+    - match:
+        dependency_name: "openjdk"
