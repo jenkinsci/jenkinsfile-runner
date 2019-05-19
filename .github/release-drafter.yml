@@ -36,3 +36,7 @@ replacers:
     replace: '[INFRA-$1](https://issues.jenkins-ci.org/browse/INFRA-$1)'
   - search: '/\[*WEBSITE-(\d+)\]*/g'
     replace: '[WEBSITE-$1](https://issues.jenkins-ci.org/browse/WEBSITE-$1)'
+  - search: '/CVE-(\d{4})-(\d+)/g'
+    replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
+  - search: 'JFR'
+    replace: 'Jenkinsfile Runner'
