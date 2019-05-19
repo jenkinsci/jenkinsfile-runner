@@ -12,11 +12,11 @@ categories:
   - title: 🚀 New features and improvements
     label: enhancement
   - title: 🐛 Bug Fixes
-    label: bug
-  - title: 📦 Dependency updates
-    label: dependencies
+    label: bugfix
   - title: 📝 Documentation updates
     label: documentation
+  - title: 📦 Dependency updates
+    label: dependencies
   - title: 🚦 Internal changes
     label: internal
 exclude-labels:
