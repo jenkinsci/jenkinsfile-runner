@@ -1,6 +1,8 @@
 name-template: $NEXT_MINOR_VERSION 🌈
 tag-template: $NEXT_MINOR_VERSION
 version-template: $MAJOR.$MINOR
+
+# https://gitmoji.carloscuesta.me/
 categories:
   - title: 🚨 Removed
     label: removed
@@ -9,14 +11,21 @@ categories:
   - title: 🚀 New features and improvements
     label: enhancement
   - title: 🐛 Bug Fixes
-    label: fix
+    label: bug
+  - title: :package: Dependency updates
+    label: dependencies
   - title: 📝 Documentation updates
     label: documentation
   - title: 🚦 Internal changes
     label: internal
 exclude-labels:
   - reverted
+  - no-changelog
 
 template: |
   ## Changes
   $CHANGES
+
+replacers:
+  - search: '/\[*JENKINS-(\d+)\]*/g'
+    replace: '[$1](https://issues.jenkins-ci.org/browse$1)'
