@@ -29,4 +29,4 @@ template: |
 
 replacers:
   - search: '/\[*JENKINS-(\d+)\]*/g'
-    replace: '[$1](https://issues.jenkins-ci.org/browse$1)'
+    replace: '[JENKINS-$1](https://issues.jenkins-ci.org/browse/JENKINS-$1) - '
