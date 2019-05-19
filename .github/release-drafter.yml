@@ -30,3 +30,5 @@ template: |
 replacers:
   - search: '/\[*JENKINS-(\d+)\]*/g'
     replace: '[JENKINS-$1](https://issues.jenkins-ci.org/browse/JENKINS-$1) - '
+- search: '/\[*INFRA-(\d+)\]*/g'
+    replace: '[INFRA-$1](https://issues.jenkins-ci.org/browse/INFRA-$1) - '
