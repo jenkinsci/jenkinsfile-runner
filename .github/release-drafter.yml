@@ -3,7 +3,7 @@ name-template: $NEXT_PATCH_VERSION
 tag-template: $NEXT_PATCH_VERSION
 version-template: $MAJOR.$MINOR-beta-$PATCH
 
-# https://gitmoji.carloscuesta.me/
+# Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
   - title: 🚨 Removed
     label: removed
@@ -28,9 +28,6 @@ exclude-labels:
 template: |
   ## Changes
   $CHANGES
-  
-  ## Previous release
-  $PREVIOUS_TAG
 
 replacers:
   - search: '/\[*JENKINS-(\d+)\]*/g'
