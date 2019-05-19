@@ -28,6 +28,9 @@ exclude-labels:
 template: |
   ## Changes
   $CHANGES
+  
+  ## Previous release
+  $PREVIOUS_TAG
 
 replacers:
   - search: '/\[*JENKINS-(\d+)\]*/g'
