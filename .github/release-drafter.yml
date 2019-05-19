@@ -43,3 +43,6 @@ replacers:
     replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
   - search: 'JFR'
     replace: 'Jenkinsfile Runner'
+  - search: 'CWP'
+    replace: 'Custom WAR Packager'
+ 
