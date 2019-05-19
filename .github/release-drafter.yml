@@ -1,9 +1,9 @@
 # Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
-name-template: $NEXT_MINOR_VERSION
-tag-template: $NEXT_MINOR_VERSION
-version-template: $MAJOR.$MINOR
+name-template: $NEXT_PATCH_VERSION
+tag-template: $NEXT_PATCH_VERSION
+version-template: $MAJOR.$MINOR-beta-$PATCH
 
-# https://gitmoji.carloscuesta.me/
+# Emoji reference: https://gitmoji.carloscuesta.me/
 categories:
   - title: 🚨 Removed
     label: removed
@@ -22,6 +22,8 @@ categories:
 exclude-labels:
   - reverted
   - no-changelog
+  - skip-changelog
+  - invalid
 
 template: |
   ## Changes
@@ -32,3 +34,9 @@ replacers:
     replace: '[JENKINS-$1](https://issues.jenkins-ci.org/browse/JENKINS-$1)'
   - search: '/\[*INFRA-(\d+)\]*/g'
     replace: '[INFRA-$1](https://issues.jenkins-ci.org/browse/INFRA-$1)'
+  - search: '/\[*WEBSITE-(\d+)\]*/g'
+    replace: '[WEBSITE-$1](https://issues.jenkins-ci.org/browse/WEBSITE-$1)'
+  - search: '/CVE-(\d{4})-(\d+)/g'
+    replace: 'https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2'
+  - search: 'JFR'
+    replace: 'Jenkinsfile Runner'
