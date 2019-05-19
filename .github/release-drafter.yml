@@ -13,7 +13,7 @@ categories:
     label: enhancement
   - title: 🐛 Bug Fixes
     label: bug
-  - title: :package: Dependency updates
+  - title: 📦 Dependency updates
     label: dependencies
   - title: 📝 Documentation updates
     label: documentation
