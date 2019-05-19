@@ -1,4 +1,5 @@
-name-template: $NEXT_MINOR_VERSION 🌈
+# Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
+name-template: $NEXT_MINOR_VERSION
 tag-template: $NEXT_MINOR_VERSION
 version-template: $MAJOR.$MINOR
 
