@@ -2,6 +2,7 @@
 # Configuration for Release Drafter: https://github.com/toolmantim/release-drafter
 name-template: $NEXT_PATCH_VERSION
 tag-template: $NEXT_PATCH_VERSION
+# TODO: Fix after the 1.0 release
 version-template: $MAJOR.$MINOR-beta-$PATCH
 
 # Emoji reference: https://gitmoji.carloscuesta.me/
