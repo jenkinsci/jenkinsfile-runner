@@ -1,5 +1,33 @@
 # Change Log
 
+## [1.0-beta-8] - 2019-05-18
+
+### 🚀 New features and improvements
+
+* Update jenkins core to 2.164.2, and update to recent plugins and libs (#115) @oleg-nenashev
+* Introduced --runHome to specify the runs JENKINS_HOME (#106) @alxsap
+* [JENKINS-55642](https://issues.jenkins-ci.org/browse/JENKINS-55642) - Create experimental "vanilla" Docker packages for the Vanilla version of Jenkinsfile Runner (#99) @fcojfernandez
+* [JENKINS-55227](https://issues.jenkins-ci.org/browse/JENKINS-55227) - Add a debug flag to Jenkinsfile Runner (#87) @fcojfernandez
+
+### 📝 Documentation updates
+
+* [JENKINS-56858](https://issues.jenkins-ci.org/browse/JENKINS-56858) - Clarify help text. (#104) @varyvol
+* Expand information about the joint use of Jenkinsfile Runner, Custom WAR Packager and Dependabot (#100) @fcojfernandez
+* [JENKINS-55663](https://issues.jenkins-ci.org/browse/JENKINS-55663) - Extend the Jenkinsfile Runner user documentation (#96) @fcojfernandez
+* [JENKINS-55227](https://issues.jenkins-ci.org/browse/JENKINS-55227) - Extends debug documentation (#95) @varyvol
+* [JENKINS-55664](https://issues.jenkins-ci.org/browse/JENKINS-55664) - Include developer documentation (#92) @varyvol
+* README: Document the issue reporting guidelines (#86) @oleg-nenashev
+
+### 📦 Dependency updates
+
+* Bump maven-hpi-plugin from 3.3 to 3.5 (#90, #117) @dependabot
+
+### 🚦 Internal changes
+
+* Using lib-support-log-formatter (#107) @jglick
+* [JENKINS-55994](https://issues.jenkins-ci.org/browse/JENKINS-55994) - Automated test more specific for java 11 (#102) @varyvol
+* Add a Dependabot configuration file (#93) @oleg-nenashev
+
 ## [1.0-beta-7] - 2019-02-20
 
 New features and bugfixes:
