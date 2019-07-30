@@ -71,7 +71,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom</artifactId>
-        <version>${jenkins.version}</version>
+        <version>2.176.2</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
