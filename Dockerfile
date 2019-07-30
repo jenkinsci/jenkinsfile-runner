@@ -1,4 +1,4 @@
-ARG JENKINS_VERSION=2.176.1
+ARG JENKINS_VERSION=2.176.2
 
 # Define maven version for other stages
 FROM maven:3.5.4 as maven

@@ -60,7 +60,7 @@ THE SOFTWARE.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.164.3</jenkins.version>
+    <jenkins.version>2.176.2</jenkins.version>
     <jetty.version>9.4.5.v20170502</jetty.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
@@ -68,6 +68,13 @@ THE SOFTWARE.
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.jenkins.tools.bom</groupId>
+        <artifactId>bom</artifactId>
+        <version>${jenkins.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
         <artifactId>commons-collections</artifactId>
@@ -83,12 +90,6 @@ THE SOFTWARE.
         <artifactId>slf4j-jdk14</artifactId>
         <version>1.7.25</version>
       </dependency>
-      <!-- Annotation engine which we want to keep at recent versions instead of ones bundled in the core -->
-      <dependency>
-        <groupId>org.jenkins-ci</groupId>
-        <artifactId>symbol-annotation</artifactId>
-        <version>1.17</version>
-      </dependency>
       <dependency>
         <groupId>org.jenkins-ci</groupId>
         <artifactId>annotation-indexer</artifactId>
@@ -98,6 +99,25 @@ THE SOFTWARE.
         <groupId>args4j</groupId>
         <artifactId>args4j</artifactId>
         <version>2.33</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.6</version>
+      </dependency>
+
+      <!--TODO(oleg-nenashev): Remove once in BOM -->
+      <dependency>
+        <groupId>org.jenkins-ci.plugins.workflow</groupId>
+        <artifactId>workflow-multibranch</artifactId>
+        <version>2.21</version>
+      </dependency>
+      <!--TODO(oleg-nenashev): Is it a valid use-case? Move to BOM if so -->
+      <dependency>
+        <groupId>org.jenkins-ci.plugins.workflow</groupId>
+        <artifactId>workflow-scm-step</artifactId>
+        <classifier>tests</classifier>
+        <version>2.4</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
