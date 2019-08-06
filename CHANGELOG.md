@@ -1,5 +1,12 @@
 # Change Log
 
+| WARNING: Changelogs have been moved to [GitHub Releases](https://github.com/jenkinsci/jenkinsfile-runner/releases) |
+| --- |
+
+## New releases
+
+See [GitHub Releases](https://github.com/jenkinsci/jenkinsfile-runner/releases).
+
 ## [1.0-beta-8] - 2019-05-18
 
 ### 🚀 New features and improvements
