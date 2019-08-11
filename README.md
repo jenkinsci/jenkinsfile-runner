@@ -1,6 +1,7 @@
 # Jenkinsfile Runner
 
 ![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/tag-pre/jenkinsci/jenkinsfile-runner)
+![Docker Pulls](https://img.shields.io/docker/pulls/jenkins4eval/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)
 
 Jenkinsfile Runner is an experiment to package Jenkins pipeline execution as a command line tool.
 The intend use cases include:
