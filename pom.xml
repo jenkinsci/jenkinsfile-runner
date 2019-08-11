@@ -113,13 +113,6 @@ THE SOFTWARE.
         <artifactId>workflow-multibranch</artifactId>
         <version>2.21</version>
       </dependency>
-      <!--TODO(oleg-nenashev): Is it a valid use-case? Move to BOM if so -->
-      <dependency>
-        <groupId>org.jenkins-ci.plugins.workflow</groupId>
-        <artifactId>workflow-scm-step</artifactId>
-        <classifier>tests</classifier>
-        <version>2.4</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
