@@ -15,7 +15,7 @@
         <!-- to treat executable-war type of artifact correctly -->
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.5</version>
+        <version>3.8</version>
         <extensions>true</extensions>
       </plugin>
     </plugins>
