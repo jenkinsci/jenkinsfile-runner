@@ -153,6 +153,11 @@ public class Bootstrap {
         if (this.workflowParameters == null){
             this.workflowParameters = new HashMap<>();
         }
+        for (Map.Entry<String, String> workflowParameter : this.workflowParameters.entrySet()) {
+            if (workflowParameter.getValue() == null) {
+                workflowParameter.setValue("");
+            }
+        }
     }
 
     private File getJenkinsWar() throws IOException {
