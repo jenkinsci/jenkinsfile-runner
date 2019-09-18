@@ -100,12 +100,12 @@ oneTimeTearDown() {
   docker_id=$(docker images -q "$jenkinsfile_runner_valid_tag")
   if [ ! -z "$docker_id" ]
   then
-    docker rmi -f "$docker_id"
+    docker rmi -f "$docker_id" || echo "WARNING: Cannot delete the test image $jenkinsfile_runner_valid_tag"
   fi
   docker_id=$(docker images -q "$jenkinsfile_runner_invalid_tag")
   if [ ! -z "$docker_id" ]
   then
-    docker rmi -f "$docker_id"
+    docker rmi -f "$docker_id" || echo "WARNING: Cannot delete the test image $jenkinsfile_runner_valid_tag"
   fi
 }
 
