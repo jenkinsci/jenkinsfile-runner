@@ -70,9 +70,8 @@ THE SOFTWARE.
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom</artifactId>
-        <!--WARNING: it is not a Jenkins core version. https://issues.jenkins-ci.org/browse/JENKINS-58770 -->
-        <version>2.176.2</version>
+        <artifactId>bom-2.176.x</artifactId>
+        <version>3</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
