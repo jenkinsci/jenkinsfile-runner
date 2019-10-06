@@ -1,7 +1,7 @@
 # Build the docker image using the local build in developer box
 # To avoid downloading everything from the internet and using developer's cache
 
-ARG JENKINS_VERSION=2.176.2
+ARG JENKINS_VERSION=2.198
 
 FROM jenkins/jenkins:${JENKINS_VERSION} as jenkins
 USER root
