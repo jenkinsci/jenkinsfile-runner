@@ -1,7 +1,7 @@
 # Jenkinsfile Runner
 
-![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/tag-pre/jenkinsci/jenkinsfile-runner)
-![Docker Pulls](https://img.shields.io/docker/pulls/jenkins4eval/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)
+[![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/tag-pre/jenkinsci/jenkinsfile-runner?label=changelog)](https://github.com/jenkinsci/jenkinsfile-runner/releases/latest)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jenkins4eval/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins4eval/jenkinsfile-runner)
 
 Jenkinsfile Runner is an experiment to package Jenkins pipeline execution as a command line tool.
 The intend use cases include:
@@ -9,8 +9,6 @@ The intend use cases include:
 * Use Jenkins in Function-as-a-Service context
 * Assist editing `Jenkinsfile` locally
 * Integration test shared libraries
-
-[CHANGELOG](https://github.com/jenkinsci/jenkinsfile-runner/releases)
 
 ## Usage in command-line
 Jenkinsfile Runner can be run in command line or in Docker.
