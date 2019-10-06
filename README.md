@@ -194,4 +194,5 @@ If you see a security issue in the component, please follow the [vulnerability r
 * [Implementation Note](IMPLEMENTATION.md)
 * [Contributing to Jenkinsfile Runner](CONTRIBUTING.md)
 * [Architecture overview](DEVELOPER.md)
+* Slides: [Under the hood of serverless Jenkins. Jenkinsfile Runner](https://docs.google.com/presentation/d/1y7YnAdnh5WY59g8oIGTsj8sLQ5KXgoV7uUCBkxcTU88/edit?usp=sharing)
 
