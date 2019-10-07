@@ -29,6 +29,8 @@ public class Bootstrap {
     public static final long CACHE_EXPIRE = System.currentTimeMillis() - 24 * 3600 * 1000;
     private static final String WORKSPACES_DIR_SYSTEM_PROPERTY = "jenkins.model.Jenkins.workspacesDir";
 
+    private static final String VERSION = "1.0-beta-10-SNAPSHOT";
+
     /**
      * This system property is set by the bootstrap script created by appassembler Maven plugin
      * to point to a local Maven repository.
@@ -80,6 +82,9 @@ public class Bootstrap {
     @Option(name = "-ns", aliases = { "--no-sandbox" }, usage = "Disable workflow job execution within sandbox environment")
     public boolean noSandBox;
 
+    @Option(name = "-v", aliases = { "--version" }, usage = "Prints the current Jenkinsfile Runner version")
+    public boolean showVersion;
+
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
         if (Boolean.getBoolean("start.pause")) {
@@ -107,6 +112,11 @@ public class Bootstrap {
 
     @PostConstruct
     private void postConstruct() throws IOException {
+
+        if (showVersion) {
+            System.out.println(VERSION);
+            System.exit(0);
+        }
 
         if (warDir == null) {
             warDir= getJenkinsWar();

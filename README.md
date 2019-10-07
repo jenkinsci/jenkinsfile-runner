@@ -127,6 +127,7 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
  -w (--jenkins-war) FILE     : path to exploded jenkins war directory.
+ -v (--version)              : Display the current version
 
 where `-a`, `-ns`, `--runHome`, `--runWorkspace` and `-jv` are optional.
 ```
