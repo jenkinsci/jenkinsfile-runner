@@ -107,28 +107,28 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
 
 ```
  # Usage: jenkinsfile-runner -w [warPath] -p [pluginsDirPath] -f [jenkinsfilePath] [other options]
- --runHome FILE          : Path to the empty Jenkins Home directory to use for
-                           this run. If not specified a temporary directory
-                           will be created. Note that the folder specified via
-                           --runHome will not be disposed after the run.
- --runWorkspace FILE     : Path to the workspace of the run to be used within
-                           the node{} context. It applies to both Jenkins
-                           master and agents (or side containers) if any.
-                           Requires Jenkins 2.119 or above
- -a (--arg)              : Parameters to be passed to workflow job. Use
-                           multiple -a switches for multiple params
- -f (--file) FILE        : Path to Jenkinsfile (or directory containing a
-                           Jenkinsfile) to run, default to ./Jenkinsfile.
- -ns (--no-sandbox)      : Disable workflow job execution within sandbox
-                           environment
- -p (--plugins) FILE     : plugins required to run pipeline. Either a
-                           plugins.txt file or a /plugins installation
-                           directory. Defaults to plugins.txt.
- -v (--version) VAL      : jenkins version to use (only in case 'warDir' is not
-                           specified). Defaults to latest LTS.
- -w (--jenkins-war) FILE : path to exploded jenkins war directory.
+ --runHome FILE              : Path to the empty Jenkins Home directory to use for
+                               this run. If not specified a temporary directory
+                               will be created. Note that the folder specified via
+                               --runHome will not be disposed after the run.
+ --runWorkspace FILE         : Path to the workspace of the run to be used within
+                               the node{} context. It applies to both Jenkins
+                               master and agents (or side containers) if any.
+                               Requires Jenkins 2.119 or above
+ -a (--arg)                  : Parameters to be passed to workflow job. Use
+                               multiple -a switches for multiple params
+ -f (--file) FILE            : Path to Jenkinsfile (or directory containing a
+                               Jenkinsfile) to run, default to ./Jenkinsfile.
+ -ns (--no-sandbox)          : Disable workflow job execution within sandbox
+                               environment
+ -p (--plugins) FILE         : plugins required to run pipeline. Either a
+                               plugins.txt file or a /plugins installation
+                               directory. Defaults to plugins.txt.
+ -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
+                               specified). Defaults to latest LTS.
+ -w (--jenkins-war) FILE     : path to exploded jenkins war directory.
 
-where `-a`, `-ns`, `--runHome`, `--runWorkspace` and `-v` are optional.
+where `-a`, `-ns`, `--runHome`, `--runWorkspace` and `-jv` are optional.
 ```
 
 ###  Passing parameters
