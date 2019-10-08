@@ -16,6 +16,7 @@ import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
+    private static final String RUNNER_CLASS_NAME = "io.jenkins.jenkinsfile.runner.Runner";
     private final Bootstrap bootstrap;
     /**
      * Keep the reference around to prevent them from getting GCed.
@@ -125,11 +127,7 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
         try {
             // so that test code has all the access to the system
             ACL.impersonate(ACL.SYSTEM);
-            ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
-                    .collectJars(new File(bootstrap.appRepo, "io/jenkins/jenkinsfile-runner/payload"))
-                    .make();
-
-            Class<?> c = cl.loadClass("io.jenkins.jenkinsfile.runner.Runner");
+            Class<?> c = bootstrap.hasClass(RUNNER_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
             returnCode = (int)c.getMethod("run", Bootstrap.class).invoke(c.newInstance(), bootstrap);
         } finally {
             after();
@@ -139,4 +137,11 @@ public class JenkinsfileRunnerLauncher extends JenkinsEmbedder {
         return returnCode;
     }
 
+    private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
+        ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
+                .collectJars(new File(bootstrap.getAppRepo(), "io/jenkins/jenkinsfile-runner/payload"))
+                .make();
+
+        return cl.loadClass(RUNNER_CLASS_NAME);
+    }
 }
