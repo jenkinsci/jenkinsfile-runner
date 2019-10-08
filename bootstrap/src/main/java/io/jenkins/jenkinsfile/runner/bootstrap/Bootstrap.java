@@ -38,8 +38,11 @@ public class Bootstrap {
     /**
      * Exploded jenkins.war
      */
-    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-v" })
+    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-v", "-h" })
     public File warDir;
+
+    @Option(name = "-h", aliases = { "--help"}, usage = "prints all help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
+    public boolean help;
 
     @Option(name = "-v", aliases = { "--version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
     public String version;
@@ -90,7 +93,7 @@ public class Bootstrap {
         CmdLineParser parser = new CmdLineParser(bootstrap);
         try {
             parser.parseArgument(args);
-            bootstrap.postConstruct();
+            bootstrap.postConstruct(parser);
             final int status = bootstrap.run();
             System.exit(status);
         } catch (CmdLineException e) {
@@ -106,10 +109,16 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    private void postConstruct() throws IOException {
+    private void postConstruct(CmdLineParser parser) throws IOException {
 
         if (warDir == null) {
             warDir= getJenkinsWar();
+        }
+        if (help) {
+            System.out.println("\nUsage: jenkinsfile-runner [options] [params]\n");
+            System.out.println("Options:");
+            parser.printUsage(System.out);
+            System.exit(0);
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
