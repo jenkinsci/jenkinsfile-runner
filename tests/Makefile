@@ -15,5 +15,6 @@ init:
 test:
 	./tests-cwp.sh
 	./tests-cwp-jdk11.sh
-	./tests-vanilla.sh
+# TODO(oleg-nenashev): Reenable once https://github.com/jenkinsci/jenkinsfile-runner/issues/185 is fixed
+#	./tests-vanilla.sh
 	./tests-negative-scenarios.sh
