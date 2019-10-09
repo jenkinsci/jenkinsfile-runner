@@ -52,6 +52,10 @@ execution engine, configuring the classloader properly.
 It also contains classes to implement or configure this "environment", such as a custom implementation for the Plugin Manager
 or a WAR exploder in charge of exploding the WAR file and fully initialising an instance.
 
+## `vanilla-package` module
+
+Defines the dependencies to be included into the Vanilla Docker distribution.
+
 ## `tests` module
 
 Contains the integration tests powered by the [Jenkinsfile Runner Test Framework](https://github.com/jenkinsci/jenkinsfile-runner-test-framework).
