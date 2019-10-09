@@ -63,12 +63,6 @@
       <artifactId>jenkins-war</artifactId>
       <version>${jenkins.version}</version>
       <type>executable-war</type>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jenkins-ci.modules</groupId>
-          <artifactId>sshd</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 </project>
