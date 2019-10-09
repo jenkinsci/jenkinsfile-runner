@@ -44,7 +44,7 @@ public class Bootstrap {
     public File warDir;
 
     @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
-    public String version;
+
     /**
      * Where to load plugins from?
      */
@@ -84,6 +84,9 @@ public class Bootstrap {
 
     @Option(name = "-v", aliases = { "--version" }, usage = "Prints the current Jenkinsfile Runner version")
     public boolean showVersion;
+  
+    @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
+    public boolean help;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -95,7 +98,7 @@ public class Bootstrap {
         CmdLineParser parser = new CmdLineParser(bootstrap);
         try {
             parser.parseArgument(args);
-            bootstrap.postConstruct();
+            bootstrap.postConstruct(parser);
             final int status = bootstrap.run();
             System.exit(status);
         } catch (CmdLineException e) {
@@ -111,7 +114,7 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    private void postConstruct() throws IOException {
+    private void postConstruct(CmdLineParser parser) throws IOException {
 
         if (showVersion) {
             System.out.println(getVersion());
@@ -120,6 +123,12 @@ public class Bootstrap {
 
         if (warDir == null) {
             warDir= getJenkinsWar();
+        }
+        if (help) {
+            System.out.println("\nUsage: jenkinsfile-runner [options] [params]\n");
+            System.out.println("Options:");
+            parser.printUsage(System.out);
+            System.exit(0);
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");

@@ -183,10 +183,14 @@ During development you can reuse the local machine build instead of doing a full
 
 ## Reporting issues
 
-Jenkinsfile Runner uses [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects.
+Jenkinsfile Runner [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects
 (project=`JENKINS`, component=`jenkinsfile-runner`).
-Please follow [these guidelines](https://wiki.jenkins.io/display/JENKINS/How+to+report+an+issue) when reporting issues.
+GitHub issues can be also used to report issues, but it is not recommended.
+For JIRA please follow [these guidelines](https://wiki.jenkins.io/display/JENKINS/How+to+report+an+issue) when reporting issues.
 If you see a security issue in the component, please follow the [vulnerability reporting guidelines](https://jenkins.io/security/#reporting-vulnerabilities).
+
+* [Open issues in Jenkins JIRa](https://issues.jenkins-ci.org/issues/?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened)%20AND%20component%20%3D%20jenkinsfile-runner)
+* [Open issues in GitHub](https://github.com/jenkinsci/jenkinsfile-runner/issues)
 
 ## Further reading
 
