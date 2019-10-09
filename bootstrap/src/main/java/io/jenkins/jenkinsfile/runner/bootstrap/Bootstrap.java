@@ -44,7 +44,8 @@ public class Bootstrap {
     public File warDir;
 
     @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
-
+    public String version;
+    
     /**
      * Where to load plugins from?
      */
