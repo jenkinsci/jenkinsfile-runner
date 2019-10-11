@@ -9,6 +9,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
@@ -18,6 +19,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -32,11 +34,12 @@ public class Bootstrap {
     /**
      * Exploded jenkins.war
      */
-    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-v" })
+    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-jv" })
     public File warDir;
 
-    @Option(name = "-v", aliases = { "--version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
+    @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
     public String version;
+    
     /**
      * Where to load plugins from?
      */
@@ -74,6 +77,12 @@ public class Bootstrap {
     @Option(name = "-ns", aliases = { "--no-sandbox" }, usage = "Disable workflow job execution within sandbox environment")
     public boolean noSandBox;
 
+    @Option(name = "-v", aliases = { "--version" }, usage = "Prints the current Jenkinsfile Runner version")
+    public boolean showVersion;
+  
+    @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
+    public boolean help;
+
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
         if (Boolean.getBoolean("start.pause")) {
@@ -84,7 +93,7 @@ public class Bootstrap {
         CmdLineParser parser = new CmdLineParser(bootstrap);
         try {
             parser.parseArgument(args);
-            bootstrap.postConstruct();
+            bootstrap.postConstruct(parser);
             final int status = bootstrap.run();
             System.exit(status);
         } catch (CmdLineException e) {
@@ -100,10 +109,21 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    private void postConstruct() throws IOException {
+    private void postConstruct(CmdLineParser parser) throws IOException {
+
+        if (showVersion) {
+            System.out.println(getVersion());
+            System.exit(0);
+        }
 
         if (warDir == null) {
             warDir= getJenkinsWar();
+        }
+        if (help) {
+            System.out.println("\nUsage: jenkinsfile-runner [options] [params]\n");
+            System.out.println("Options:");
+            parser.printUsage(System.out);
+            System.exit(0);
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
@@ -151,6 +171,15 @@ public class Bootstrap {
             if (workflowParameter.getValue() == null) {
                 workflowParameter.setValue("");
             }
+        }
+    }
+
+    private String getVersion() throws IOException {
+        String propertiesPath = "/META-INF/maven/io.jenkins.jenkinsfile-runner/jenkinsfile-runner/pom.properties";
+        try (InputStream pomProperties = this.getClass().getResourceAsStream(propertiesPath)) {
+            Properties props = new Properties();
+            props.load(pomProperties);
+            return props.getProperty("version");
         }
     }
 

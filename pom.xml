@@ -55,6 +55,7 @@ THE SOFTWARE.
     <module>payload</module>
     <module>app</module>
     <module>tests</module>
+    <module>vanilla-package</module>
   </modules>
 
   <properties>
@@ -112,6 +113,12 @@ THE SOFTWARE.
         <artifactId>workflow-multibranch</artifactId>
         <version>2.21</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>3.5</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -129,7 +136,6 @@ THE SOFTWARE.
         <!-- to treat executable-war type of artifact correctly -->
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.5</version>
         <extensions>true</extensions>
       </plugin>
       <plugin>
