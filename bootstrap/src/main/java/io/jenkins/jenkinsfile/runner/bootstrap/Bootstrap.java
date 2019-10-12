@@ -32,12 +32,6 @@ public class Bootstrap {
     private static final String WORKSPACES_DIR_SYSTEM_PROPERTY = "jenkins.model.Jenkins.workspacesDir";
 
     /**
-     * This system property is set by the bootstrap script created by appassembler Maven plugin
-     * to point to a local Maven repository.
-     */
-    public final File appRepo = new File(System.getProperty("app.repo"));
-
-    /**
      * Exploded jenkins.war
      */
     @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-jv" })
@@ -230,17 +224,23 @@ public class Bootstrap {
     }
 
     public int run() throws Throwable {
+        String appClassName = "io.jenkins.jenkinsfile.runner.App";
+        if (hasClass(appClassName)) {
+            Class<?> c = Class.forName(appClassName);
+            return ((IApp) c.newInstance()).run(this);
+        }
+
         ClassLoader jenkins = createJenkinsWarClassLoader();
         ClassLoader setup = createSetupClassLoader(jenkins);
 
         Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
 
         try {
-            Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
+            Class<?> c = setup.loadClass(appClassName);
             return ((IApp) c.newInstance()).run(this);
         } catch (ClassNotFoundException e) {
             if (setup instanceof URLClassLoader) {
-                throw new ClassNotFoundException(e.getMessage() + " not found in " + appRepo + ","
+                throw new ClassNotFoundException(e.getMessage() + " not found in " + getAppRepo() + ","
                         + new File(warDir, "WEB-INF/lib") + " " + Arrays.toString(((URLClassLoader) setup).getURLs()),
                         e);
             } else {
@@ -253,13 +253,13 @@ public class Bootstrap {
         return new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
                 .collectJars(new File(warDir,"WEB-INF/lib"))
                 // servlet API needs to be visible to jenkins.war
-                .collectJars(new File(appRepo,"javax/servlet"))
+                .collectJars(new File(getAppRepo(),"javax/servlet"))
                 .make();
     }
 
     public ClassLoader createSetupClassLoader(ClassLoader jenkins) throws IOException {
         return new ClassLoaderBuilder(jenkins)
-                .collectJars(appRepo)
+                .collectJars(getAppRepo())
                 .make();
     }
 
@@ -279,4 +279,16 @@ public class Bootstrap {
         return !javaVersion.startsWith("1.");
     }
 
+    public boolean hasClass(String className) {
+        try  {
+            Class.forName(className);
+            return true;
+        }  catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public File getAppRepo() {
+        return new File(System.getProperty("app.repo"));
+    }
 }
