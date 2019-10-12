@@ -110,13 +110,14 @@ node('docker') {
                 }
             }
 
-            if (branchName.startsWith('master')) {
-                stage('Publish container') {
-                    timestamps {
-                        image.push();
-                    }
-                }
-            }
+  // TODO(oleg-nenashev): Reenable once CI is stable
+  //          if (branchName.startsWith('master')) {
+  //              stage('Publish container') {
+  //                  timestamps {
+  //                      image.push();
+  //                  }
+  //              }
+  //          }
         }
     }
 }
