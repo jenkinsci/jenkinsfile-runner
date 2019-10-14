@@ -12,5 +12,11 @@ pipeline {
                 echo "Value for param2: ${params.param2}"
             }
         }
+        stage('Use Pipeline Steps - Read Yaml ') {
+            steps {
+                def essentialsYaml = readYaml(file: "example.yaml")
+                echo "First param key: ${essentialsYaml.params[0].key}"
+            }
+        }
     }
 }

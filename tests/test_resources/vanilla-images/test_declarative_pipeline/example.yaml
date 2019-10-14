@@ -1,0 +1,9 @@
+parameters:
+  params:
+    -
+    key: param1
+    value: 'Hello world'
+    -
+    key: param2
+    value: ''
+
