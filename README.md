@@ -127,6 +127,7 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
                                directory. Defaults to plugins.txt.
  -n (--job-name) VAL         : Name of the job the run belongs to, default to
                                'job'
+ -c (--cause) VAL            : Cause of the run
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
  -w (--jenkins-war) FILE     : path to exploded jenkins war directory.

@@ -76,6 +76,12 @@ public class Bootstrap {
     @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
     public String jobName = "job";
 
+    /**
+     * Cause of the Run.
+     */
+    @Option(name = "-c", aliases = { "--cause"}, usage = "Cause of the run")
+    public String cause;
+
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull
     public Map<String,String> workflowParameters;
