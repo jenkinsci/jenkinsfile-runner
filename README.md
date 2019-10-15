@@ -125,6 +125,8 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
  -p (--plugins) FILE         : plugins required to run pipeline. Either a
                                plugins.txt file or a /plugins installation
                                directory. Defaults to plugins.txt.
+ -n (--job-name) VAL         : Name of the job the run belongs to, default to
+                               'job'
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
  -w (--jenkins-war) FILE     : path to exploded jenkins war directory.

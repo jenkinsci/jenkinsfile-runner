@@ -1,6 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.model.Action;
+import hudson.model.Failure;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
@@ -30,8 +31,14 @@ public class Runner {
      * Main entry point invoked by the setup module
      */
     public int run(Bootstrap bootstrap) throws Exception {
+        try {
+          Jenkins.checkGoodName(bootstrap.jobName); 
+        } catch (Failure e) {
+          System.err.println("invalid job name provided: " + e.getMessage()); 
+          return -1;
+        } 
         Jenkins j = Jenkins.getInstance();
-        WorkflowJob w = j.createProject(WorkflowJob.class, "job");
+        WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));

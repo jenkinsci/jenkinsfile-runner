@@ -69,6 +69,12 @@ public class Bootstrap {
             "Note that the folder specified via --runHome will not be disposed after the run.")
     public File runHome;
 
+    
+    /**
+     * Job name for the Run.
+     */
+    @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
+    public String jobName = "job";
 
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull
