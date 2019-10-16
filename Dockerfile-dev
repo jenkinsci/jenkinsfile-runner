@@ -3,14 +3,18 @@
 
 FROM openjdk:8-jdk
 ENV JENKINS_UC https://updates.jenkins.io
+ENV CASC_JENKINS_CONFIG file:///casc/jenkins.yaml
 USER root
-RUN mkdir -p /app /usr/share/jenkins/ref/plugins
+RUN mkdir -p /app /usr/share/jenkins/ref/plugins /casc
+RUN echo "jenkins: {}" >/casc/jenkins.yaml
 
 COPY app/target/appassembler /app
 COPY vanilla-package/target/war/jenkins.war /usr/share/jenkins/jenkins.war
 RUN unzip /usr/share/jenkins/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 COPY vanilla-package/target/plugins /usr/share/jenkins/ref/plugins
+
+VOLUME /casc
 
 ENTRYPOINT ["/app/bin/jenkinsfile-runner", \
             "-w", "/app/jenkins",\

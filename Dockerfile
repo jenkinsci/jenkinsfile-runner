@@ -25,14 +25,17 @@ RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.w
 
 FROM openjdk:8-jdk
 ENV JENKINS_UC https://updates.jenkins.io
+ENV CASC_JENKINS_CONFIG file:///casc/jenkins.yaml
 USER root
-RUN mkdir -p /app /usr/share/jenkins/ref/plugins
+RUN mkdir -p /app /usr/share/jenkins/ref/plugins /casc
+RUN echo "jenkins: {}" >/casc/jenkins.yaml
 COPY --from=jenkinsfilerunner-build /app/jenkins /app/jenkins
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/vanilla-package/target/plugins /usr/share/jenkins/ref/plugins
 COPY jenkinsfile-runner-launcher /app/bin
 
 VOLUME /build
+VOLUME /casc
 
 ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher", \
             "-w", "/app/jenkins",\
