@@ -82,6 +82,12 @@ public class Bootstrap {
     @Option(name = "-c", aliases = { "--cause"}, usage = "Cause of the run")
     public String cause;
 
+    /**
+     * BuildNumber of the Run.
+     */
+    @Option(name = "-b", aliases = { "--build-number"}, usage = "BuildNumber of the run")
+    public int buildNumber = 1;
+
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull
     public Map<String,String> workflowParameters;

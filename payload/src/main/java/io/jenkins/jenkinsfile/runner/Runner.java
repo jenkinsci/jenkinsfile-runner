@@ -42,6 +42,7 @@ public class Runner {
         } 
         Jenkins j = Jenkins.getInstance();
         WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
+        w.updateNextBuildNumber(bootstrap.buildNumber);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
