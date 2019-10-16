@@ -14,16 +14,9 @@ The intend use cases include:
 Jenkinsfile Runner can be run in command line or in Docker.
 In case you want to run it in command line just follow these steps:
 
-1. Download the jar file available in [artifactory](https://repo.jenkins-ci.org/webapp/#/home) or build the source code from this repository
+1. Download the jar file available in [artifactory](https://repo.jenkins-ci.org/webapp/#/home) or build the source code from this repository (see [contributing guidelines](./CONTRIBUTING.md))
 2. Prepare the execution environment
 3. Run the command
-
-### Build
-To build this code just use maven as follows:
-```
-mvn package
-```
-This will produce the distribution in `app/target/appassembler`.
 
 ### Preparation
 Find `jenkins.war` that represents the version of Jenkins that you'd like to use,
@@ -47,6 +40,12 @@ Say you have your Git repository checked out at `~/foo` that contains `Jenkinsfi
 You can now run Jenkinsfile Runner like this:
 
 ```
+jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello" -a "param2=value2"]
+```
+
+Sample Jenkinsfile:
+
+```groovy
 $ cat ~/foo/Jenkinsfile
 pipeline {
     agent any
@@ -65,9 +64,11 @@ pipeline {
         }
     }
 }
+```
 
+Output:
 
-# Usage: jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello" -a "param2=value2"]
+```
 $ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/ -a "param1=Hello&param2=value2"
 Started
 Running in Durability level: PERFORMANCE_OPTIMIZED
