@@ -37,7 +37,7 @@ public class Runner {
         try {
           Jenkins.checkGoodName(bootstrap.jobName); 
         } catch (Failure e) {
-          System.err.println("invalid job name provided: " + e.getMessage()); 
+          System.err.println(String.format("invalid job name: '%s': %s", bootstrap.jobName, e.getMessage())); 
           return -1;
         } 
         Jenkins j = Jenkins.getInstance();
@@ -59,6 +59,7 @@ public class Runner {
         }
 
         Action[] workflowActions = workflowActionsList.toArray(new Action[0]);
+        workflowActionsList = null;
         QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0, workflowActions);
 
         b = f.getStartCondition().get();
