@@ -190,6 +190,10 @@ public class Bootstrap {
                 workflowParameter.setValue("");
             }
         }
+        if (this.cause != null) {
+           this.cause = this.cause.trim();
+           if (this.cause.isEmpty()) this.cause = null;
+        }
     }
 
     private String getVersion() throws IOException {
