@@ -3,7 +3,7 @@ package io.jenkins.jenkinsfile.runner;
 /**
  * @author Matthias Rinck
  */
-public class StringCause extends hudson.model.Cause {
+class StringCause extends hudson.model.Cause {
 
   private String cause;
   
@@ -14,7 +14,7 @@ public class StringCause extends hudson.model.Cause {
   @Override
   public String getShortDescription()
   {
-    return cause;
+    return String.format("Started by %s",cause);
   }
 
   @Override
