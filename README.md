@@ -129,7 +129,7 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
  -b (--build-number) N       : Build number of the run, defaults to 1.
  -c (--cause) VAL            : A string describing the cause of the run.
                                It will be attached to the build so that it appears in the
-                               build log and is availabled to plug-ins and pipeline steps.
+                               build log and becomes available to plug-ins and pipeline steps.
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
  -w (--jenkins-war) FILE     : path to exploded jenkins war directory.

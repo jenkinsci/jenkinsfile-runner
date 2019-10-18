@@ -47,7 +47,7 @@ public class Runner {
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
 
-        List<Action> workflowActionsList = new ArrayList<Action>(3);
+        List<Action> workflowActionsList = new ArrayList<>(3);
         workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
 
         if (bootstrap.workflowParameters.size() > 0) {
