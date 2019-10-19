@@ -53,6 +53,11 @@ root@dec4c0f12478:/src# cp -r /app/jenkins /tmp/jenkins
 root@dec4c0f12478:/src# /app/bin/jenkinsfile-runner -w /tmp/jenkins -p /usr/share/jenkins/ref/plugins -f /workspace
 ```
 
+Optionally, if you need special Jenkins configuration, you can mount JCasC YAML files into the
+`/usr/share/jenkins/ref/casc` directory as a volume. Refer to the
+[Configuration-as-Code documentation](https://github.com/jenkinsci/configuration-as-code-plugin)
+for available options and the [JCasC demo](demo/casc/README.md) for an example.
+
 ## Debug
 In case you want to debug Jenkinsfile Runner, you need to use the "Vanilla" Docker image built following the steps mentioned in the section above.
 

@@ -3,4 +3,4 @@ jenkins:
     - envVars:
         env:
           - key: SOME_CASC_ENV_VAR
-            value: a value configured via JCasc
+            value: a value configured via JCasC
