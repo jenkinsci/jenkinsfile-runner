@@ -1,0 +1,11 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Hello world!'
+                echo "An environment variable configured via JCasC: ${env.SOME_CASC_ENV_VAR}"
+            }
+        }
+    }
+}
