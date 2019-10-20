@@ -70,7 +70,7 @@ public class Bootstrap {
             "Note that the folder specified via --runHome will not be disposed after the run.")
     public File runHome;
 
-    
+
     private static final String DEFAULT_JOBNAME = "job";
 
     /**
@@ -107,6 +107,8 @@ public class Bootstrap {
     @Option(name = "-u", aliases = { "--keep-undefined-parameters"}, usage = "Keep undefined parameters if set")
     public boolean keepUndefinedParameters = false;
 
+    @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
+    public boolean cliOnly;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -141,6 +143,10 @@ public class Bootstrap {
             System.exit(0);
         }
 
+        if (System.getenv("FORCE_JENKINS_CLI") != null) {
+            this.cliOnly = true;
+        }
+
         if (this.version != null && !isVersionSupported()) {
             System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
                     this.version,
@@ -159,7 +165,7 @@ public class Bootstrap {
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
-        if (!this.jenkinsfile.exists()) {
+        if (!this.cliOnly && !this.jenkinsfile.exists()) {
             System.err.println("no Jenkinsfile in current directory.");
             System.exit(-1);
         }
