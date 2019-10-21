@@ -69,6 +69,26 @@ public class Bootstrap {
             "Note that the folder specified via --runHome will not be disposed after the run.")
     public File runHome;
 
+    
+    private static final String DEFAULT_JOBNAME = "job";
+
+    /**
+     * Job name for the Run.
+     */
+    @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
+    public String jobName = DEFAULT_JOBNAME;
+
+    /**
+     * Cause of the Run.
+     */
+    @Option(name = "-c", aliases = { "--cause"}, usage = "Cause of the run")
+    public String cause;
+
+    /**
+     * BuildNumber of the Run.
+     */
+    @Option(name = "-b", aliases = { "--build-number"}, usage = "Build number of the run")
+    public int buildNumber = 1;
 
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull
@@ -172,6 +192,12 @@ public class Bootstrap {
                 workflowParameter.setValue("");
             }
         }
+        if (this.cause != null) {
+           this.cause = this.cause.trim();
+           if (this.cause.isEmpty()) this.cause = null;
+        }
+
+        if (this.jobName.isEmpty()) this.jobName = DEFAULT_JOBNAME;
     }
 
     private String getVersion() throws IOException {

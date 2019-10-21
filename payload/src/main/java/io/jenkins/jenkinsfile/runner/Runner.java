@@ -1,6 +1,9 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.model.Action;
+import hudson.model.Cause;
+import hudson.model.CauseAction;
+import hudson.model.Failure;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
@@ -16,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.NoSuchFileException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -30,21 +35,32 @@ public class Runner {
      * Main entry point invoked by the setup module
      */
     public int run(Bootstrap bootstrap) throws Exception {
+        try {
+          Jenkins.checkGoodName(bootstrap.jobName); 
+        } catch (Failure e) {
+          System.err.println(String.format("invalid job name: '%s': %s", bootstrap.jobName, e.getMessage())); 
+          return -1;
+        } 
         Jenkins j = Jenkins.getInstance();
-        WorkflowJob w = j.createProject(WorkflowJob.class, "job");
+        WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
+        w.updateNextBuildNumber(bootstrap.buildNumber);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
 
-        Action[] workflowActions = bootstrap.workflowParameters != null && bootstrap.workflowParameters.size() > 0 ?
-                new Action[] { new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox),
-                new ParametersAction(bootstrap.workflowParameters
-                                     .entrySet()
-                                     .stream()
-                                     .map(e -> new StringParameterValue(e.getKey(), e.getValue()))
-                                     .collect(Collectors.toList())) } :
-                new Action[] { new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox) };
+        List<Action> workflowActionsList = new ArrayList<>(3);
+        workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
 
+        if (bootstrap.workflowParameters.size() > 0) {
+          workflowActionsList.add(createParametersAction(bootstrap));
+        }
+
+        if (bootstrap.cause != null) {
+          workflowActionsList.add(createCauseAction(bootstrap.cause));
+        }
+
+        Action[] workflowActions = workflowActionsList.toArray(new Action[0]);
+        workflowActionsList = null;
         QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0, workflowActions);
 
         b = f.getStartCondition().get();
@@ -53,6 +69,19 @@ public class Runner {
 
         f.get();    // wait for the completion
         return b.getResult().ordinal;
+    }
+
+    private Action createParametersAction(Bootstrap bootstrap) {
+      return new ParametersAction(bootstrap.workflowParameters
+            .entrySet()
+            .stream()
+            .map(e -> new StringParameterValue(e.getKey(), e.getValue()))
+            .collect(Collectors.toList()));
+    }
+
+    private CauseAction createCauseAction(String cause) {
+      Cause c = new JenkinsfileRunnerCause(cause);
+      return new CauseAction(c);
     }
 
     private void writeLogTo(PrintStream out) throws IOException, InterruptedException {
