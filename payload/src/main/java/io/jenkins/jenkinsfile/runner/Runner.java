@@ -1,6 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.model.Action;
+import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Failure;
 import hudson.model.ParametersAction;
@@ -79,7 +80,7 @@ public class Runner {
     }
 
     private CauseAction createCauseAction(String cause) {
-      StringCause c = new StringCause(cause);
+      Cause c = new JenkinsfileRunnerCause(cause);
       return new CauseAction(c);
     }
 

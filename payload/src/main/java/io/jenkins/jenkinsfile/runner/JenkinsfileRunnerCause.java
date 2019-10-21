@@ -3,11 +3,11 @@ package io.jenkins.jenkinsfile.runner;
 /**
  * @author Matthias Rinck
  */
-class StringCause extends hudson.model.Cause {
+class JenkinsfileRunnerCause extends hudson.model.Cause {
 
   private String cause;
   
-  public StringCause(String cause) {
+  public JenkinsfileRunnerCause(String cause) {
     this.cause = cause;
   }
 
@@ -20,8 +20,8 @@ class StringCause extends hudson.model.Cause {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof StringCause)) return false;
-    final StringCause c = (StringCause) o;
+    if (!(o instanceof JenkinsfileRunnerCause)) return false;
+    final JenkinsfileRunnerCause c = (JenkinsfileRunnerCause) o;
     return this.cause.equals(c.getShortDescription());
   }
 
