@@ -122,6 +122,13 @@ public class Bootstrap {
             System.exit(0);
         }
 
+        if (this.version != null && !this.getMininumJenkinsVersion().equals(this.version)) {
+            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
+                    this.version,
+                    this.getMininumJenkinsVersion());
+            System.exit(-1);
+        }
+
         if (warDir == null) {
             warDir= getJenkinsWar();
         }
@@ -181,11 +188,19 @@ public class Bootstrap {
     }
 
     private String getVersion() throws IOException {
+       return readPropertyFromPom("version");
+    }
+
+    private String getMininumJenkinsVersion() throws IOException {
+        return readPropertyFromPom("jenkins.version");
+    }
+
+    private String readPropertyFromPom(String key) throws IOException {
         String propertiesPath = "/META-INF/maven/io.jenkins.jenkinsfile-runner/jenkinsfile-runner/pom.properties";
         try (InputStream pomProperties = this.getClass().getResourceAsStream(propertiesPath)) {
             Properties props = new Properties();
             props.load(pomProperties);
-            return props.getProperty("version");
+            return props.getProperty(key);
         }
     }
 
