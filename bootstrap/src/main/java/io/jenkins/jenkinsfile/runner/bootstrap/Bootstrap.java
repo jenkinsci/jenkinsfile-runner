@@ -70,11 +70,13 @@ public class Bootstrap {
     public File runHome;
 
     
+    private static final String DEFAULT_JOBNAME = "job";
+
     /**
      * Job name for the Run.
      */
     @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
-    public String jobName = "job";
+    public String jobName = DEFAULT_JOBNAME;
 
     /**
      * Cause of the Run.
@@ -194,6 +196,8 @@ public class Bootstrap {
            this.cause = this.cause.trim();
            if (this.cause.isEmpty()) this.cause = null;
         }
+
+        if (this.jobName.isEmpty()) this.jobName = DEFAULT_JOBNAME;
     }
 
     private String getVersion() throws IOException {
