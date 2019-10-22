@@ -5,6 +5,9 @@ import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Failure;
 import hudson.model.ParametersAction;
+import hudson.model.ParameterDefinition;
+import hudson.model.ParametersDefinitionProperty;
+import hudson.model.StringParameterDefinition;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
@@ -45,6 +48,11 @@ public class Runner {
         WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
         w.updateNextBuildNumber(bootstrap.buildNumber);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
+        List<ParameterDefinition> parameterDefinitions = new ArrayList<>(); 
+        for (String parameterName : bootstrap.workflowParameters.keySet()) {
+          parameterDefinitions.add(new StringParameterDefinition(parameterName,""));
+        }
+        w.addProperty(new ParametersDefinitionProperty(parameterDefinitions));
         w.setDefinition(new CpsScmFlowDefinition(
                 new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
 
