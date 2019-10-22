@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
+import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -122,7 +123,7 @@ public class Bootstrap {
             System.exit(0);
         }
 
-        if (this.version != null && !this.getMininumJenkinsVersion().equals(this.version)) {
+        if (this.version != null && !isVersionSupported()) {
             System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
                     this.version,
                     this.getMininumJenkinsVersion());
@@ -193,6 +194,10 @@ public class Bootstrap {
 
     private String getMininumJenkinsVersion() throws IOException {
         return readPropertyFromPom("jenkins.version");
+    }
+
+    private boolean isVersionSupported() throws IOException {
+        return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
     }
 
     private String readPropertyFromPom(String key) throws IOException {
