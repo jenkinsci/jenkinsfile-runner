@@ -118,6 +118,8 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
                                Requires Jenkins 2.119 or above
  -a (--arg)                  : Parameters to be passed to workflow job. Use
                                multiple -a switches for multiple params
+ -u (--keep-undefined-parameters) : Keep undefined parameters if set, defaults
+                                    to false.
  -f (--file) FILE            : Path to Jenkinsfile (or directory containing a
                                Jenkinsfile) to run, default to ./Jenkinsfile.
  -ns (--no-sandbox)          : Disable workflow job execution within sandbox
