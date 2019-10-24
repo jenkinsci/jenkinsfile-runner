@@ -104,6 +104,10 @@ public class Bootstrap {
     @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
     public boolean help;
 
+    @Option(name = "-u", aliases = { "--keep-undefined-parameters"}, usage = "Keep undefined parameters if set")
+    public boolean keepUndefinedParameters = false;
+
+
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
         if (Boolean.getBoolean("start.pause")) {
@@ -206,6 +210,10 @@ public class Bootstrap {
         }
 
         if (this.jobName.isEmpty()) this.jobName = DEFAULT_JOBNAME;
+
+        if (this.keepUndefinedParameters) {
+          System.setProperty("hudson.model.ParametersAction.keepUndefinedParameters", "true");
+        }
     }
 
     private String getVersion() throws IOException {
