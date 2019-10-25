@@ -16,29 +16,34 @@ ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 RUN mvn compile dependency:resolve dependency:resolve-plugins
 
 FROM maven as jenkinsfilerunner-build
+
+ARG JENKINS_REF=/usr/share/jenkins/ref
+ARG JENKINS_HOME=/app/jenkins
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
 ADD . /jenkinsfile-runner
 RUN cd /jenkinsfile-runner && mvn package
-RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
-  rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
+RUN mkdir /app && \
+  unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d ${JENKINS_HOME} && \
+  rm -rf ${JENKINS_HOME}/scripts ${JENKINS_HOME}/jsbundles ${JENKINS_HOME}/css ${JENKINS_HOME}/images ${JENKINS_HOME}/help ${JENKINS_HOME}/WEB-INF/detached-plugins ${JENKINS_HOME}/winstone.jar ${JENKINS_HOME}/WEB-INF/jenkins-cli.jar ${JENKINS_HOME}/WEB-INF/lib/jna-4.5.2.jar
 
 FROM openjdk:8-jdk
-ENV JENKINS_UC https://updates.jenkins.io
-ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
+
+ARG JENKINS_REF=/usr/share/jenkins/ref
+ARG JENKINS_HOME=/app/jenkins
+ENV JENKINS_REF ${JENKINS_REF}
+ENV JENKINS_HOME ${JENKINS_HOME}
+
 USER root
-RUN mkdir -p /app /usr/share/jenkins/ref/plugins /usr/share/jenkins/ref/casc
-RUN echo "jenkins: {}" >/usr/share/jenkins/ref/casc/jenkins.yaml
-COPY --from=jenkinsfilerunner-build /app/jenkins /app/jenkins
+RUN mkdir -p /app ${JENKINS_REF}/plugins ${JENKINS_REF}/casc
+COPY --from=jenkinsfilerunner-build ${JENKINS_HOME} ${JENKINS_HOME}
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
-COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/vanilla-package/target/plugins /usr/share/jenkins/ref/plugins
+COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/vanilla-package/target/plugins ${JENKINS_REF}/plugins
 COPY jenkinsfile-runner-launcher /app/bin
 
 VOLUME /build
-VOLUME /usr/share/jenkins/ref/casc
+VOLUME ${JENKINS_REF}/casc
 
-ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher", \
-            "-w", "/app/jenkins",\
-            "-p", "/usr/share/jenkins/ref/plugins",\
-            "-f", "/workspace", \
-            "--runWorkspace", "/build"]
+ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher"]
+
+CMD ["run"]

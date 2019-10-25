@@ -143,10 +143,6 @@ public class Bootstrap {
             System.exit(0);
         }
 
-        if (System.getenv("FORCE_JENKINS_CLI") != null) {
-            this.cliOnly = true;
-        }
-
         if (this.version != null && !isVersionSupported()) {
             System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
                     this.version,

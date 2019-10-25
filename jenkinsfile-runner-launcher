@@ -1,7 +1,54 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-if [ -n "$DEBUG" ] ; then
-  export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 $JAVA_OPTS"
+if [[ -z "${JENKINS_HOME}" ]] || [[ -z "${JENKINS_REF}" ]]; then
+  echo "$0: Environment variables JENKINS_HOME and JENKINS_REF need to be set!" >&2
+  exit 1
+elif [[ ! -d "${JENKINS_HOME}" ]]; then
+  echo "$0: JENKINS_HOME at ${JENKINS_HOME} does not exist." >&2
+  exit 1
+elif [[ ! -d "${JENKINS_REF}" ]]; then
+  echo "$0: JENKINS_REF at ${JENKINS_REF} does not exist." >&2
+  exit 1
 fi
 
-. /app/bin/jenkinsfile-runner
+export JENKINS_WORKSPACE="${JENKINS_WORKSPACE:-/workspace}"
+export JENKINS_BUILD_DIR="${JENKINS_BUILD_DIR:-/build}"
+export CASC_JENKINS_CONFIG="${CASC_JENKINS_CONFIG:-${JENKINS_REF}/casc}"
+export JENKINS_PLUGIN_DIR="${JENKINS_PLUGIN_DIR:-${JENKINS_REF}/plugins}"
+
+export JENKINS_UC="${JENKINS_UC:-https://updates.jenkins.io}"
+
+LAUNCHER_PARAMS=("-w" "${JENKINS_HOME}" "-p" "${JENKINS_REF}/plugins")
+
+if [[ -n "${DEBUG}" ]]; then
+  export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 ${JAVA_OPTS:-}"
+  echo "Make sure to expose the debug port by providing -p 5005:5005 to docker run"
+fi
+
+if [[ "$#" -gt 0 ]]; then
+  case "$1" in
+    run)
+      LAUNCHER_PARAMS+=("-f" "${JENKINS_WORKSPACE}" "--runWorkspace" "${JENKINS_BUILD_DIR}")
+      ;;
+    cli)
+      LAUNCHER_PARAMS+=("--cli")
+      ;;
+    *)
+      echo "$0: Unknown action $1. Try $0 [run|cli]"
+      echo "    run: Launch a Jenkinsfile build."
+      echo "    cli: Attach an interactive Jenkins shell."
+      exit 1
+      ;;
+  esac
+
+  if [[ "$#" -gt 1 ]]; then
+    LAUNCHER_PARAMS+=("${@:1}")
+  fi
+fi
+
+if [[ -x "/app/bin/jenkinsfile-runner" ]]; then
+  /app/bin/jenkinsfile-runner "${LAUNCHER_PARAMS[@]}"
+else
+  echo "$0: /app/bin/jenkinsfile-runner needs to be an executable file." >&2
+  exit 1
+fi
