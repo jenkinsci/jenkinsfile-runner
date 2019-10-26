@@ -10,6 +10,10 @@ The intend use cases include:
 * Assist editing `Jenkinsfile` locally
 * Integration test shared libraries
 
+This repository includes the Jenkinsfile Runner sources and also the base (aka "vanilla") Docker image.
+This Docker image includes the minimum required set of plugins for running pipelines, but it needs to be extended in order to run real-world pipelines.
+See the documentation below for more information.
+
 ## Usage in command-line
 Jenkinsfile Runner can be run in command line or in Docker.
 In case you want to run it in command line just follow these steps:
@@ -156,16 +160,13 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 ```
 
 ## Usage in Docker
-See the demos and the [Packaging into Docker image](DOCKER.md) page for further detail.
-
-### Build the docker image
-You can build your customized Jenkinsfile Runner image using the Vanilla Dockerfile included in this repository or [with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging)
 
 ### Execution
-Once the Docker image is built, Jenkinsfile Runner can be launched simply as...
+
+Jenkinsfile Runner can be launched simply as...
 
 ```
-    docker run --rm -v $(shell pwd)/Jenkinsfile:/workspace/Jenkinsfile ${JENKINSFILE_RUNNER_IMAGE}
+    docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins4eval/jenkinsfile-runner
 ```
 
 Advanced options:
@@ -184,11 +185,18 @@ Advanced options:
 
 ## Docker build
 
-    docker build -t jenkins/jenkinsfile-runner .
+You can build your customized Jenkinsfile Runner image using the Vanilla Dockerfile included in this repository or [with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging).
+See the demos and the [Packaging into Docker image](DOCKER.md) page for further detail.
+
+### Building the Vanilla image
+
+This repository includes the base image which can be built simply as...
+
+    docker build -t jenkins4eval/jenkinsfile-runner .
 
 During development you can reuse the local machine build instead of doing a full build from scratch
 
-    docker build -t jenkins/jenkinsfile-runner:dev -f Dockerfile-dev .
+    docker build -t jenkins4eval/jenkinsfile-runner:dev -f Dockerfile-dev .
 
 ## Reporting issues
 
