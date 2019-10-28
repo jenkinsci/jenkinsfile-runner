@@ -1,5 +1,5 @@
 # Define maven version for other stages
-FROM maven:3.5.4 as maven
+FROM maven:3.6.2 as maven
 
 FROM maven as jenkinsfilerunner-mvncache
 ADD pom.xml /src/pom.xml
