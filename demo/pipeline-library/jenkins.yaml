@@ -1,0 +1,14 @@
+unclassified:
+  globalLibraries:
+    libraries:
+    - defaultVersion: "1.0"
+      name: "Test Git Lib"
+      implicit: true
+      retriever:
+        legacySCM:
+          scm:
+            git:
+              userRemoteConfigs:
+              - url: "https://github.com/jenkins-infra/pipeline-library.git"
+              branches:
+              - name: "master"
