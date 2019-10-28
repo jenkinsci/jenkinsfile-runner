@@ -1,0 +1,15 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/jenkinsci/mailer-plugin'
+            }
+        }
+        stage('Example Build') {
+            steps {
+                sh 'mvn -B clean verify'
+            }
+        }
+    }
+}
