@@ -24,20 +24,7 @@ for (int i = 0; i < platforms.size(); ++i) {
                     }
 
                     stage('Build') {
-                        withEnv([
-                            "JAVA_HOME=${tool 'jdk8'}",
-                            "PATH+MVN=${tool 'mvn'}/bin",
-                            'PATH+JDK=$JAVA_HOME/bin',
-                        ]) {
-                            timeout(60) {
-                                String command = 'mvn --batch-mode clean package -Dmaven.test.failure.ignore=true -Denvironment=test'
-                                if (isUnix()) {
-                                    sh command
-                                } else {
-                                    bat command
-                                }
-                            }
-                        }
+                        infra.runMaven(['clean', 'package', '-Dmaven.test.failure.ignore=true', '-Denvironment=test'])
                     }
 
                     // TODO: Add some tests first
