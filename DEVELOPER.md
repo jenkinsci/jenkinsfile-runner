@@ -34,7 +34,7 @@ Contains the configuration for the "real" pipeline job to be configured and run 
   * Sets the Jenkinsfile to be executed.
   * Sets the specified parameters.
   * (Un)Sets the script security plugin security layer.
-  * Schedules a build and wait for the finalisation, redirecting the logs to the system output.
+  * Schedules a build and wait for the finalization, redirecting the logs to the system output.
 
 ## `payload-dependencies` module
 
@@ -42,7 +42,7 @@ The `payload` module depends on the presence of many other plugins,
 but they are only used during the compilation and therefore are not shipped to runtime.
 
 Having all the dependencies under payload-dependencies makes it easier to exclude
-them from assembly.
+them from the assembly.
 
 ## `setup` module
 
@@ -50,11 +50,11 @@ It implements the `JenkinsfileRunnerLauncher` in charge of starting the Jenkins 
 execution engine, configuring the classloader properly.
 
 It also contains classes to implement or configure this "environment", such as a custom implementation for the Plugin Manager
-or a WAR exploder in charge of exploding the WAR file and fully initialising an instance.
+or a WAR exploder in charge of exploding the WAR file and fully initializing an instance.
 
 ## `vanilla-package` module
 
-Defines the dependencies to be included into the Vanilla Docker distribution.
+Defines the dependencies to be included in the Vanilla Docker distribution.
 
 ## `tests` module
 
