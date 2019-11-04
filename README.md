@@ -16,8 +16,8 @@ This Docker image includes the minimum required set of plugins for running pipel
 See the documentation below for more information.
 
 ## Usage in command-line
-Jenkinsfile Runner can be run in command line or in Docker.
-In case you want to run it in command line just follow these steps:
+Jenkinsfile Runner can be run in the command line or in Docker.
+In case you want to run it in the command line just follow these steps:
 
 1. Download the jar file available in [artifactory](https://repo.jenkins-ci.org/webapp/#/home) or build the source code from this repository (see [contributing guidelines](./CONTRIBUTING.md))
 2. Prepare the execution environment
@@ -32,7 +32,7 @@ unzip jenkins.war -d /tmp/jenkins
 ```
 
 Next, create a directory and assemble all the plugins that you'd like to use with the build.
-One way to do this is to run Jenkins setup wizard and install the default set of plugins.
+One way to do this is to run the Jenkins setup wizard and install the default set of plugins.
 This is a gap intended to be filled with [configuration as code](https://github.com/jenkinsci/configuration-as-code-plugin)
 ```
 JENKINS_HOME=/tmp/jenkins_home java -jar jenkins.war
