@@ -9,8 +9,15 @@ import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 public class App implements IApp {
     @Override
     public int run(Bootstrap bootstrap) throws Throwable {
-        JenkinsfileRunnerLauncher launcher = new JenkinsfileRunnerLauncher(bootstrap);
-
+        JenkinsLauncher launcher = createLauncherFor(bootstrap);
         return launcher.launch();
+    }
+
+    private JenkinsLauncher createLauncherFor(Bootstrap bootstrap) {
+        if(bootstrap.cliOnly) {
+            return new CLILauncher(bootstrap);
+        } else {
+            return new JenkinsfileRunnerLauncher(bootstrap);
+        }
     }
 }

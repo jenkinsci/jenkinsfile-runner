@@ -123,9 +123,10 @@ The executable of Jenkinsfile Runner allows its invocation with these cli option
                                Requires Jenkins 2.119 or above
  -a (--arg)                  : Parameters to be passed to workflow job. Use
                                multiple -a switches for multiple params
+ --cli                       : Launch interactive CLI. (default: false)
  -u (--keep-undefined-parameters) : Keep undefined parameters if set, defaults
                                     to false.
- -f (--file) FILE            : Path to Jenkinsfile (or directory containing a
+-f (--file) FILE            : Path to Jenkinsfile (or directory containing a
                                Jenkinsfile) to run, default to ./Jenkinsfile.
  -ns (--no-sandbox)          : Disable workflow job execution within sandbox
                                environment
@@ -183,6 +184,8 @@ Advanced options:
   This way you can access the build metadata in `<jenkinsHome>/jobs/job/builds/1`, like the build.xml, logs, and workflow data, even after the container finished.
 
 * The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
+
+* You may pass `--cli` to obtain an interactive Jenkins CLI session.
 
 ## Docker build
 

@@ -58,6 +58,9 @@ Optionally, if you need special Jenkins configuration, you can mount JCasC YAML 
 [Configuration-as-Code documentation](https://github.com/jenkinsci/configuration-as-code-plugin)
 for available options and the [JCasC demo](demo/casc/README.md) for an example.
 
+To get an interactive Jenkins CLI shell in the container, pass
+`-i -e FORCE_JENKINS_CLI=true` to `docker run` as extra parameters.
+
 ## Debug
 In case you want to debug Jenkinsfile Runner, you need to use the "Vanilla" Docker image built following the steps mentioned in the section above.
 
