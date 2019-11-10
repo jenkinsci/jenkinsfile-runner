@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
+import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -70,6 +71,26 @@ public class Bootstrap {
     public File runHome;
 
 
+    private static final String DEFAULT_JOBNAME = "job";
+
+    /**
+     * Job name for the Run.
+     */
+    @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
+    public String jobName = DEFAULT_JOBNAME;
+
+    /**
+     * Cause of the Run.
+     */
+    @Option(name = "-c", aliases = { "--cause"}, usage = "Cause of the run")
+    public String cause;
+
+    /**
+     * BuildNumber of the Run.
+     */
+    @Option(name = "-b", aliases = { "--build-number"}, usage = "Build number of the run")
+    public int buildNumber = 1;
+
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull
     public Map<String,String> workflowParameters;
@@ -82,6 +103,12 @@ public class Bootstrap {
   
     @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
     public boolean help;
+
+    @Option(name = "-u", aliases = { "--keep-undefined-parameters"}, usage = "Keep undefined parameters if set")
+    public boolean keepUndefinedParameters = false;
+
+    @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
+    public boolean cliOnly;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -116,6 +143,17 @@ public class Bootstrap {
             System.exit(0);
         }
 
+        if (System.getenv("FORCE_JENKINS_CLI") != null) {
+            this.cliOnly = true;
+        }
+
+        if (this.version != null && !isVersionSupported()) {
+            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
+                    this.version,
+                    this.getMininumJenkinsVersion());
+            System.exit(-1);
+        }
+
         if (warDir == null) {
             warDir= getJenkinsWar();
         }
@@ -127,7 +165,7 @@ public class Bootstrap {
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
-        if (!this.jenkinsfile.exists()) {
+        if (!this.cliOnly && !this.jenkinsfile.exists()) {
             System.err.println("no Jenkinsfile in current directory.");
             System.exit(-1);
         }
@@ -172,14 +210,36 @@ public class Bootstrap {
                 workflowParameter.setValue("");
             }
         }
+        if (this.cause != null) {
+           this.cause = this.cause.trim();
+           if (this.cause.isEmpty()) this.cause = null;
+        }
+
+        if (this.jobName.isEmpty()) this.jobName = DEFAULT_JOBNAME;
+
+        if (this.keepUndefinedParameters) {
+          System.setProperty("hudson.model.ParametersAction.keepUndefinedParameters", "true");
+        }
     }
 
     private String getVersion() throws IOException {
+       return readPropertyFromPom("version");
+    }
+
+    private String getMininumJenkinsVersion() throws IOException {
+        return readPropertyFromPom("jenkins.version");
+    }
+
+    private boolean isVersionSupported() throws IOException {
+        return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
+    }
+
+    private String readPropertyFromPom(String key) throws IOException {
         String propertiesPath = "/META-INF/maven/io.jenkins.jenkinsfile-runner/jenkinsfile-runner/pom.properties";
         try (InputStream pomProperties = this.getClass().getResourceAsStream(propertiesPath)) {
             Properties props = new Properties();
             props.load(pomProperties);
-            return props.getProperty("version");
+            return props.getProperty(key);
         }
     }
 
