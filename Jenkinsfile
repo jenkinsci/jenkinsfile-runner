@@ -24,7 +24,9 @@ for (int i = 0; i < platforms.size(); ++i) {
                     }
 
                     stage('Build') {
-                        infra.runMaven(['clean', 'package', '-Dmaven.test.failure.ignore=true', '-Denvironment=test'])
+                        timeout(60) {
+                            infra.runMaven(['clean', 'package', '-Dmaven.test.failure.ignore=true', '-Denvironment=test'])
+                        }
                     }
 
                     // TODO: Add some tests first
