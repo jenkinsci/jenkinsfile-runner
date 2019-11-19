@@ -202,6 +202,23 @@ During development you can reuse the local machine build instead of doing a full
 
     docker build -t jenkins4eval/jenkinsfile-runner:dev -f Dockerfile-dev .
 
+
+## Extending Jenkins Runner
+
+Say you want to install a specific plugin (e.g. slack, in order to send notifications to Slack channel ). You can create two files with the following content:
+- plugins.txt
+```
+slack
+```
+- Dockerfile
+```
+FROM jenkins4eval/jenkinsfile-runner
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN cd /app/jenkins && jar -cvf jenkins.war *
+RUN java -jar /app/bin/jenkins-plugin-manager.jar --war /app/jenkins/jenkins.war --plugin-file /usr/share/jenkins/ref/plugins.txt && rm /app/jenkins/jenkins.war
+```
+Now you have a custom image of jenkins-runner with your own plugins installed!
+
 ## Reporting issues
 
 Jenkinsfile Runner [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects
