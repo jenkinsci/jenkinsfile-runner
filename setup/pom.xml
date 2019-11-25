@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-10-SNAPSHOT</version>
+    <version>1.0-beta-12-SNAPSHOT</version>
   </parent>
 
   <artifactId>setup</artifactId>
@@ -15,7 +15,6 @@
         <!-- to treat executable-war type of artifact correctly -->
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.5</version>
         <extensions>true</extensions>
       </plugin>
     </plugins>
@@ -63,12 +62,6 @@
       <artifactId>jenkins-war</artifactId>
       <version>${jenkins.version}</version>
       <type>executable-war</type>
-      <exclusions>
-        <exclusion>
-          <groupId>org.jenkins-ci.modules</groupId>
-          <artifactId>sshd</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 </project>

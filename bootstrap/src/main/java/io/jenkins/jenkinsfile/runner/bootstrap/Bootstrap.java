@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
+import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -9,6 +10,7 @@ import javax.annotation.CheckForNull;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URL;
@@ -18,6 +20,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -30,19 +33,14 @@ public class Bootstrap {
     private static final String WORKSPACES_DIR_SYSTEM_PROPERTY = "jenkins.model.Jenkins.workspacesDir";
 
     /**
-     * This system property is set by the bootstrap script created by appassembler Maven plugin
-     * to point to a local Maven repository.
-     */
-    public final File appRepo = new File(System.getProperty("app.repo"));
-
-    /**
      * Exploded jenkins.war
      */
-    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-v" })
+    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-jv" })
     public File warDir;
 
-    @Option(name = "-v", aliases = { "--version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
+    @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
     public String version;
+    
     /**
      * Where to load plugins from?
      */
@@ -73,12 +71,44 @@ public class Bootstrap {
     public File runHome;
 
 
+    private static final String DEFAULT_JOBNAME = "job";
+
+    /**
+     * Job name for the Run.
+     */
+    @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
+    public String jobName = DEFAULT_JOBNAME;
+
+    /**
+     * Cause of the Run.
+     */
+    @Option(name = "-c", aliases = { "--cause"}, usage = "Cause of the run")
+    public String cause;
+
+    /**
+     * BuildNumber of the Run.
+     */
+    @Option(name = "-b", aliases = { "--build-number"}, usage = "Build number of the run")
+    public int buildNumber = 1;
+
     @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
     @CheckForNull
     public Map<String,String> workflowParameters;
 
     @Option(name = "-ns", aliases = { "--no-sandbox" }, usage = "Disable workflow job execution within sandbox environment")
     public boolean noSandBox;
+
+    @Option(name = "-v", aliases = { "--version" }, usage = "Prints the current Jenkinsfile Runner version")
+    public boolean showVersion;
+  
+    @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
+    public boolean help;
+
+    @Option(name = "-u", aliases = { "--keep-undefined-parameters"}, usage = "Keep undefined parameters if set")
+    public boolean keepUndefinedParameters = false;
+
+    @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
+    public boolean cliOnly;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -90,7 +120,7 @@ public class Bootstrap {
         CmdLineParser parser = new CmdLineParser(bootstrap);
         try {
             parser.parseArgument(args);
-            bootstrap.postConstruct();
+            bootstrap.postConstruct(parser);
             final int status = bootstrap.run();
             System.exit(status);
         } catch (CmdLineException e) {
@@ -106,14 +136,36 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    private void postConstruct() throws IOException {
+    private void postConstruct(CmdLineParser parser) throws IOException {
+
+        if (showVersion) {
+            System.out.println(getVersion());
+            System.exit(0);
+        }
+
+        if (System.getenv("FORCE_JENKINS_CLI") != null) {
+            this.cliOnly = true;
+        }
+
+        if (this.version != null && !isVersionSupported()) {
+            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
+                    this.version,
+                    this.getMininumJenkinsVersion());
+            System.exit(-1);
+        }
 
         if (warDir == null) {
             warDir= getJenkinsWar();
         }
+        if (help) {
+            System.out.println("\nUsage: jenkinsfile-runner [options] [params]\n");
+            System.out.println("Options:");
+            parser.printUsage(System.out);
+            System.exit(0);
+        }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
-        if (!this.jenkinsfile.exists()) {
+        if (!this.cliOnly && !this.jenkinsfile.exists()) {
             System.err.println("no Jenkinsfile in current directory.");
             System.exit(-1);
         }
@@ -158,6 +210,37 @@ public class Bootstrap {
                 workflowParameter.setValue("");
             }
         }
+        if (this.cause != null) {
+           this.cause = this.cause.trim();
+           if (this.cause.isEmpty()) this.cause = null;
+        }
+
+        if (this.jobName.isEmpty()) this.jobName = DEFAULT_JOBNAME;
+
+        if (this.keepUndefinedParameters) {
+          System.setProperty("hudson.model.ParametersAction.keepUndefinedParameters", "true");
+        }
+    }
+
+    private String getVersion() throws IOException {
+       return readPropertyFromPom("version");
+    }
+
+    private String getMininumJenkinsVersion() throws IOException {
+        return readPropertyFromPom("jenkins.version");
+    }
+
+    private boolean isVersionSupported() throws IOException {
+        return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
+    }
+
+    private String readPropertyFromPom(String key) throws IOException {
+        String propertiesPath = "/META-INF/maven/io.jenkins.jenkinsfile-runner/jenkinsfile-runner/pom.properties";
+        try (InputStream pomProperties = this.getClass().getResourceAsStream(propertiesPath)) {
+            Properties props = new Properties();
+            props.load(pomProperties);
+            return props.getProperty(key);
+        }
     }
 
     private File getJenkinsWar() throws IOException {
@@ -201,17 +284,23 @@ public class Bootstrap {
     }
 
     public int run() throws Throwable {
+        String appClassName = "io.jenkins.jenkinsfile.runner.App";
+        if (hasClass(appClassName)) {
+            Class<?> c = Class.forName(appClassName);
+            return ((IApp) c.newInstance()).run(this);
+        }
+
         ClassLoader jenkins = createJenkinsWarClassLoader();
         ClassLoader setup = createSetupClassLoader(jenkins);
 
         Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
 
         try {
-            Class<?> c = setup.loadClass("io.jenkins.jenkinsfile.runner.App");
+            Class<?> c = setup.loadClass(appClassName);
             return ((IApp) c.newInstance()).run(this);
         } catch (ClassNotFoundException e) {
             if (setup instanceof URLClassLoader) {
-                throw new ClassNotFoundException(e.getMessage() + " not found in " + appRepo + ","
+                throw new ClassNotFoundException(e.getMessage() + " not found in " + getAppRepo() + ","
                         + new File(warDir, "WEB-INF/lib") + " " + Arrays.toString(((URLClassLoader) setup).getURLs()),
                         e);
             } else {
@@ -224,13 +313,13 @@ public class Bootstrap {
         return new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
                 .collectJars(new File(warDir,"WEB-INF/lib"))
                 // servlet API needs to be visible to jenkins.war
-                .collectJars(new File(appRepo,"javax/servlet"))
+                .collectJars(new File(getAppRepo(),"javax/servlet"))
                 .make();
     }
 
     public ClassLoader createSetupClassLoader(ClassLoader jenkins) throws IOException {
         return new ClassLoaderBuilder(jenkins)
-                .collectJars(appRepo)
+                .collectJars(getAppRepo())
                 .make();
     }
 
@@ -250,4 +339,16 @@ public class Bootstrap {
         return !javaVersion.startsWith("1.");
     }
 
+    public boolean hasClass(String className) {
+        try  {
+            Class.forName(className);
+            return true;
+        }  catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public File getAppRepo() {
+        return new File(System.getProperty("app.repo"));
+    }
 }

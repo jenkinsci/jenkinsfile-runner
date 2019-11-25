@@ -34,7 +34,7 @@ THE SOFTWARE.
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-beta-10-SNAPSHOT</version>
+  <version>1.0-beta-12-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
@@ -55,6 +55,7 @@ THE SOFTWARE.
     <module>payload</module>
     <module>app</module>
     <module>tests</module>
+    <module>vanilla-package</module>
   </modules>
 
   <properties>
@@ -99,6 +100,24 @@ THE SOFTWARE.
         <artifactId>workflow-multibranch</artifactId>
         <version>2.21</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>3.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>pipeline-utility-steps</artifactId>
+        <version>2.3.1</version>
+      </dependency>
+
+      <!-- TODO: Remove version override once BOM is updated to reference >=1.32 -->
+      <dependency>
+        <groupId>io.jenkins</groupId>
+        <artifactId>configuration-as-code</artifactId>
+        <version>1.32</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -115,7 +134,6 @@ THE SOFTWARE.
         <!-- to treat executable-war type of artifact correctly -->
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.5</version>
         <extensions>true</extensions>
       </plugin>
       <plugin>
