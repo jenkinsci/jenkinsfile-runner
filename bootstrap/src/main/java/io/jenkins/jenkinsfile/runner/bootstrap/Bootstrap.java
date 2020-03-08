@@ -47,6 +47,9 @@ public class Bootstrap {
     @Option(name = "-p", aliases = { "--plugins" }, usage = "plugins required to run pipeline. Either a plugins.txt file or a /plugins installation directory. Defaults to plugins.txt.")
     public File pluginsDir;
 
+    @Option(name = "-m", aliases = {"--mirror"}, usage = "mirror site of Jenkins, get the mirror list from http://mirrors.jenkins-ci.org/status.html. Defaults to empty.")
+    public String mirror;
+
     /**
      * Checked out copy of the working space.
      */
@@ -261,7 +264,7 @@ public class Bootstrap {
         File war = new File(cache, String.format("war/%s/jenkins-war-%s.war", version, version));
         if (!war.exists()) {
             war.getParentFile().mkdirs();
-            final URL url = new URL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", version));
+            final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", version)));
             System.out.printf("Downloading jenkins %s...\n", version);
             FileUtils.copyURLToFile(url, war);
         }
@@ -275,12 +278,20 @@ public class Bootstrap {
         File plugin = new File(cache, String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
-            final URL url = new URL(String.format("http://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname));
+            final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
             System.out.printf("Downloading jenkins plugin %s (%s)...\n", shortname, version);
             FileUtils.copyURLToFile(url, plugin);
         }
 
         Files.createSymbolicLink(install.toPath(), plugin.toPath());
+    }
+
+    private String getMirrorURL(String url) {
+        if (this.mirror == null || "".equals(this.mirror.trim())) {
+            return url;
+        }
+
+        return url.replace("http://updates.jenkins.io/download", this.mirror);
     }
 
     public int run() throws Throwable {
