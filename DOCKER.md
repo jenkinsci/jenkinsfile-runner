@@ -1,6 +1,6 @@
 # Packaging to Docker image
 You can package Jenkinsfile Runner with a specific Jenkins image and turn that into a Docker image.
-This way, you can ensure people are running Jenkinsfile in the specific Jenkins environment, for example one that's identical to your production environment.
+This way, you can ensure people are running Jenkinsfile in the specific Jenkins environment, for example one that's identical to your staging or production environment.
 
 ## Building the Vanilla image
 This repository offers a Dockerfile to generate a Jenkinsfile Runner docker image.
