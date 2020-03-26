@@ -47,7 +47,7 @@ public class Bootstrap {
     @Option(name = "-p", aliases = { "--plugins" }, usage = "plugins required to run pipeline. Either a plugins.txt file or a /plugins installation directory. Defaults to plugins.txt.")
     public File pluginsDir;
 
-    @Option(name = "-m", aliases = {"--mirror"}, usage = "mirror site of Jenkins, get the mirror list from http://mirrors.jenkins-ci.org/status.html. Defaults to empty.")
+    @Option(name = "-m", aliases = {"--mirror"}, usage = "mirror site of Jenkins, defaults to http://updates.jenkins.io/download. Get the mirror list from http://mirrors.jenkins-ci.org/status.html.")
     public String mirror;
 
     /**
