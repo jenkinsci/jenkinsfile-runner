@@ -3,7 +3,6 @@ package io.jenkins.jenkinsfile.runner;
 import hudson.ClassicPluginStrategy;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
-import jenkins.slaves.DeprecatedAgentProtocolMonitor;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -23,10 +22,6 @@ import java.util.logging.Logger;
  */
 public abstract class JenkinsLauncher extends JenkinsEmbedder {
     protected final Bootstrap bootstrap;
-    /**
-     * Keep the reference around to prevent them from getting GCed.
-     */
-    private final Set<Object> noGc = new HashSet<>();
 
     public JenkinsLauncher(Bootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -117,9 +112,6 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
         Logger.getLogger("").setLevel(Level.WARNING);
         // Prevent warnings for plugins with old plugin POM (JENKINS-54425)
         Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
-        Logger l = Logger.getLogger(DeprecatedAgentProtocolMonitor.class.getName());
-        l.setLevel(Level.OFF);
-        noGc.add(l);    // the configuration will be lost if Logger gets GCed.
     }
 
     /**
