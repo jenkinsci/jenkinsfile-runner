@@ -186,9 +186,15 @@ public class Bootstrap {
             // This is a plugin list file
             this.pluginsDir = Files.createTempDirectory("plugins").toFile();
             for (String line : FileUtils.readLines(plugins_txt, UTF_8)) {
+                String shortname = line;
+                String version = "latest";
+
                 int i = line.indexOf(':');
-                String shortname = line.substring(0,i);
-                String version = line.substring(i+1);
+                if (i != -1) {
+                    shortname = line.substring(0,i);
+                    version = line.substring(i+1);
+                }
+
                 installPlugin(shortname, version);
             }
         }
