@@ -1,0 +1,209 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: powershell.exe
+  
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: C:\Users\Oleg\Documents\jenkins\jfr\jenkinsfile-runner
+  
+  # Export additional ENV variables
+  env:
+    recording: true
+  
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 111
+  
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 27
+  
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+  
+  # Quality
+  # 1 - 100
+  quality: 100
+  
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+  
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 2000
+  
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: Terminalizer
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+  
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+  
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+  
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  
+  # The size of the font
+  fontSize: 12
+  
+  # The height of lines
+  lineHeight: 1
+  
+  # The spacing between letters
+  letterSpacing: 0
+  
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+  
+# Records, feel free to edit them
+records:
+  - delay: 948
+    content: "\e[0m\e[0K"
+  - delay: 186
+    content: "Windows PowerShell\e[0K\e[?25l\r\nCopyright (C) Microsoft Corporation. All rights reserved.\e[0K\r\n\e[0K\r\n\e[0K\e[?25h"
+  - delay: 782
+    content: "PS C:\\Users\\Oleg\\Documents\\jenkins\\jfr\\jenkinsfile-runner>\e[0K\e[60G"
+  - delay: 3469
+    content: "\e[?25l\rPS C:\\Users\\Oleg\\Documents\\jenkins\\jfr\\jenkinsfile-runner> \e[0;33;93mb\e[0m\e[0K\e[?25h"
+  - delay: 122
+    content: "\e[0;33;93ma\e[0m\e[0K"
+  - delay: 154
+    content: "\e[0;33;93ms\e[0m\e[0K"
+  - delay: 850
+    content: "\e[0;33;93mh\e[0m\e[0K"
+  - delay: 218
+    content: "\e[?25l\r\n\e[0K\e[?25h"
+  - delay: 316
+    content: "\e]0;onenashev@LAPTOP-25K65LOS: /c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner\a\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner\e[0m$\e[0K\e[83G"
+  - delay: 716
+    content: "\e[?25l\r\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner\e[0m$ c\e[0K\e[?25h"
+  - delay: 92
+    content: "d\e[0K"
+  - delay: 121
+    content: "\e[86G"
+  - delay: 602
+    content: "\e[?25l\r\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner\e[0m$ cd d\e[0K\e[?25h"
+  - delay: 243
+    content: "e\e[0K"
+  - delay: 161
+    content: "mo/\e[0K"
+  - delay: 1028
+    content: "c\e[0K"
+  - delay: 220
+    content: "\e[?25lw\e[0K\e[92G\e[?25h"
+  - delay: 26
+    content: "\e[93G"
+  - delay: 223
+    content: "\e[?25l\r\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner\e[0m$ cd demo/cwp\e[0K\e[?25h"
+  - delay: 823
+    content: "\e]0;onenashev@LAPTOP-25K65LOS: /c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp\a\e[?25l\r\n\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp\e[0m$\e[0K\e[92G\e[?25h"
+  - delay: 1021
+    content: "\e[?25l\r\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp\e[0m$ m\e[0K\e[?25h"
+  - delay: 94
+    content: "a\e[0K"
+  - delay: 154
+    content: "k\e[0K"
+  - delay: 95
+    content: "e\e[0K"
+  - delay: 128
+    content: "\e[97G"
+  - delay: 156
+    content: "\e[?25l\r\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp\e[0m$ make r\e[0K\e[?25h"
+  - delay: 156
+    content: "u\e[0K"
+  - delay: 315
+    content: "n\e[0K"
+  - delay: 652
+    content: "\e[?25l\r\n\e[0K\e[?25h"
+  - delay: 52
+    content: "docker run --rm -v /c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp/Jenkinsfile:/workspace/Jenk\e[0Ki\e[?25l\r\nnsfile jenkins-experimental/jenkinsfile-runner-demo\e[0K\r\n\e[0K\e[?25h"
+  - delay: 8110
+    content: "Started\e[0K\e[?25l\r\nRunning in Durability level: PERFORMANCE_OPTIMIZED\e[0K\r\n\e[0K\e[?25h"
+  - delay: 1002
+    content: "[Pipeline] stage\e[0K\e[?25l\r\n[Pipeline] { (Read Evergreen YAML)\e[0K\r\n[Pipeline] node\e[0K\r\nRunning on master in /tmp/jenkinsfileRunner.tmp/jfr429085012063035869.run/workspace/job\e[0K\r\n[Pipeline] {\e[0K\r\n\e[0K\e[?25h"
+  - delay: 998
+    content: "[Pipeline] sh\e[0K\e[?25l\r\n[job] Running shell script\e[0K\r\n+ wget https://raw.githubusercontent.com/jenkins-infra/evergreen/master/services/essentials.yaml\e[0K\r\n--2019-04-17 18:37:29--  https://raw.githubusercontent.com/jenkins-infra/evergreen/master/services/essentials.\e[0Ky\r\naml\e[0K\r\n\e[0K\e[?25h"
+  - delay: 1105
+    content: "Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.112.133\e[0K\e[?25l\r\nConnecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.112.133|:443... connected.\e[0K\r\nHTTP request sent, awaiting response... 200 OK\e[0K\r\nLength: 17168 (17K) [text/plain]\e[0K\r\nSaving to: ‘essentials.yaml’\e[0K\r\n\e[0K\r\n     0K .......... ......                                     100%  305K=0.05s\e[0K\r\n\e[0K\e[?25h"
+  - delay: 38
+    content: "\e[?25l\r\n2019-04-17 18:37:31 (305 KB/s) - ‘essentials.yaml’ saved [17168/17168]\e[0K\r\n\e[0K\r\n[Pipeline] readYaml\e[0K\r\n\e[0K\e[?25h"
+  - delay: 982
+    content: "[Pipeline] echo\e[0K\e[?25l\r\nJenkins Evergreen uses the following Core version: 2.164\e[0K\r\n[Pipeline] }\e[0K\r\n[Pipeline] // node\e[0K\r\n[Pipeline] }\e[0K\r\n[Pipeline] // stage\e[0K\r\n[Pipeline] End of Pipeline\e[0K\r\nFinished: SUCCESS\e[0K\r\n\e[0K\e[?25h"
+  - delay: 1185
+    content: "\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp\e[0m$\e[0K\e[92G"
+  - delay: 1216
+    content: "\e[?25l\r\e[0;32;92monenashev@LAPTOP-25K65LOS\e[0m:\e[0;34;94m/c/Users/Oleg/Documents/jenkins/jfr/jenkinsfile-runner/demo/cwp\e[0m$ e\e[0K\e[?25h"
+  - delay: 280
+    content: "x\e[0K"
+  - delay: 218
+    content: "i\e[0K"
+  - delay: 127
+    content: "t\e[0K"
+  - delay: 1224
+    content: "\e[?25l\r\nlogout\e[0K\r\n\e[0K\e[?25h"
+  - delay: 21
+    content: "\e]0; \aPS C:\\Users\\Oleg\\Documents\\jenkins\\jfr\\jenkinsfile-runner>\e[0K\e[60G"
+  - delay: 1036
+    content: "\e[?25l\rPS C:\\Users\\Oleg\\Documents\\jenkins\\jfr\\jenkinsfile-runner> \e[0;33;93me\e[0m\e[0K\e[?25h"
+  - delay: 257
+    content: "\e[0;33;93mx\e[0m\e[0K"
+  - delay: 145
+    content: "\e[0;33;93mi\e[0m\e[0K"
+  - delay: 135
+    content: "\e[?25l\rPS C:\\Users\\Oleg\\Documents\\jenkins\\jfr\\jenkinsfile-runner> \e[0;32;92mexit\e[0m\e[0K\e[?25h"
+  - delay: 464
+    content: "\e[?25l\r\n\e[0K\e[?25h"

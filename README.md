@@ -15,6 +15,15 @@ This repository includes the Jenkinsfile Runner sources and also the base (aka "
 This Docker image includes the minimum required set of plugins for running pipelines, but it needs to be extended in order to run real-world pipelines.
 See the documentation below for more information.
 
+## Quick Demo
+
+The demo below demonstrates running  of a simple Pipeline with Jenkinsfile Runner:
+
+![Jenkinsfile Runner Demo](./demo/cwp/recording.gif)
+
+See [this directory](./demo/cwp/) for the source codes of the demo.
+There are more demos available in the project.
+
 ## Usage in command-line
 Jenkinsfile Runner can be run in the command line or in Docker.
 In case you want to run it in the command line just follow these steps:
