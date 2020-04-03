@@ -14,14 +14,14 @@ buildSettings:
       source:
         dir: ./.jenkinsfile-runner-test-framework/source
     docker:
-      base: "jenkins/jenkins:2.164-jdk11"
+      base: "jenkins/jenkins:2.222.1-jdk11"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
       build: false
 war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.164"
+    version: "2.222.1"
 plugins:
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-job"
