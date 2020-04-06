@@ -309,12 +309,10 @@ public class Bootstrap {
         }
 
         // Explode war if necessary
-        if(FilenameUtils.getExtension(warDir.getAbsolutePath()).equals("war")) {
-            System.out.println("Exploding jenkins.war, this might take some time.");
-            String warPath = warDir.getAbsolutePath();
+        String warPath = warDir.getAbsolutePath();
+        if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
+            System.out.println("Exploding," + warPath +  "this might take some time.");
             warDir = Util.explodeWar(warPath);
-
-            //TO-DO - Checksum
         }
 
         ClassLoader jenkins = createJenkinsWarClassLoader();
