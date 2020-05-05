@@ -3,6 +3,7 @@ package io.jenkins.jenkinsfile.runner;
 import hudson.ClassicPluginStrategy;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
+import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -96,7 +97,7 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
      */
     @Override
     protected LoginService configureUserRealm() {
-        return new HashLoginService();
+        return new JFRLoginService();
     }
 
     @Override
@@ -124,5 +125,22 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
     public void after() throws Exception {
         jenkins = null;
         super.after();
+    }
+
+    private static class JFRLoginService extends AbstractLoginService {
+
+        public JFRLoginService() {
+            setName("jfr");
+        }
+
+        @Override
+        protected String[] loadRoleInfo(UserPrincipal user) {
+            return null;
+        }
+
+        @Override
+        protected UserPrincipal loadUserInfo(String username) {
+            return null;
+        }
     }
 }
