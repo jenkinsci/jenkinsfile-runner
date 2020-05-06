@@ -16,7 +16,12 @@ oneTimeSetUp() {
   mkdir -p "$working_directory"
 
   cd "$src_directory"
-  result=$(docker build -t "$jenkinsfile_runner_tag" --no-cache . | grep 'Successfully tagged')
+  docker_build_options="--no-cache"
+  if [ -n "$JFR_DEVEL" ] ; then
+    echo "Running tests against the development image"
+    docker_build_options="-f Dockerfile-dev"
+  fi
+  result=$(docker build -t "$jenkinsfile_runner_tag" $docker_build_options . | grep 'Successfully tagged')
   execution_should_success "$?" "$jenkinsfile_runner_tag" "$result"
 
   cd "$current_directory"
