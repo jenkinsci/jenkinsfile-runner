@@ -115,5 +115,14 @@ public class SmokeTest {
         assertThat(systemOut.getLog(), containsString("Unknown stage section"));
     }
 
+    @Test
+    public void shouldSupportDataboundMethods() throws Throwable {
+        File jenkinsfile = tmp.newFile("Jenkinsfile");
+        FileUtils.writeStringToFile(jenkinsfile, "node {\n" +
+                "    checkout scm\n" +
+                "}\n", Charset.defaultCharset());
 
+        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        assertThat("JFR should be executed successfully", result, equalTo(0));
+    }
 }
