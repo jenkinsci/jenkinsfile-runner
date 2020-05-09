@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.rules.TemporaryFolder;
+import org.junit.rules.Timeout;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -24,6 +25,9 @@ public class ParametersTest {
 
     @Rule
     public final SystemOutRule systemOut = new SystemOutRule().enableLog();
+
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(30);
 
     @Test
     public void scriptedPipeline() throws Throwable {

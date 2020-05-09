@@ -1,11 +1,13 @@
 package io.jenkins.jenkinsfile.runner.vanilla;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemErrRule;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.rules.TemporaryFolder;
+import org.junit.rules.Timeout;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -24,6 +26,8 @@ public class SmokeTest {
     @Rule
     public final SystemErrRule systemErr = new SystemErrRule().enableLog();
 
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(30);
 
     @Test
     public void helloWorld() throws Throwable {
@@ -42,6 +46,23 @@ public class SmokeTest {
         int result = JFRTestUtil.run(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
         assertThat(systemOut.getLog(), containsString("does not exist"));
+    }
+
+    // TODO: uncomment once JFR can do something about timeouts internally
+    @Test
+    @Ignore
+    public void shouldHangWhenPipelineHangs() throws Throwable {
+        File jenkinsfile = new File(tmp.getRoot(), "Jenkinsfile");
+        FileUtils.writeStringToFile(jenkinsfile, "stage('Hang!') {\n" +
+                "    node {\n" +
+                "        while(true) {\n" +
+                "            // it hangs\n" +
+                "        }\n" +
+                "    }\n" +
+                "}", Charset.defaultCharset());
+
+        int result = JFRTestUtil.run(jenkinsfile);
+        assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
     }
 
     @Test
