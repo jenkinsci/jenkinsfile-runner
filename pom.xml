@@ -54,8 +54,9 @@ THE SOFTWARE.
     <module>payload-dependencies</module>
     <module>payload</module>
     <module>app</module>
-    <module>tests</module>
     <module>vanilla-package</module>
+    <!-- Heavy integration tests -->
+    <module>tests</module>
   </modules>
 
   <properties>
