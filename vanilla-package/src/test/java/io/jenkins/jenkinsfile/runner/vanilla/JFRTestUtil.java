@@ -4,9 +4,12 @@ import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.CheckReturnValue;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 // TODO: convert to rule?
@@ -36,15 +39,27 @@ public class JFRTestUtil {
      */
     @CheckReturnValue
     public static int runAsCLI(File jenkinsfile) throws Throwable, CmdLineException {
+        return runAsCLI(jenkinsfile, null);
+    }
+
+
+    /**
+     * Runs JFR using the CLI routines
+     */
+    @CheckReturnValue
+    public static int runAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable, CmdLineException {
         File vanillaTarget = new File("target");
-        List<String> cmd = Arrays.asList(
+        List<String> basicArgs = Arrays.asList(
                 "-w", new File(vanillaTarget, "war").getAbsolutePath(),
                 "-p", new File(vanillaTarget, "plugins").getAbsolutePath(),
                 "-f", jenkinsfile.getAbsolutePath());
+        List<String> cmd = new ArrayList<>(basicArgs);
+        if (additionalArgs != null) {
+            cmd.addAll(additionalArgs);
+        }
 
         String[] args = cmd.toArray(new String[0]);
 
-        //TODO: PostConstruct is not invoked
         final Bootstrap bootstrap = new Bootstrap();
         CmdLineParser parser = new CmdLineParser(bootstrap);
         parser.parseArgument(args);

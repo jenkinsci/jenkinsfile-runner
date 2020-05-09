@@ -15,6 +15,4 @@ init:
 test:
 	./tests-cwp.sh
 	./tests-cwp-jdk11.sh
-	./tests-vanilla.sh
 	./tests-negative-scenarios.sh
-	./tests-vanilla-negative-scenarios.sh
