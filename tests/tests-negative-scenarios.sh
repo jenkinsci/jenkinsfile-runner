@@ -38,25 +38,6 @@ setUp() {
   fi
 }
 
-test_pipeline_execution_fails_bad_syntax() {
-  run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_fails_bad_syntax/Jenkinsfile"
-  execution_success "$?"
-  logs_not_contains "[Pipeline] End of Pipeline"
-  logs_contains "Finished: FAILURE"
-  logs_contains "Unknown stage section"
-}
-
-test_pipeline_execution_fails() {
-  run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_fails/Jenkinsfile"
-  jenkinsfile_execution_should_fail "$?"
-}
-
-test_pipeline_execution_is_unstable() {
-  run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_is_unstable/Jenkinsfile"
-  execution_success "$?"
-  logs_contains "Finished: UNSTABLE"
-}
-
 test_pipeline_execution_hangs() {
   result=$(eval private_execution_after_timeout "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_hangs/Jenkinsfile")
   execution_success "$?"
