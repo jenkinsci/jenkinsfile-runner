@@ -1,24 +1,10 @@
-# Define maven version for other stages
-FROM maven:3.5.4 as maven
+FROM jenkins4eval/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
-FROM maven as jenkinsfilerunner-mvncache
-ADD pom.xml /src/pom.xml
-ADD app/pom.xml /src/app/pom.xml
-ADD bootstrap/pom.xml /src/bootstrap/pom.xml
-ADD setup/pom.xml /src/setup/pom.xml
-ADD payload/pom.xml /src/payload/pom.xml
-ADD payload-dependencies/pom.xml /src/payload-dependencies/pom.xml
-ADD vanilla-package/pom.xml /src/vanilla-package/pom.xml
-
-WORKDIR /src
-ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
-RUN mvn compile dependency:resolve dependency:resolve-plugins
-
-FROM maven as jenkinsfilerunner-build
+FROM maven:3.5.4 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
 ADD . /jenkinsfile-runner
-RUN cd /jenkinsfile-runner && mvn package
+RUN cd /jenkinsfile-runner && mvn clean package
 RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 
