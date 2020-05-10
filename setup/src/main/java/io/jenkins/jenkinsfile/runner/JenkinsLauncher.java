@@ -1,10 +1,10 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.ClassicPluginStrategy;
+import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import org.eclipse.jetty.security.AbstractLoginService;
-import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
@@ -12,9 +12,9 @@ import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +53,11 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
         server.setHandler(context);
         context.getSecurityHandler().setLoginService(configureUserRealm());
         context.setResourceBase(bootstrap.warDir.getPath());
+
+        // Jenkins core and some extension points supply extension points which try to access the filter
+        // In Jenkins core it is define in web.xml
+        // TODO: Consider reusing Jenkins web.xml instead of manual magic
+        context.addFilter(PluginServletFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
         server.start();
 
