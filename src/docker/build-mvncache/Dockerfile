@@ -14,4 +14,4 @@ WORKDIR /src
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 # We collect a full cache instead of resolving dependencies
 # RUN mvn compile dependency:resolve dependency:resolve-plugins
-RUN mvn clean package
+RUN mvn clean package -Dmaven.test.failure.ignore=true -Denvironment=test
