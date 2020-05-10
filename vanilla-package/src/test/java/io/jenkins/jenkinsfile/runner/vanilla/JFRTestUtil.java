@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 // TODO: convert to rule?
 
 /**
@@ -49,9 +51,14 @@ public class JFRTestUtil {
     @CheckReturnValue
     public static int runAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable, CmdLineException {
         File vanillaTarget = new File("target");
+        File warDir = new File(vanillaTarget, "war");
+        File pluginsDir = new File(vanillaTarget, "plugins");
+        assertTrue("Jenkins WAR directory must exist when running tests", warDir.exists());
+        assertTrue("Plugins directory must exist when running tests", pluginsDir.exists());
+
         List<String> basicArgs = Arrays.asList(
-                "-w", new File(vanillaTarget, "war").getAbsolutePath(),
-                "-p", new File(vanillaTarget, "plugins").getAbsolutePath(),
+                "-w", warDir.getAbsolutePath(),
+                "-p", pluginsDir.getAbsolutePath(),
                 "-f", jenkinsfile.getAbsolutePath());
         List<String> cmd = new ArrayList<>(basicArgs);
         if (additionalArgs != null) {
