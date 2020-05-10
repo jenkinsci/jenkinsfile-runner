@@ -8,7 +8,6 @@ ADD bootstrap/pom.xml /src/bootstrap/pom.xml
 ADD setup/pom.xml /src/setup/pom.xml
 ADD payload/pom.xml /src/payload/pom.xml
 ADD payload-dependencies/pom.xml /src/payload-dependencies/pom.xml
-ADD tests/pom.xml /src/tests/pom.xml
 ADD vanilla-package/pom.xml /src/vanilla-package/pom.xml
 
 WORKDIR /src

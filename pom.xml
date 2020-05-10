@@ -55,9 +55,6 @@ THE SOFTWARE.
     <module>payload</module>
     <module>app</module>
     <module>vanilla-package</module>
-    <!-- Heavy integration tests -->
-    <!-- TODO: Custom War Packager tests need a fix, build hangs -->
-    <!-- <module>tests</module> -->
   </modules>
 
   <properties>
@@ -187,4 +184,14 @@ THE SOFTWARE.
     <url>https://github.com/jenkinsci/jenkinsfile-runner</url>
     <tag>HEAD</tag>
   </scm>
+
+  <profiles>
+    <profile>
+      <!-- Integration tests -->
+      <id>run-its</id>
+      <modules>
+        <module>tests</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

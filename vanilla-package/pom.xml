@@ -144,7 +144,7 @@
         <executions>
           <execution>
             <id>prepare-plugins-dir</id>
-            <phase>package</phase>
+            <phase>compile</phase>
             <goals>
               <goal>assemble-dependencies</goal>
             </goals>
@@ -162,7 +162,7 @@
         <executions>
           <execution>
             <id>prepare-war</id>
-            <phase>package</phase>
+            <phase>compile</phase>
             <goals>
               <goal>copy</goal>
             </goals>
