@@ -1,9 +1,6 @@
-# Define maven version for other stages
-FROM maven:3.5.4 as maven
-
 FROM jenkins4eval/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
-FROM maven as jenkinsfilerunner-build
+FROM maven:3.5.4 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
 ADD . /jenkinsfile-runner

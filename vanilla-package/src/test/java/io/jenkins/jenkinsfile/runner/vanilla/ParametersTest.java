@@ -41,7 +41,7 @@ public class ParametersTest {
                 "    [$class: 'StringParameterDefinition',\n" +
                 "      name: 'param2',\n" +
                 "      defaultValue: '',\n" +
-                "      description: '2nd paramete']\n" +
+                "      description: '2nd parameter']\n" +
                 "  ]]\n" +
                 "])\n" +
                 "\n" +
