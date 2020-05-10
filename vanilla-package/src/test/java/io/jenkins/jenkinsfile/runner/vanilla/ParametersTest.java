@@ -27,7 +27,7 @@ public class ParametersTest {
     public final SystemOutRule systemOut = new SystemOutRule().enableLog();
 
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(30);
+    public Timeout globalTimeout = Timeout.seconds(120);
 
     @Test
     public void scriptedPipeline() throws Throwable {
