@@ -1,6 +1,6 @@
 # Jenkinsfile Runner
 
-[![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/tag-pre/jenkinsci/jenkinsfile-runner?label=changelog)](https://github.com/jenkinsci/jenkinsfile-runner/releases/latest)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog)](https://github.com/jenkinsci/jenkinsfile-runner/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jenkins4eval/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins4eval/jenkinsfile-runner)
 [![GitHub contributors](https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner)](https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors)
 
