@@ -27,7 +27,7 @@ public class SmokeTest {
     public final SystemErrRule systemErr = new SystemErrRule().enableLog();
 
     @Rule
-    public Timeout globalTimeout = Timeout.seconds(30);
+    public Timeout globalTimeout = Timeout.seconds(120);
 
     @Test
     public void helloWorld() throws Throwable {
