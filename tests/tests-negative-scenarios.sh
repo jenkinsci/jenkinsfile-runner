@@ -19,10 +19,6 @@ oneTimeSetUp() {
   # docker image to test the plugin version collision
   jfr_tag=$(execute_cwp_jar_and_generate_docker_image "$working_directory" "$downloaded_cwp_jar" "$version" "$current_directory/test_resources/negative-scenarios/config/packager-config-plugin-collision.yml" "$jenkinsfile_runner_invalid_tag" | grep 'Successfully tagged')
   execution_should_success "$?" "$jenkinsfile_runner_invalid_tag" "$jfr_tag"
-
-  # docker image for the rest of tests
-  jfr_tag=$(execute_cwp_jar_and_generate_docker_image "$working_directory" "$downloaded_cwp_jar" "$version" "$current_directory/test_resources/negative-scenarios/config/packager-config-valid.yml" "$jenkinsfile_runner_valid_tag" | grep 'Successfully tagged')
-  execution_should_success "$?" "$jenkinsfile_runner_valid_tag" "$jfr_tag"
 }
 
 setUp() {
@@ -36,30 +32,6 @@ setUp() {
   else
     set_timeout -1
   fi
-}
-
-test_pipeline_execution_fails_bad_syntax() {
-  run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_fails_bad_syntax/Jenkinsfile"
-  execution_success "$?"
-  logs_not_contains "[Pipeline] End of Pipeline"
-  logs_contains "Finished: FAILURE"
-  logs_contains "Unknown stage section"
-}
-
-test_pipeline_execution_fails() {
-  run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_fails/Jenkinsfile"
-  jenkinsfile_execution_should_fail "$?"
-}
-
-test_pipeline_execution_is_unstable() {
-  run_jfr_docker_image "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_is_unstable/Jenkinsfile"
-  execution_success "$?"
-  logs_contains "Finished: UNSTABLE"
-}
-
-test_pipeline_execution_hangs() {
-  result=$(eval private_execution_after_timeout "$jenkinsfile_runner_valid_tag" "$current_directory/test_resources/negative-scenarios/test_pipeline_execution_hangs/Jenkinsfile")
-  execution_success "$?"
 }
 
 test_plugin_versions_collision() {
@@ -85,11 +57,6 @@ private_execution_after_timeout() {
 
 oneTimeTearDown() {
   # force docker termination in case it is still executing
-  docker_id=$(docker ps -aqf "name=$jenkinsfile_runner_valid_tag")
-  if [ ! -z "$docker_id" ]
-  then
-    docker stop -t 1 "$docker_id"
-  fi
   docker_id=$(docker ps -aqf "name=$jenkinsfile_runner_invalid_tag")
   if [ ! -z "$docker_id" ]
   then
@@ -97,11 +64,6 @@ oneTimeTearDown() {
   fi
 
   # remove docker with invalid configuration
-  docker_id=$(docker images -q "$jenkinsfile_runner_valid_tag")
-  if [ ! -z "$docker_id" ]
-  then
-    docker rmi -f "$docker_id"
-  fi
   docker_id=$(docker images -q "$jenkinsfile_runner_invalid_tag")
   if [ ! -z "$docker_id" ]
   then

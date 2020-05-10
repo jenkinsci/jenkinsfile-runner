@@ -139,7 +139,7 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    private void postConstruct(CmdLineParser parser) throws IOException {
+    public void postConstruct(CmdLineParser parser) throws IOException {
 
         if (showVersion) {
             System.out.println(getVersion());
