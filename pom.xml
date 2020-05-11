@@ -54,7 +54,6 @@ THE SOFTWARE.
     <module>payload-dependencies</module>
     <module>payload</module>
     <module>app</module>
-    <module>tests</module>
     <module>vanilla-package</module>
   </modules>
 
@@ -71,8 +70,8 @@ THE SOFTWARE.
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.176.x</artifactId>
-        <version>6</version>
+        <artifactId>bom-2.222.x</artifactId>
+        <version>9</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -185,4 +184,14 @@ THE SOFTWARE.
     <url>https://github.com/jenkinsci/jenkinsfile-runner</url>
     <tag>HEAD</tag>
   </scm>
+
+  <profiles>
+    <profile>
+      <!-- Integration tests -->
+      <id>run-its</id>
+      <modules>
+        <module>tests</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

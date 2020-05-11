@@ -25,9 +25,4 @@ test_cwp() {
   logs_contains "Jenkins Evergreen"
 }
 
-test_databound() {
-  run_jfr_docker_image "$jenkinsfile_runner_tag" "$current_directory/test_resources/cwp-produced-images/test_databound/Jenkinsfile"
-  jenkinsfile_execution_should_succeed "$?"
-}
-
 init_framework

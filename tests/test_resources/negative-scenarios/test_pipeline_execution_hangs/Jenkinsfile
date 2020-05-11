@@ -1,7 +1,0 @@
-stage('Read Evergreen YAML') {
-    node {
-        while(true) {
-            // it hangs
-        }
-    }
-}

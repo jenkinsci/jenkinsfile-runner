@@ -1,1 +1,18 @@
 Dockerfile*
+
+# App and intermediate build dirs
+app/target/jenkinsfile-runner*
+app/target/classes
+app/target/maven-archiver
+app/archive-tmp
+bootstrap/target
+payload/target
+payload-dependencies/target
+setup/target
+
+# Tests
+tests
+
+# Documentation
+demo
+docs

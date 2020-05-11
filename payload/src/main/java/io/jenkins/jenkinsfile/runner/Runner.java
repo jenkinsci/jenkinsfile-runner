@@ -51,7 +51,7 @@ public class Runner {
         List<Action> workflowActionsList = new ArrayList<>(3);
         workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
 
-        if (bootstrap.workflowParameters.size() > 0) {
+        if (bootstrap.workflowParameters != null && bootstrap.workflowParameters.size() > 0) {
           workflowActionsList.add(createParametersAction(bootstrap));
         }
 
