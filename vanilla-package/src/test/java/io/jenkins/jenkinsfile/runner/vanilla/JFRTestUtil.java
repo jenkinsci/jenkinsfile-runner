@@ -4,8 +4,8 @@ import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.CheckReturnValue;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
