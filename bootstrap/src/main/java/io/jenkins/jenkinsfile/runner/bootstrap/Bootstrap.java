@@ -2,6 +2,7 @@ package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -305,6 +306,13 @@ public class Bootstrap {
         if (hasClass(appClassName)) {
             Class<?> c = Class.forName(appClassName);
             return ((IApp) c.newInstance()).run(this);
+        }
+
+        // Explode war if necessary
+        String warPath = warDir.getAbsolutePath();
+        if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
+            System.out.println("Exploding," + warPath +  "this might take some time.");
+            warDir = Util.explodeWar(warPath);
         }
 
         ClassLoader jenkins = createJenkinsWarClassLoader();
