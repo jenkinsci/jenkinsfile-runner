@@ -108,7 +108,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
-        <version>2.5.0</version>
+        <version>2.6.0</version>
       </dependency>
 
       <!-- TODO: Remove version override once BOM is updated to reference >=1.38 -->
