@@ -60,7 +60,7 @@ THE SOFTWARE.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.222.1</jenkins.version>
+    <jenkins.version>2.235.2</jenkins.version>
     <jetty.version>9.4.30.v20200611</jetty.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
@@ -70,8 +70,8 @@ THE SOFTWARE.
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.222.x</artifactId>
-        <version>9</version>
+        <artifactId>bom-2.235.x</artifactId>
+        <version>11</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -82,6 +82,14 @@ THE SOFTWARE.
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <!-- Extra libraries -->
+      <dependency>
+        <groupId>io.jenkins.lib</groupId>
+        <artifactId>support-log-formatter</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <!-- TODO(oleg-nenashev): Remove after 2.238: https://github.com/jenkinsci/jenkins/pull/4702 -->
       <dependency>
         <groupId>commons-collections</groupId>
         <artifactId>commons-collections</artifactId>
@@ -92,18 +100,23 @@ THE SOFTWARE.
         <artifactId>args4j</artifactId>
         <version>2.33</version>
       </dependency>
+      <dependency>
+        <groupId>org.jenkins-ci</groupId>
+        <artifactId>version-number</artifactId>
+        <version>1.7</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.9.3</version>
+      </dependency>
 
+      <!-- Plugins -->
       <!--TODO(oleg-nenashev): Remove once in BOM -->
       <dependency>
         <groupId>org.jenkins-ci.plugins.workflow</groupId>
         <artifactId>workflow-multibranch</artifactId>
         <version>2.21</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.11</version>
       </dependency>
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
@@ -111,11 +124,11 @@ THE SOFTWARE.
         <version>2.6.1</version>
       </dependency>
 
-      <!-- TODO: Remove version override once BOM is updated to reference >=1.38 -->
+      <!-- Maven plugins -->
       <dependency>
-        <groupId>io.jenkins</groupId>
-        <artifactId>configuration-as-code</artifactId>
-        <version>1.38</version>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>3.11</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
