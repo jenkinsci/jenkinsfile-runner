@@ -128,7 +128,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>org.jenkins-ci.tools</groupId>
         <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.11</version>
+        <version>3.15</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
