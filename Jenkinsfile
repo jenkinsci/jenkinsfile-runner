@@ -97,7 +97,6 @@ node('docker') {
                     imageTag = branchName.equals("master") ? "latest" : branchName
                     echo "Creating the container ${imageName}:${imageTag}"
                     sh "docker build -t ${imageName}:${imageTag} --no-cache --rm -f packaging/docker/unix/debian-jdk8/Dockerfile ."
-                    image = docker.build("", '')
                 }
             }
 
