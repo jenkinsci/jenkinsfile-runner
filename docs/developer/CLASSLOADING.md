@@ -1,6 +1,7 @@
 # Implementation Note
-Jenkinsfile Runner uses the unit test harness to embed Jenkins in a command line tool,
-then execute a pipeline inside. In order to allow users to choose Jenkins version as
+
+Jenkinsfile Runner embeds Jenkins in a command line tool, then execute a pipeline inside.
+In order to allow users to choose Jenkins version as
 well as plugins, it creates a classloader hierarchy and different portion of the code
 runs in different classloader.
 
@@ -29,7 +30,7 @@ the rest of the classloader hierachy, then jump to the setup.
 
 `System` classloader is the one JavaVM implicitly creates to host JavaSE runtime.
 
-`Jenkins` classloader contains the jenkins core, which comes from `jenkins.war`
+`Jenkins` classloader contains the Jenkins core, which comes from `jenkins.war`
 given by a user.
 
 `Setup` classloader contains Jetty, Jenkins unit test harness, and other garbage
