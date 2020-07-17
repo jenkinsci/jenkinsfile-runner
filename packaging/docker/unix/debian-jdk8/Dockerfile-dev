@@ -13,7 +13,7 @@ COPY vanilla-package/target/war/jenkins.war /usr/share/jenkins/jenkins.war
 RUN unzip /usr/share/jenkins/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 COPY vanilla-package/target/plugins /usr/share/jenkins/ref/plugins
-COPY jenkinsfile-runner-launcher /app/bin
+COPY /packaging/docker/unix/jenkinsfile-runner-launcher /app/bin
 
 VOLUME /usr/share/jenkins/ref/casc
 

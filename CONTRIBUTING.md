@@ -27,7 +27,16 @@ Run `mvn clean package` for the project to be just built and `mvn clean package 
 to be built and the integration tests to be launched, which are based on the [Jenkinsfile Runner Test Framework](https://github.com/jenkinsci/jenkinsfile-runner-test-framework).
 
 This will generate an assembly artifact through the `appassembler-maven-plugin` that can be configured and used to run Jenkinsfiles.
-In case you are interested in generating a Docker image containing both the assembly and the configuration, see [DOCKER.md](DOCKER.md).
+
+## Building Docker images
+
+This repository includes the base image which can be built simply as...
+
+    docker build -t jenkins4eval/jenkinsfile-runner -f packaging/docker/unix/debian-jdk8/Dockerfile .
+
+During development you can reuse the local machine build instead of doing a full build from scratch
+
+    docker build -t jenkins4eval/jenkinsfile-runner:dev -f packaging/docker/unix/debian-jdk8/Dockerfile-dev .
 
 ## Debugging
 
