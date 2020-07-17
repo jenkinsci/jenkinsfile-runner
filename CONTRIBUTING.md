@@ -14,7 +14,12 @@ This page provides information about contributing code to the Jenkinsfile Runner
   * Docker.
   * Make.
 
-## Building and Debugging
+## Documentation
+
+This page provides basic information about building and testing Jenkinsfile Runner.
+In case you are more interested in details and in the architecture, see the [Developer Documentation](./docs/developer/README.md).
+
+## Building
 
 The build flow for Jenkinsfile Runner is built around Maven and Docker.
 
@@ -24,8 +29,9 @@ to be built and the integration tests to be launched, which are based on the [Je
 This will generate an assembly artifact through the `appassembler-maven-plugin` that can be configured and used to run Jenkinsfiles.
 In case you are interested in generating a Docker image containing both the assembly and the configuration, see [DOCKER.md](DOCKER.md).
 
-There you will also find information regarding debugging Jenkinsfile Runner. In case you are more interested
-in the architecture, see [DEVELOPER.md](DEVELOPER.md).
+## Debugging
+
+See the [Debugging Guidelines](./docs/developer/DEBUG.md).
 
 ## Testing changes
 

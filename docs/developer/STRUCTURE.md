@@ -55,6 +55,7 @@ or a WAR exploder in charge of exploding the WAR file and fully initializing an 
 ## `vanilla-package` module
 
 Defines the dependencies to be included in the Vanilla Docker distribution.
+It also includes unit tests that verify basic functionality of Jenkinsfile Runner.
 
 ## `tests` module
 
