@@ -36,7 +36,7 @@ RUN New-Item -ItemType Directory -Path "C:/app","C:/ProgramData/jenkins/ref/plug
 COPY --from=jenkinsfilerunner-build C:/app/jenkins C:/app/jenkins
 COPY --from=jenkinsfilerunner-build C:/jenkinsfile-runner/app/target/appassembler C:/app
 COPY --from=jenkinsfilerunner-build C:/jenkinsfile-runner/vanilla-package/target/plugins C:/ProgramData/jenkins/ref/plugins
-COPY jenkinsfile-runner-launcher.ps1 C:/app/bin
+COPY C:/jenkinsfile-runner/packaging/docker/windows/jenkinsfile-runner-launcher.ps1 C:/app/bin
 
 VOLUME C:/build
 
