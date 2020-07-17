@@ -182,51 +182,50 @@ Jenkinsfile Runner can be launched simply as...
 
 Advanced options:
 
-* `JAVA_OPTS` environment variable can be passed to pass extra options to the image
+* `JAVA_OPTS` environment variable can be passed to pass extra JVM arguments to the image
+
+```bash
+docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
+```
+
 * In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
   This directory can be exposed as a volume.
   The docker image generated with Custom War Packager maps the workspace to `/build` by default and it can be exposed as well.
   However it is possible to override that directory if both the `-v` docker option and the `--runWorkspace` Jenkinsfile Runner option are specified.
-* By default the JENKINS_HOME folder is randomly created and disposed afterwards. With the `--runHome` parameter in combination with the `-v` docker option it is possible to specify a folder.   
+* By default the JENKINS_HOME folder is randomly created and disposed afterwards. With the `--runHome` parameter in combination with the `-v` Docker option it is possible to specify a folder.   
   e.g. `docker run -v /local/Jenkinsfile:/workspace/Jenkinsfile -v /local/jenkinsHome:/jenkinsHome ${JENKINSFILE_RUNNER_IMAGE} --runHome /jenkinsHome`
 
   This way you can access the build metadata in `<jenkinsHome>/jobs/job/builds/1`, like the build.xml, logs, and workflow data, even after the container finished.
 
 * The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
+  Using a non-sandbox environment may pose potential security risks.
+  We strongly encourage you not to use this mode unless it is strictly necessary and always with extreme care and at your own risk.
 
 * You may pass `--cli` to obtain an interactive Jenkins CLI session.
+  To get an interactive Jenkins CLI shell in the container, pass
+`-i -e FORCE_JENKINS_CLI=true` to `docker run` as extra parameters.
 
-## Docker build
+* Optionally, if you want to change default parameters for plugins or workspace, you can get onto the container
+by overriding entrypoint - binary is placed in `/app/bin/jenkinsfile-runner`.
 
-You can build your customized Jenkinsfile Runner image using the Vanilla Dockerfile included in this repository or [with Custom WAR Packager](https://jenkins.io/blog/2018/10/16/custom-war-packager/#jenkinsfile-runner-packaging).
-See the demos and the [Packaging into Docker image](DOCKER.md) page for further detail.
-
-### Building the Vanilla image
-
-This repository includes the base image which can be built simply as...
-
-    docker build -t jenkins4eval/jenkinsfile-runner .
-
-During development you can reuse the local machine build instead of doing a full build from scratch
-
-    docker build -t jenkins4eval/jenkinsfile-runner:dev -f Dockerfile-dev .
-
-
-## Extending Jenkins Runner
-
-Say you want to install a specific plugin (e.g. slack, in order to send notifications to Slack channel ). You can create two files with the following content:
-- plugins.txt
+```bash
+$ docker run --rm -it -v $PWD/test:/workspace --entrypoint bash jenkinsfile-runner:my-production-jenkins
+root@dec4c0f12478:/src# cp -r /app/jenkins /tmp/jenkins
+root@dec4c0f12478:/src# /app/bin/jenkinsfile-runner -w /tmp/jenkins -p /usr/share/jenkins/ref/plugins -f /workspace
 ```
-slack
-```
-- Dockerfile
-```
-FROM jenkins4eval/jenkinsfile-runner
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN cd /app/jenkins && jar -cvf jenkins.war *
-RUN java -jar /app/bin/jenkins-plugin-manager.jar --war /app/jenkins/jenkins.war --plugin-file /usr/share/jenkins/ref/plugins.txt && rm /app/jenkins/jenkins.war
-```
-Now you have a custom image of jenkins-runner with your own plugins installed!
+
+## Extending Jenkinsfile Runner
+
+Jenkinsfile Runner provides a vanilla image which includes some plugins and configurations.
+Usually, it is not enough to run a real Jenkins Pipelines.
+It might be required to install extra plugins and tools, and then to configure Jenkins so that Pipelines can properly operate in the user environment.
+
+There are 2 ways to extend Jenkinsfile Runner:
+
+* Using low-level management tools, including the `--plugins` command included in CLI.
+* For Docker images only: using Custom WAR/Docker Packager which automates some build steps and allows managing Jenkinsfile Runner configuration via a single YAML file.
+
+For Docker images see [Extending Jenkinsfile Runner images](./docs/using/EXTENDING_DOCKER.md) for more information and examples.
 
 ## Reporting issues
 
@@ -244,4 +243,3 @@ If you see a security issue in the component, please follow the [vulnerability r
 * [Contributing to Jenkinsfile Runner](CONTRIBUTING.md)
 * [Developer Documentation](./docs/developer/README.md)
 * Slides: [Under the hood of serverless Jenkins. Jenkinsfile Runner](https://docs.google.com/presentation/d/1y7YnAdnh5WY59g8oIGTsj8sLQ5KXgoV7uUCBkxcTU88/edit?usp=sharing)
-
