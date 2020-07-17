@@ -21,7 +21,7 @@ RUN mkdir -p /app /usr/share/jenkins/ref/plugins /usr/share/jenkins/ref/casc /ap
 COPY --from=jenkinsfilerunner-build /app/jenkins /app/jenkins
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/vanilla-package/target/plugins /usr/share/jenkins/ref/plugins
-COPY jenkinsfile-runner-launcher /app/bin
+COPY /packaging/docker/unix/jenkinsfile-runner-launcher /app/bin
 
 VOLUME /build
 VOLUME /usr/share/jenkins/ref/casc
