@@ -126,7 +126,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>io.jenkins.plugins</groupId>
         <artifactId>pipeline-as-yaml</artifactId>
-        <version>0.10-rc-20200717.081243-1</version>
+        <version>0.10-rc</version>
       </dependency>
 
       <!-- Maven plugins -->

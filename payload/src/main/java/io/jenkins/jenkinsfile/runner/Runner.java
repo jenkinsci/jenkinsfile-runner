@@ -10,7 +10,6 @@ import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
 
-import org.apache.commons.io.FilenameUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.flow.FlowDurabilityHint;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -21,7 +20,6 @@ import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlSc
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +48,7 @@ public class Runner {
         w.updateNextBuildNumber(bootstrap.buildNumber);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
 
-        String ext = FilenameUtils.getExtension(bootstrap.jenkinsfile.getName());
-        if (ext.equals("yml")) {
+        if (bootstrap.jenkinsfile.getName().endsWith(".yml")) {
           w.setDefinition(new PipelineAsYamlScmFlowDefinition(
             bootstrap.jenkinsfile.getName(),
             new FileSystemSCM(bootstrap.jenkinsfile.getParent()),
