@@ -9,15 +9,19 @@ import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
+
+import org.apache.commons.io.FilenameUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.flow.FlowDurabilityHint;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.job.properties.DurabilityHintJobProperty;
+import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScmFlowDefinition;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +49,19 @@ public class Runner {
         WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
         w.updateNextBuildNumber(bootstrap.buildNumber);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
-        w.setDefinition(new CpsScmFlowDefinition(
-                new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
+
+        String ext = FilenameUtils.getExtension(bootstrap.jenkinsfile.getName());
+        if (ext.equals("yml")) {
+          w.setDefinition(new PipelineAsYamlScmFlowDefinition(
+            bootstrap.jenkinsfile.getName(),
+            new FileSystemSCM(bootstrap.jenkinsfile.getParent()),
+            false));
+        } else {
+          w.setDefinition(new CpsScmFlowDefinition(
+            new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
+        }
+
+        
 
         List<Action> workflowActionsList = new ArrayList<>(3);
         workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
