@@ -1,6 +1,10 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import hudson.util.VersionNumber;
+import io.jenkins.tools.pluginmanager.impl.Plugin;
+import io.jenkins.tools.pluginmanager.impl.PluginManager;
+import io.jenkins.tools.pluginmanager.util.PluginListParser;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.args4j.CmdLineException;
@@ -20,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -189,18 +194,18 @@ public class Bootstrap {
             File plugins_txt = this.pluginsDir;
             // This is a plugin list file
             this.pluginsDir = Files.createTempDirectory("plugins").toFile();
-            for (String line : FileUtils.readLines(plugins_txt, UTF_8)) {
-                String shortname = line;
-                String version = "latest";
 
-                int i = line.indexOf(':');
-                if (i != -1) {
-                    shortname = line.substring(0,i);
-                    version = line.substring(i+1);
-                }
-
-                installPlugin(shortname, version);
+            List<Plugin> plugins = new PluginListParser().parsePluginTxtFile(plugins_txt);
+            if (plugins == null || plugins.isEmpty()) {
+                // TODO: proper error propagation?
+                System.err.println("Failed to read plugins from " + plugins_txt);
+                System.exit(-1);
             }
+
+            PluginManager pluginManager = Util.initPluginManager(
+                pluginsDir,
+                configBuilder -> configBuilder.withPlugins(plugins));
+            pluginManager.installedPlugins();
         }
 
         if (this.runWorkspace != null){
@@ -277,20 +282,6 @@ public class Bootstrap {
         }
 
         return war;
-    }
-
-    private void installPlugin(String shortname, String version) throws IOException {
-
-        final File install = new File(pluginsDir, shortname + ".jpi");
-        File plugin = new File(cache, String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
-        if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
-            plugin.getParentFile().mkdirs();
-            final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
-            System.out.printf("Downloading jenkins plugin %s (%s)...\n", shortname, version);
-            FileUtils.copyURLToFile(url, plugin);
-        }
-
-        Files.createSymbolicLink(install.toPath(), plugin.toPath());
     }
 
     private String getMirrorURL(String url) {

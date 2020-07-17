@@ -11,6 +11,10 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+import io.jenkins.tools.pluginmanager.config.Config;
+import io.jenkins.tools.pluginmanager.impl.PluginManager;
+
 
 public class Util {
 
@@ -45,5 +49,29 @@ public class Util {
             }
         }
         return destDir;
+    }
+
+    public interface PluginManagerConfigurator {
+        void configure(Config.Builder configBuilder);
+    }
+
+    @NonNull
+    public static PluginManager initPluginManager(File pluginsDir, PluginManagerConfigurator configurator) {
+        Config.Builder configBuilder = Config.builder()
+                //.withJenkinsWar(jenkinsWar.getAbsolutePath())
+                .withPluginDir(pluginsDir)
+                .withShowAvailableUpdates(true)
+                .withIsVerbose(true)
+                .withDoDownload(false);
+        configurator.configure(configBuilder);
+        Config config = configBuilder.build();
+
+        PluginManager pluginManager = new PluginManager(config);
+        //pluginManager.setCm(new CacheManager(cacheDir.toPath(), true));
+        //pluginManager.setJenkinsVersion(new VersionNumber("2.222.1"));
+        //pluginManager.setLatestUcJson(latestUcJson);
+        //pluginManager.setLatestUcPlugins(latestUcJson.getJSONObject("plugins"));
+        //pluginManager.setPluginInfoJson(pluginManager.getJson(pluginVersionsFile.toURI().toURL(), "plugin-versions"));
+        return pluginManager;
     }
 }
