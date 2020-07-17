@@ -52,9 +52,12 @@
       <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.jenkins.lib</groupId>
       <artifactId>support-log-formatter</artifactId>
-      <version>1.0</version>
     </dependency>
 
     <dependency>
