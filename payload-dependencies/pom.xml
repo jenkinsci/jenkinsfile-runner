@@ -62,5 +62,16 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>scm-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>pipeline-as-yaml</artifactId>
+      <exclusions>
+        <!-- TODO(oleg_nenashev): guava:13.0.1 in pipeline-model-api 1.7.1 : https://issues.jenkins-ci.org/browse/JENKINS-63123 -->
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 </project>
