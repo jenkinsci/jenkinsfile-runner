@@ -2,7 +2,9 @@ Pipeline as YAML demo
 =====================
 
 This demo shows how to use [Pipeline as YAML](https://plugins.jenkins.io/pipeline-as-yaml/) in Jenkinsfile Runner.
-It executes a simple "Hello, world!" Pipeline defined as YAML.
+Support for Pipeline as YAML plugin is available starting from 1.0-beta-13 (and beta-14 for Vanilla Docker images).
+
+In this demo we will execute a simple "Hello, world!" Pipeline defined as YAML.
 
 ## Running in Docker
 

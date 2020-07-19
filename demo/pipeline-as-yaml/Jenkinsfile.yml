@@ -4,4 +4,4 @@ pipeline:
   stages:
   - stage: "Print Hello"
     steps:
-    - echo "Hello, world!"
+    - echo "Hello, YAML world!"
