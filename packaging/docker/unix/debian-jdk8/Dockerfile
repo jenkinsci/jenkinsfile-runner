@@ -3,7 +3,13 @@ FROM jenkins4eval/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncach
 FROM maven:3.5.4 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
-ADD . /jenkinsfile-runner
+ADD app /jenkinsfile-runner/app
+ADD bootstrap /jenkinsfile-runner/bootstrap
+ADD payload /jenkinsfile-runner/payload
+ADD payload-dependencies /jenkinsfile-runner/payload-dependencies
+ADD setup /jenkinsfile-runner/setup
+ADD vanilla-package /jenkinsfile-runner/vanilla-package
+ADD pom.xml /jenkinsfile-runner/pom.xml
 RUN cd /jenkinsfile-runner && mvn clean package
 RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
@@ -26,8 +32,4 @@ COPY /packaging/docker/unix/jenkinsfile-runner-launcher /app/bin
 VOLUME /build
 VOLUME /usr/share/jenkins/ref/casc
 
-ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher", \
-            "-w", "/app/jenkins",\
-            "-p", "/usr/share/jenkins/ref/plugins",\
-            "-f", "/workspace", \
-            "--runWorkspace", "/build"]
+ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher"]
