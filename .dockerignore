@@ -9,6 +9,7 @@ bootstrap/target
 payload/target
 payload-dependencies/target
 setup/target
+target/
 
 # Tests
 tests
