@@ -10,12 +10,14 @@ import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
 
+import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.flow.FlowDurabilityHint;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.job.properties.DurabilityHintJobProperty;
 import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScmFlowDefinition;
+import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScriptFlowDefinition;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,21 +49,17 @@ public class Runner {
         WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
         w.updateNextBuildNumber(bootstrap.buildNumber);
         w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
+        List<Action> workflowActionsList = new ArrayList<>(3);
 
         if (bootstrap.jenkinsfile.getName().endsWith(".yml")) {
-          w.setDefinition(new PipelineAsYamlScmFlowDefinition(
-            bootstrap.jenkinsfile.getName(),
-            new FileSystemSCM(bootstrap.jenkinsfile.getParent()),
-            false));
+          // We do not use SCM definition here due to https://github.com/jenkinsci/pipeline-as-yaml-plugin/issues/28
+          w.setDefinition(new PipelineAsYamlScriptFlowDefinition(
+            FileUtils.readFileToString(bootstrap.jenkinsfile),!bootstrap.noSandBox));
         } else {
           w.setDefinition(new CpsScmFlowDefinition(
             new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
+          workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
         }
-
-        
-
-        List<Action> workflowActionsList = new ArrayList<>(3);
-        workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
 
         if (bootstrap.workflowParameters != null && bootstrap.workflowParameters.size() > 0) {
           workflowActionsList.add(createParametersAction(bootstrap));

@@ -2,6 +2,6 @@ pipeline:
   agent:
     none:
   stages:
-    - stage: "Print Hello"
-      steps:
-        - echo "Hello, world!" 
+  - stage: "Print Hello"
+    steps:
+    - echo "Hello, world!"

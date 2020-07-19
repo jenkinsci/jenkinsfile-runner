@@ -130,13 +130,13 @@ public class SmokeTest {
     public void helloWorldAsYaml() throws Throwable {
         File jenkinsfile = tmp.newFile("Jenkinsfile.yml");
         FileUtils.writeStringToFile(jenkinsfile,
-        " pipeline:\n" +
-        "      agent:\n" +
-        "       none:\n" +
-        "        stages:\n" +
-        "        - stage: \"Print Hello\"\n" +
-        "          steps:\n" +
-        "          - echo \"Hello, world!\"" 
+        "pipeline:\n" +
+        "  agent:\n" +
+        "    none:\n" +
+        "  stages:\n" +
+        "    - stage: \"Print Hello\"\n" +
+        "      steps:\n" +
+        "        - echo \"Hello, world!\""
         , Charset.defaultCharset());
 
         int result = JFRTestUtil.runAsCLI(jenkinsfile);
