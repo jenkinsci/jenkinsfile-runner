@@ -19,9 +19,8 @@ update_configs:
     
 
 - package_manager: "docker"
-  directory: "/"
+  directory: "/packaging/docker/unix/debian-jdk8"
   update_schedule: "weekly"
-
   ignored_updates:
     - match:
         dependency_name: "openjdk"
