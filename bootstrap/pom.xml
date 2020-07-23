@@ -22,5 +22,9 @@
       <groupId>org.jenkins-ci</groupId>
       <artifactId>version-number</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.jenkins.plugin-management</groupId>
+      <artifactId>plugin-management-library</artifactId>
+    </dependency>
   </dependencies>
 </project>

@@ -64,6 +64,8 @@ THE SOFTWARE.
     <jetty.version>9.4.30.v20200611</jetty.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
+    <!-- https://github.com/jenkinsci/plugin-installation-manager-tool -->
+    <plugin.installation.manager.version>1.1.2</plugin.installation.manager.version>
   </properties>
 
   <dependencyManagement>
@@ -89,6 +91,12 @@ THE SOFTWARE.
         <artifactId>support-log-formatter</artifactId>
         <version>1.0</version>
       </dependency>
+      <dependency>
+        <groupId>io.jenkins.plugin-management</groupId>
+        <artifactId>plugin-management-library</artifactId>
+        <version>1.1.2</version>
+      </dependency>
+
       <!-- TODO(oleg-nenashev): Remove after 2.238: https://github.com/jenkinsci/jenkins/pull/4702 -->
       <dependency>
         <groupId>commons-collections</groupId>
