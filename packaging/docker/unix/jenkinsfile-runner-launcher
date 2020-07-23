@@ -3,6 +3,9 @@
 if [ -n "$DEBUG" ] ; then
   export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 $JAVA_OPTS"
 fi
+if [ -n "$JDK_11" ] ; then
+  export JAVA_OPTS="--illegal-access=permit $JAVA_OPTS"
+fi
 
 if [ -f "/workspace/Jenkinsfile" ] ; then
   JENKINSFILE_PATH="/workspace/Jenkinsfile"
