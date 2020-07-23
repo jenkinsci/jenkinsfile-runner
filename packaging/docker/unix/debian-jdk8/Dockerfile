@@ -1,6 +1,6 @@
 FROM jenkins4eval/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
-FROM maven:3.5.4 as jenkinsfilerunner-build
+FROM maven:3.6.3 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
 ADD app /jenkinsfile-runner/app
