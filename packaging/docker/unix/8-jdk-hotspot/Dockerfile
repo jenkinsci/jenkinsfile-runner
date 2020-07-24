@@ -14,7 +14,9 @@ RUN cd /jenkinsfile-runner && mvn clean package
 RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 
-FROM openjdk:8-jdk
+FROM adoptopenjdk:8u262-b10-jdk-hotspot
+RUN apt-get update && apt-get install wget && rm -rf /var/lib/apt/lists/*
+
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
 ENV JENKINS_PM_VERSION 0.1-alpha-10

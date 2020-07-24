@@ -96,7 +96,7 @@ node('docker') {
                     def shortCommit = scmVars.GIT_COMMIT
                     imageTag = branchName.equals("master") ? "latest" : branchName
                     echo "Creating the container ${imageName}:${imageTag}"
-                    sh "docker build -t ${imageName}:${imageTag} --no-cache --rm -f packaging/docker/unix/debian-jdk8/Dockerfile ."
+                    sh "docker build -t ${imageName}:${imageTag} --no-cache --rm -f packaging/docker/unix/8-jdk-hotspot/Dockerfile ."
                 }
             }
 

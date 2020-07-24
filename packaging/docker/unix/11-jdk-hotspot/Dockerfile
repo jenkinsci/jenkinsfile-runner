@@ -14,7 +14,7 @@ RUN cd /jenkinsfile-runner && mvn clean package
 RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 
-FROM adoptopenjdk:11-jdk-hotspot
+FROM adoptopenjdk:11.0.8_10-jdk-hotspot
 RUN apt-get update && apt-get install wget && rm -rf /var/lib/apt/lists/*
 
 ENV JDK_11 true
