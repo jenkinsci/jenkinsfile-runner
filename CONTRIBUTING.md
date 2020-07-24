@@ -32,11 +32,11 @@ This will generate an assembly artifact through the `appassembler-maven-plugin` 
 
 This repository includes the base image which can be built simply as...
 
-    docker build -t jenkins4eval/jenkinsfile-runner -f packaging/docker/unix/debian-jdk8/Dockerfile .
+    docker build -t jenkins4eval/jenkinsfile-runner -f packaging/docker/unix/8-jdk-hotspot/Dockerfile .
 
 During development you can reuse the local machine build instead of doing a full build from scratch
 
-    docker build -t jenkins4eval/jenkinsfile-runner:dev -f packaging/docker/unix/debian-jdk8/Dockerfile-dev .
+    docker build -t jenkins4eval/jenkinsfile-runner:dev -f packaging/docker/unix/8-jdk-hotspot/Dockerfile-dev .
 
 ## Debugging
 
