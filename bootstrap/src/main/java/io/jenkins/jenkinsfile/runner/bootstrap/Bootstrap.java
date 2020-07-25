@@ -233,20 +233,19 @@ public class Bootstrap {
     }
 
     private String getVersion() throws IOException {
-       return readPropertyFromPom("version");
+       return getClass().getPackage().getImplementationVersion();
     }
 
     private String getMininumJenkinsVersion() throws IOException {
-        return readPropertyFromPom("jenkins.version");
+        return readJenkinsPomProperty("jenkins.version");
     }
 
     private boolean isVersionSupported() throws IOException {
         return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
     }
 
-    private String readPropertyFromPom(String key) throws IOException {
-        String propertiesPath = "/META-INF/maven/io.jenkins.jenkinsfile-runner/jenkinsfile-runner/pom.properties";
-        try (InputStream pomProperties = this.getClass().getResourceAsStream(propertiesPath)) {
+    private String readJenkinsPomProperty(String key) throws IOException {
+        try (InputStream pomProperties = this.getClass().getResourceAsStream("/jenkins.properties")) {
             Properties props = new Properties();
             props.load(pomProperties);
             return props.getProperty(key);
