@@ -1,0 +1,41 @@
+# Jenkinsfile Runner Docker Images
+
+[![Docker Pulls](https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins/jenkinsfile-runner)
+
+This directory includes the Docker images for Jenkinsfile Runner (JFR) which are a part of the
+main Jenkinsfile Runner repository.
+
+Starting from JFR 1.0-beta-15,
+all images in this repository are based on [AdoptOpenJDK](https://adoptopenjdk.net/)
+and published as [jenkins/jenkinsfile-runner](https://hub.docker.com/r/jenkins/jenkinsfile-runner) on DockerHub.
+At the moment, official packages include only Linux-based distributions (Ubuntu, Debian and Alpine).
+There are also prototype Windows images that can be built manually.
+Images for other platforms and JDKs may be added upon a pull request,
+contributions are welcome!
+
+## Naming conventions
+
+Folders in the repository represent the tag that will be assigned in DockerHub.
+The following format is used:
+
+```bash
+${JVM_VENDOR}-${JAVA_VERSION}[-${JVM_CLASSIFIER1}][-${JVM_CLASSIFIER2}]...[-${OS}]
+```
+
+Examples: `adoptopenjdk-8-hotspot`, `adoptopnejdk-11-jre-alpine`
+
+* `JVM_VENDOR` - source of the JVM in lowercase, e.g. AdoptOpenJDK or JVM.
+* `JAVA_VERSION` - version of the JVM.
+  Right now `8` or `11` are used, fine-grain versions might be added in the future.
+* `JVM_CLASSIFIER` - Additional information about the JVM used in the image.
+  It might refer to `jdk`/`jre` or a JVM type (e.g. `hotspot`, `openj9`).
+  Multiple classifiers might be used.
+  Optional, defaults to the upstream image defaults.
+* `OS` - Information about the operating system (e.g. `alpine`, `debian`, `buster`).
+  Optional, defaults to the upstream image defaults.
+
+Naming convention and defaults for generic tags like `latest` may change over time.
+
+## Building images locally
+
+See the [Contributing guidelines](r/CONTRIBUTING.md#building-docker-images).

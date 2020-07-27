@@ -1,18 +1,19 @@
-# Jenkinsfile Runner
+# Jenkinsfile Runner (Incubating project)
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog)](https://github.com/jenkinsci/jenkinsfile-runner/releases/latest)
-[![Docker Pulls](https://img.shields.io/docker/pulls/jenkins4eval/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins4eval/jenkinsfile-runner)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins/jenkinsfile-runner)
 [![GitHub contributors](https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner)](https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors)
 
-Jenkinsfile Runner is an experiment to package Jenkins pipeline execution as a command line tool.
-The intend use cases include:
+Jenkinsfile Runner packages Jenkins pipeline execution as a command line tool or as a Docker image.
+Target use cases include but not limited to:
 
-* Use Jenkins in Function-as-a-Service context
-* Assist editing `Jenkinsfile` locally
-* Integration test shared libraries
+* Using Jenkins in a Function-as-a-Service context
+* Assist editing and testing Jenkins Pipeline definitions and libraries locally.
+* Integration testing of Pipelines.
 
-This repository includes the Jenkinsfile Runner sources and also the base (aka "vanilla") Docker image.
-This Docker image includes the minimum required set of plugins for running pipelines, but it needs to be extended in order to run real-world pipelines.
+This repository includes the Jenkinsfile Runner itself and the _Vanilla_ distribution.
+The Vanilla distribution includes the minimum required set of plugins for running pipelines,
+but it needs to be extended in order to run real-world pipelines.
 See the documentation below for more information.
 
 ## Quick Demo
@@ -177,7 +178,7 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 Jenkinsfile Runner can be launched simply as...
 
 ```
-    docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins4eval/jenkinsfile-runner
+    docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins/jenkinsfile-runner
 ```
 
 Advanced options:
@@ -185,7 +186,7 @@ Advanced options:
 * `JAVA_OPTS` environment variable can be passed to pass extra JVM arguments to the image
 
 ```bash
-docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
+docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkins/jenkinsfile-runner
 ```
 
 * In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
