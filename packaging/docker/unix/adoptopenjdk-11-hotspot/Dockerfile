@@ -1,4 +1,4 @@
-FROM jenkins4eval/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
+FROM jenkins/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
 FROM maven:3.5.4 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo

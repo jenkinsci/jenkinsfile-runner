@@ -1,4 +1,4 @@
-FROM jenkins4eval/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
+FROM jenkins/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
 FROM maven:3.5.4 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
@@ -15,7 +15,7 @@ RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.w
   rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/winstone.jar /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
 
 # Unofficial experimental image, AdoptOpenJDK does not offer official Alpine for JDK8
-FROM adoptopenjdk/openjdk11:jre-11.0.7_10-alpine
+FROM adoptopenjdk/openjdk8:jdk8u252-b09-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
 ENV JENKINS_PM_VERSION 0.1-alpha-10
