@@ -4,6 +4,7 @@ FROM maven:3.5.4 as jenkinsfilerunner-build
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
 ADD app /jenkinsfile-runner/app
+ADD app-portable /jenkinsfile-runner/app-portable
 ADD bootstrap /jenkinsfile-runner/bootstrap
 ADD payload /jenkinsfile-runner/payload
 ADD payload-dependencies /jenkinsfile-runner/payload-dependencies

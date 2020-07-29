@@ -19,6 +19,11 @@ Picks what's necessary from other modules by adding them as dependencies and con
 the `appassembler-maven-plugin` so that an assembly is generated, containing the Jenkinsfile Runner as an
 executable script.
 
+## `app-portable` module
+
+Same as `app`, but it also includes the Jenkins core and the minimum required set of plugins as JARs.
+It allows running Jenkinsfile Runner from classpath without providing the external WAR and plugin locations.
+
 ## `bootstrap` module
 
 Contains special classloader configuration so that Jenkinsfile Runner is able to work both with Jenkins classes and with the

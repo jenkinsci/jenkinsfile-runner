@@ -8,6 +8,7 @@ FROM jenkins4eval/maven-windows-jdk-8 as maven
 FROM maven as jenkinsfilerunner-mvncache
 ADD pom.xml C:/src/pom.xml
 ADD app/pom.xml C:/src/app/pom.xml
+ADD app-portable/pom.xml C:/src/app-portable/pom.xml
 ADD bootstrap/pom.xml C:/src/bootstrap/pom.xml
 ADD setup/pom.xml C:/src/setup/pom.xml
 ADD payload/pom.xml C:/src/payload/pom.xml

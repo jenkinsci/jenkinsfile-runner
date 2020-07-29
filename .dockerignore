@@ -5,6 +5,10 @@ app/target/jenkinsfile-runner*
 app/target/classes
 app/target/maven-archiver
 app/archive-tmp
+app-portable/target/jenkinsfile-runner*
+app-portable/target/classes
+app-portable/target/maven-archiver
+app-portable/archive-tmp
 bootstrap/target
 payload/target
 payload-dependencies/target

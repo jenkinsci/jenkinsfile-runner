@@ -7,8 +7,8 @@
     <version>1.0-beta-16-SNAPSHOT</version>
   </parent>
 
-  <artifactId>jenkinsfile-runner</artifactId>
-  <description>Jenkinsfile Runner bundle which includes CLI only, without the Jenkins core and required plugins</description>
+  <artifactId>jenkinsfile-runner-portable</artifactId>
+  <description>Portable Jenkinsfile Runner bundle which includes the Jenkins Core and plugin JARs</description>
 
   <build>
     <finalName>jenkinsfile-runner</finalName>
@@ -109,9 +109,20 @@
       <groupId>org.jenkins-ci</groupId>
       <artifactId>symbol-annotation</artifactId>
     </dependency>
+
+    <!-- Bundles jenkins-core.jar, plugin JARs, and other dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>payload-dependencies</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.jenkins-ci</groupId>
       <artifactId>annotation-indexer</artifactId>
     </dependency>
   </dependencies>
+
+
+
 </project>

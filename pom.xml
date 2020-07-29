@@ -54,6 +54,7 @@ THE SOFTWARE.
     <module>payload-dependencies</module>
     <module>payload</module>
     <module>app</module>
+    <module>app-portable</module>
     <module>vanilla-package</module>
   </modules>
 
