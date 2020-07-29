@@ -1,10 +1,9 @@
 package io.jenkins.jenkinsfile.runner;
 
-import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 import hudson.ClassicPluginStrategy;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
-import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
+import io.jenkins.jenkinsfile.runner.bootstrap.PairClassLoader;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -77,13 +76,11 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
         before();
 
         try {
-            // Prepare the classloader so that it can take implementations from plugins
+            // Prepare the classloader so that it can take payload implementations from plugins
             if (bootstrap.pluginsDir != null) {
-                ClassLoader baseClassloader = currentThread.getContextClassLoader();
-
-                CompositeClassLoader cl = new CompositeClassLoader();
-                cl.add(baseClassloader);
-                cl.add(jenkins.getPluginManager().uberClassLoader);
+                PairClassLoader cl = new PairClassLoader(
+                        currentThread.getContextClassLoader(),
+                        jenkins.getPluginManager().uberClassLoader);
                 Thread.currentThread().setContextClassLoader(cl);
             }
 

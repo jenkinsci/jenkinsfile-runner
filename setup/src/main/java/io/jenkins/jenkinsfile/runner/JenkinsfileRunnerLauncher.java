@@ -28,8 +28,15 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher {
     protected int doLaunch() throws Exception {
         // so that test code has all the access to the system
         ACL.impersonate(ACL.SYSTEM);
-        Class<?> c = bootstrap.hasClass(RUNNER_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
-        return (int)c.getMethod("run", Bootstrap.class).invoke(c.newInstance(), bootstrap);
+
+        Class<?> runnerClass;
+        try {
+            runnerClass = Class.forName(RUNNER_CLASS_NAME);
+        } catch (ClassNotFoundException ex) {
+            runnerClass = getRunnerClassFromJar();
+        }
+        return (int)runnerClass.getMethod("run", Bootstrap.class).
+                invoke(runnerClass.newInstance(), bootstrap);
     }
 
     private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
