@@ -14,71 +14,75 @@ buildSettings:
       source:
         dir: ./source
     docker:
-      base: "jenkins/jenkins:2.164-jdk11"
+      base: "openjdk:11-jdk"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
       build: false
 war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.164"
+    version: "2.235.2"
 plugins:
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-job"
     source:
-      version: "2.24"
+      version: "2.39"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-cps"
     source:
-      version: "2.48"
+      version: "2.81"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-api"
     source:
-      version: "2.30"
+      version: "2.40"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-step-api"
     source:
-      version: "2.14"
+      version: "2.22"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-support"
     source:
-      version: "3.0" # TO-DO: Maybe this should be into payload-dependencies ?
+      version: "3.5"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "pipeline-utility-steps"
     source:
-      version: "2.1.0"
+      version: "2.6.1"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "cloudbees-folder"
     source:
-      version: "6.4"
+      version: "6.14"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "credentials"
     source:
-      version: "2.1.11"
+      version: "2.3.12"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "structs"
     source:
-      version: "1.14"
+      version: "1.20"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "scm-api"
     source:
-      version: "2.2.6"
+      version: "2.6.3"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "ssh-credentials"
     source:
-      version: "1.12"
+      version: "1.18.1"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "mailer"
+    source:
+      version: "1.32"
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "credentials-binding"
     source:
-      version: "1.16"
-  - groupId: "org.jenkins-ci.plugins.workflow"
-    artifactId: "workflow-aggregator"
-    source:
-      version: "2.5"
+      version: "1.23"
   - groupId: "io.jenkins"
     artifactId: "configuration-as-code"
     source:
-      version: "1.1"
+      version: "1.41"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "durable-task"
+    source:
+      version: "1.34"
 systemProperties: {
     jenkins.model.Jenkins.slaveAgentPort: "50000",
     jenkins.model.Jenkins.slaveAgentPortEnforce: "true"}
