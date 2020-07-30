@@ -79,6 +79,10 @@ plugins:
     artifactId: "configuration-as-code"
     source:
       version: "1.41"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "durable-task"
+    source:
+      version: "1.34"
 systemProperties: {
     jenkins.model.Jenkins.slaveAgentPort: "50000",
     jenkins.model.Jenkins.slaveAgentPortEnforce: "true"}
