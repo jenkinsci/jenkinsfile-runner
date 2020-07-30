@@ -31,7 +31,7 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher {
 
         Class<?> runnerClass;
         try {
-            runnerClass = Class.forName(RUNNER_CLASS_NAME);
+            runnerClass = Thread.currentThread().getContextClassLoader().loadClass(RUNNER_CLASS_NAME);
         } catch (ClassNotFoundException ex) {
             runnerClass = getRunnerClassFromJar();
         }

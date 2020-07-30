@@ -114,6 +114,8 @@ public class Bootstrap {
     @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
     public boolean cliOnly;
 
+    private OptionalClassLoader pluginClassloader;
+
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
         if (Boolean.getBoolean("start.pause")) {
@@ -304,9 +306,14 @@ public class Bootstrap {
         String appClassName = "io.jenkins.jenkinsfile.runner.App";
         if (hasClass(appClassName)) {
             Class<?> c = Class.forName(appClassName);
+
+            Thread th = Thread.currentThread();
+            this.pluginClassloader = new OptionalClassLoader(th.getContextClassLoader());
+            th.setContextClassLoader(pluginClassloader);
             return ((IApp) c.newInstance()).run(this);
         }
 
+        //TODO(oleg_nenashev): Looks like the WAR would not be resolved if appClassName is present. Bug
         // Explode war if necessary
         String warPath = warDir.getAbsolutePath();
         if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
@@ -314,7 +321,10 @@ public class Bootstrap {
             warDir = Util.explodeWar(warPath);
         }
 
-        ClassLoader jenkins = createJenkinsWarClassLoader();
+        // TODO(oleg_nenashev): this path has no coverage
+        ClassLoader platformClassloader = getPlatformClassloader();
+        this.pluginClassloader = new OptionalClassLoader(platformClassloader);
+        ClassLoader jenkins = createJenkinsWarClassLoader(pluginsDir != null ? pluginClassloader : platformClassloader);
         ClassLoader setup = createSetupClassLoader(jenkins);
 
         Thread.currentThread().setContextClassLoader(setup);    // or should this be 'jenkins'?
@@ -333,8 +343,8 @@ public class Bootstrap {
         }
     }
 
-    public ClassLoader createJenkinsWarClassLoader() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        return new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
+    public ClassLoader createJenkinsWarClassLoader(ClassLoader parent) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        return new ClassLoaderBuilder(new SideClassLoader(parent))
                 .collectJars(new File(warDir,"WEB-INF/lib"))
                 // servlet API needs to be visible to jenkins.war
                 .collectJars(new File(getAppRepo(),"javax/servlet"))
@@ -345,6 +355,14 @@ public class Bootstrap {
         return new ClassLoaderBuilder(jenkins)
                 .collectJars(getAppRepo())
                 .make();
+    }
+
+    public void setPluginClassloader(ClassLoader classloader) throws IllegalStateException {
+        if (pluginClassloader == null) {
+            throw new IllegalStateException("Plugin classloader holder has not been initialized. " +
+                    "Bootstrap#run() has not been invoked yet.");
+        }
+        pluginClassloader.set(classloader);
     }
 
     /**

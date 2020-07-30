@@ -1,9 +1,9 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.ClassicPluginStrategy;
+import hudson.model.Hudson;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
-import io.jenkins.jenkinsfile.runner.bootstrap.PairClassLoader;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -69,6 +69,14 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
         return context.getServletContext();
     }
 
+    @Override
+    protected Hudson newHudson() throws Exception {
+        Hudson h = super.newHudson();
+        // Notify the bootstrap about the plugin classloader to be used in its logic
+        bootstrap.setPluginClassloader(h.getPluginManager().uberClassLoader);
+        return h;
+    }
+
     public int launch() throws Throwable {
         Thread currentThread = Thread.currentThread();
         String originalThreadName = currentThread.getName();
@@ -76,15 +84,6 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
         before();
 
         try {
-            // Prepare the classloader so that it can take payload implementations from plugins
-            if (bootstrap.pluginsDir != null) {
-                PairClassLoader cl = new PairClassLoader(
-                        currentThread.getContextClassLoader(),
-                        jenkins.getPluginManager().uberClassLoader);
-                Thread.currentThread().setContextClassLoader(cl);
-            }
-
-            // Launch!
             return doLaunch();
         } finally {
             after();
