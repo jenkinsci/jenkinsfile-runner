@@ -9,6 +9,7 @@ ADD payload /jenkinsfile-runner/payload
 ADD payload-dependencies /jenkinsfile-runner/payload-dependencies
 ADD setup /jenkinsfile-runner/setup
 ADD vanilla-package /jenkinsfile-runner/vanilla-package
+ADD packaging-parent-pom /jenkinsfile-runner/packaging-parent-pom
 ADD pom.xml /jenkinsfile-runner/pom.xml
 RUN cd /jenkinsfile-runner && mvn clean package
 # Prepare the Jenkins core

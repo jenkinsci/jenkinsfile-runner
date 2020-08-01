@@ -3,63 +3,19 @@
 
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>packaging-parent-pom</artifactId>
     <version>1.0-beta-16-SNAPSHOT</version>
+    <relativePath>../packaging-parent-pom</relativePath>
   </parent>
 
   <artifactId>vanilla-package</artifactId>
   <description>Defines plugins which should be included into the Vanilla bundle</description>
 
-  <dependencies>
-    <!-- All Payload dependencies are inherited here -->
-    <!-- TODO(oleg-nenashev): payload-dependencies is not HPI, and hpi:assemble-dependencies does not include plugins unless listed explicitly here
-         Would be nice to deduplicate
-    -->
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-cps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-job</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-multibranch</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-scm-step</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-basic-steps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-durable-task-step</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-support</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>script-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.jenkins</groupId>
-      <artifactId>configuration-as-code</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>scm-api</artifactId>
-    </dependency>
+  <properties>
+    <jfr.name>jenkinsfile-runner-vanilla</jfr.name>
+  </properties>
 
+  <dependencies>
     <!-- Extra Dependencies for Vanilla -->
     <dependency>
       <groupId>org.jenkinsci.plugins</groupId>
@@ -138,52 +94,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>prepare-plugins-dir</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>assemble-dependencies</goal>
-            </goals>
-            <configuration>
-              <minimumJavaVersion>8</minimumJavaVersion>
-              <jenkinsCoreVersionOverride>${jenkins.version}</jenkinsCoreVersionOverride>
-              <outputDirectory>${project.build.directory}/plugins</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>prepare-war</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.jenkins-ci.main</groupId>
-                  <artifactId>jenkins-war</artifactId>
-                  <version>${jenkins.version}</version>
-                  <type>war</type>
-                  <outputDirectory>${project.build.directory}/war</outputDirectory>
-                  <destFileName>jenkins.war</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

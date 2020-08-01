@@ -38,7 +38,7 @@ THE SOFTWARE.
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
-  <description>Jenkinsfile runner parent</description>
+  <description>Jenkinsfile runner parent POM</description>
 
   <licenses>
     <license>
@@ -53,8 +53,8 @@ THE SOFTWARE.
     <module>setup</module>
     <module>payload-dependencies</module>
     <module>payload</module>
-    <module>app</module>
-    <module>vanilla-package</module>
+    <module>packaging-parent-pom</module>
+    <!-- more modules come from profiles -->
   </modules>
 
   <properties>
@@ -204,6 +204,24 @@ THE SOFTWARE.
   </scm>
 
   <profiles>
+    <profile>
+      <id>package-app</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>app</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>package-vanilla</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>vanilla-package</module>
+      </modules>
+    </profile>
     <profile>
       <!-- Integration tests -->
       <id>run-its</id>
