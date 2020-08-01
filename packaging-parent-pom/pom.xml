@@ -174,7 +174,7 @@
                     <artifactItem>
                       <groupId>io.jenkins.jenkinsfile-runner</groupId>
                       <artifactId>packaging-parent-pom</artifactId>
-                      <version>${parent.version}</version>
+                      <version>${project.parent.version}</version>
                       <classifier>assembly-zip-config</classifier>
                       <type>xml</type>
                       <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
@@ -183,7 +183,7 @@
                     <artifactItem>
                       <groupId>io.jenkins.jenkinsfile-runner</groupId>
                       <artifactId>packaging-parent-pom</artifactId>
-                      <version>${parent.version}</version>
+                      <version>${project.parent.version}</version>
                       <classifier>jenkins-properties</classifier>
                       <type>xml</type>
                       <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
@@ -266,7 +266,6 @@
               <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
               </descriptorRefs>-->
-              <finalName>jenkinsfile-runner-standalone</finalName>
               <appendAssemblyId>false</appendAssemblyId>
               <archive>
                 <manifest>
