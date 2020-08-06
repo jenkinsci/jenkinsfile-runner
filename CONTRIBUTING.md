@@ -1,5 +1,7 @@
 # Contributing to Jenkinsfile Runner
 
+[![Gitter](https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg)](https://gitter.im/jenkinsci/jenkinsfile-runner)
+
 This page provides information about contributing code to the Jenkinsfile Runner codebase.
 
 ## Getting started
@@ -18,6 +20,15 @@ This page provides information about contributing code to the Jenkinsfile Runner
 
 This page provides basic information about building and testing Jenkinsfile Runner.
 In case you are more interested in details and in the architecture, see the [Developer Documentation](./docs/developer/README.md).
+
+## Contacts
+
+If you have any questions or need help, please use the following channels:
+
+* [Gitter Chat](https://gitter.im/jenkinsci/jenkinsfile-runner) - for JFR usage and development questions
+* [Jenkins Cloud Native SIG](https://www.jenkins.io/sigs/cloud-native/) channels: mailing lists, chats, meetings
+* [Jenkins Developer Mailing list](https://groups.google.com/d/forum/jenkinsci-dev) - for JFR development questions
+
 
 ## Building
 
