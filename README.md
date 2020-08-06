@@ -3,6 +3,7 @@
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog)](https://github.com/jenkinsci/jenkinsfile-runner/releases/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins/jenkinsfile-runner)
 [![GitHub contributors](https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner)](https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors)
+[![Gitter](https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg)](https://gitter.im/jenkinsci/jenkinsfile-runner)
 
 Jenkinsfile Runner packages Jenkins pipeline execution as a command line tool or as a Docker image.
 Target use cases include but not limited to:
