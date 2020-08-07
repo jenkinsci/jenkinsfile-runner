@@ -231,14 +231,11 @@ For Docker images see [Extending Jenkinsfile Runner images](./docs/using/EXTENDI
 
 ## Reporting issues
 
-Jenkinsfile Runner [Jenkins JIRA](https://issues.jenkins-ci.org) for tracking of tasks and defects
-(project=`JENKINS`, component=`jenkinsfile-runner`).
-GitHub issues can be also used to report issues, but it is not recommended.
-For JIRA please follow [these guidelines](https://wiki.jenkins.io/display/JENKINS/How+to+report+an+issue) when reporting issues.
+Please use [GitHub Issues](https://github.com/jenkinsci/jenkinsfile-runner/issues) to report defects and improvement ideas.
 If you see a security issue in the component, please follow the [vulnerability reporting guidelines](https://jenkins.io/security/#reporting-vulnerabilities).
 
-* [Open issues in Jenkins JIRA](https://issues.jenkins-ci.org/issues/?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened)%20AND%20component%20%3D%20jenkinsfile-runner)
 * [Open issues in GitHub](https://github.com/jenkinsci/jenkinsfile-runner/issues)
+* [Open issues in Jenkins JIRA](https://issues.jenkins-ci.org/issues/?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened)%20AND%20component%20%3D%20jenkinsfile-runner) (deprecated)
 
 ## Further reading
 
