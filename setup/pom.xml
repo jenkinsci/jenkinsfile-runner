@@ -22,7 +22,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
