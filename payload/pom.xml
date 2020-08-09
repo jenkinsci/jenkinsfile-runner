@@ -11,12 +11,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
       <version>${project.version}</version>
     </dependency>

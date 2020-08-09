@@ -87,17 +87,17 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload</artifactId>
       <version>${project.version}</version>
     </dependency>
