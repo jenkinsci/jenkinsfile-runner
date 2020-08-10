@@ -1,6 +1,8 @@
 package io.jenkins.jenkinsfile.runner;
 
+import hudson.JFRPluginStrategy;
 import hudson.PluginManager;
+import hudson.PluginStrategy;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -18,5 +20,10 @@ class PluginManagerImpl extends PluginManager {
     @Override
     protected Collection<String> loadBundledPlugins() throws Exception {
         return Collections.emptySet();
+    }
+
+    @Override
+    protected PluginStrategy createPluginStrategy() {
+        return new JFRPluginStrategy(this);
     }
 }

@@ -1384,7 +1384,7 @@ public class PatchedAntClassLoader extends ClassLoader implements SubBuildListen
                         + ioe.getMessage() + ")", Project.MSG_VERBOSE);
             }
         }
-        throw new ClassNotFoundException(name);
+        throw new ClassNotFoundExceptionNoStackTrace(name);
     }
 
     /**

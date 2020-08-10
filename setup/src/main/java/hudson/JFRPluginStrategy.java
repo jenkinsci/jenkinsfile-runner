@@ -624,7 +624,7 @@ public class JFRPluginStrategy implements PluginStrategy {
                 }
             }
 
-            throw new ClassNotFoundException(name);
+            throw new ClassNotFoundExceptionNoStackTrace(name);
         }
 
         @Override
