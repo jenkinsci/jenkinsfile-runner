@@ -275,7 +275,7 @@ public class JFRPluginStrategy implements PluginStrategy {
             }
         }
 
-        AntClassLoader2 classLoader = new AntClassLoader2(parent);
+        PatchedAntClassLoader2 classLoader = new PatchedAntClassLoader2(parent);
         classLoader.addPathFiles(paths);
         return classLoader;
     }
@@ -394,11 +394,11 @@ public class JFRPluginStrategy implements PluginStrategy {
                 return (DependencyClassLoader)classLoader;
             }
 
-            if (classLoader instanceof AntClassLoader) {
+            if (classLoader instanceof PatchedAntClassLoader) {
                 // AntClassLoaders hold parents not only as AntClassLoader#getParent()
                 // but also as AntClassLoader#getConfiguredParent()
                 DependencyClassLoader ret = findAncestorDependencyClassLoader(
-                        ((AntClassLoader)classLoader).getConfiguredParent()
+                        ((PatchedAntClassLoader)classLoader).getConfiguredParent()
                 );
                 if (ret != null) {
                     return ret;
@@ -678,8 +678,8 @@ public class JFRPluginStrategy implements PluginStrategy {
     /**
      * {@link AntClassLoader} with a few methods exposed, {@link Closeable} support, and {@link org.jenkinsci.bytecode.Transformer} support.
      */
-    private final class AntClassLoader2 extends AntWithFindResourceClassLoader implements Closeable {
-        private AntClassLoader2(ClassLoader parent) {
+    private final class PatchedAntClassLoader2 extends PatchedAntWithFindResourceClassLoader implements Closeable {
+        private PatchedAntClassLoader2(ClassLoader parent) {
             super(parent, true);
         }
 
