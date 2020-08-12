@@ -1,6 +1,10 @@
-# Debugging Jenkinsfile Runner
+= Debugging Jenkinsfile Runner
 
-## Debugging without Docker
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+== Debugging without Docker
 
 Jenkinsfile Runner is a common Java application.
 You can debug it by passing Debug flags to JVM on the startup and then connecting a remote debugger from your IDE.
@@ -11,7 +15,7 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 \
      -p ../../vanilla-package/target/plugins/ -w ../../vanilla-package/target/war/jenkins.war -f . 
 ```
 
-## Debugging in Docker
+== Debugging in Docker
 
 In case you want to debug Jenkinsfile Runner, you need to use the "Vanilla" Docker image built following the steps mentioned in the section above.
 
@@ -22,7 +26,7 @@ considers 5005 as debugging port but you can map such port to whatever value you
 docker run --rm -e DEBUG=true -p 5005:5005 -v $PWD/test:/workspace jenkinsfile-runner:my-production-jenkins
 ```
 
-In case you are having issues when the Docker image is generated in another way (for example through [Custom WAR Packager](https://github.com/jenkinsci/custom-war-packager/)),
+In case you are having issues when the Docker image is generated in another way (for example through (https://github.com/jenkinsci/custom-war-packager/[Custom WAR Packager]),
 you can directly pass `JAVA_OPTS` using the Docker run arguments:
 
 ```bash
