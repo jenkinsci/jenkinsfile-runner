@@ -1,19 +1,19 @@
-# Jenkinsfile Runner Docker Images
+= Jenkinsfile Runner Docker Images
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29)](https://hub.docker.com/r/jenkins/jenkinsfile-runner)
+https://hub.docker.com/r/jenkins/jenkinsfile-runner[image:https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29[Docker pulls]]
 
 This directory includes the Docker images for Jenkinsfile Runner (JFR) which are a part of the
 main Jenkinsfile Runner repository.
 
 Starting from JFR 1.0-beta-15,
-all images in this repository are based on [AdoptOpenJDK](https://adoptopenjdk.net/)
-and published as [jenkins/jenkinsfile-runner](https://hub.docker.com/r/jenkins/jenkinsfile-runner) on DockerHub.
+all images in this repository are based on https://adoptopenjdk.net/AdoptOpenJDK
+and published as https://hub.docker.com/r/jenkins/jenkinsfile-runner[jenkins/jenkinsfile-runner] on DockerHub.
 At the moment, official packages include only Linux-based distributions (Ubuntu, Debian and Alpine).
 There are also prototype Windows images that can be built manually.
 Images for other platforms and JDKs may be added upon a pull request,
 contributions are welcome!
 
-## Naming conventions
+== Naming/Tag conventions
 
 Folders in the repository represent the tag that will be assigned in DockerHub.
 The following format is used:
@@ -36,6 +36,6 @@ Examples: `adoptopenjdk-8-hotspot`, `adoptopnejdk-11-jre-alpine`
 
 Naming convention and defaults for generic tags like `latest` may change over time.
 
-## Building images locally
+== Building images locally
 
-See the [Contributing guidelines](r/CONTRIBUTING.md#building-docker-images).
+See the link:/CONTRIBUTING.adoc#building-docker-images[Contributing guidelines].

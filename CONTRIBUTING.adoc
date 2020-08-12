@@ -1,45 +1,48 @@
-# Contributing to Jenkinsfile Runner
+= Contributing to Jenkinsfile Runner
 
-[![Gitter](https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg)](https://gitter.im/jenkinsci/jenkinsfile-runner)
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+https://gitter.im/jenkinsci/jenkinsfile-runner[image:https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg[Gitter]]
 
 This page provides information about contributing code to the Jenkinsfile Runner codebase.
 
-## Getting started
+== Getting started
 
 1. Fork the repository on GitHub
 2. Clone the forked repository to your machine
 3. Install the development tools. In order to develop Jenkinsfile Runner, you need the following tools:
-  * Java Development Kit (JDK) 8.
+** Java Development Kit (JDK) 8.
      - We usually use [OpenJDK](http://openjdk.java.net/) but you can use other JDKs as well.
-  * Maven 3.5.4 or above.
-  * Any IDE which supports importing Maven projects.
-  * Docker.
-  * Make.
+** Maven 3.5.4 or above.
+** Any IDE which supports importing Maven projects.
+** Docker.
+** Make.
 
-## Documentation
+== Documentation
 
 This page provides basic information about building and testing Jenkinsfile Runner.
-In case you are more interested in details and in the architecture, see the [Developer Documentation](./docs/developer/README.md).
+In case you are more interested in details and in the architecture, see the link:/docs/developer/README.adoc[Developer Documentation].
 
-## Contacts
+== Contacts
 
 If you have any questions or need help, please use the following channels:
 
-* [Gitter Chat](https://gitter.im/jenkinsci/jenkinsfile-runner) - for JFR usage and development questions
-* [Jenkins Cloud Native SIG](https://www.jenkins.io/sigs/cloud-native/) channels: mailing lists, chats, meetings
-* [Jenkins Developer Mailing list](https://groups.google.com/d/forum/jenkinsci-dev) - for JFR development questions
+* https://gitter.im/jenkinsci/jenkinsfile-runner[Gitter Chat] - for JFR usage and development questions
+* https://www.jenkins.io/sigs/cloud-native/[Jenkins Cloud Native SIG] channels: mailing lists, chats, meetings
+* https://groups.google.com/d/forum/jenkinsci-dev[Jenkins Developer Mailing list] - for JFR development questions
 
-
-## Building
+== Building
 
 The build flow for Jenkinsfile Runner is built around Maven and Docker.
 
 Run `mvn clean package` for the project to be just built and `mvn clean package -Denvironment=test` for the project
-to be built and the integration tests to be launched, which are based on the [Jenkinsfile Runner Test Framework](https://github.com/jenkinsci/jenkinsfile-runner-test-framework).
+to be built and the integration tests to be launched, which are based on the https://github.com/jenkinsci/jenkinsfile-runner-test-framework[Jenkinsfile Runner Test Framework].
 
 This will generate an assembly artifact through the `appassembler-maven-plugin` that can be configured and used to run Jenkinsfiles.
 
-## Building Docker images
+=== Building Docker images
 
 This repository includes the base image which can be built simply as...
 
@@ -49,11 +52,11 @@ During development you can reuse the local machine build instead of doing a full
 
     docker build -t jenkins4eval/jenkinsfile-runner:dev -f packaging/docker/unix/adoptopenjdk-8-hotspot/Dockerfile-dev .
 
-## Debugging
+== Debugging
 
-See the [Debugging Guidelines](./docs/developer/DEBUG.md).
+See the link:/docs/developer/DEBUG.adoc[Debugging Guidelines].
 
-## Testing changes
+== Testing changes
 
 Jenkinsfile Runner includes integration tests as a part of the repository.
 
@@ -63,7 +66,7 @@ so there is no strict need to run them before proposing a pull request.
 
 In case you want to run them, see the previous section. You could also enter the `tests` directory and execute the `make` command.
 
-## Proposing Changes
+== Proposing Changes
 
 All proposed changes are submitted and code reviewed using the _GitHub Pull Request_ process.
 
@@ -79,11 +82,11 @@ It is a good practice to create branches instead of pushing to master.
 
 It is recommended that new features/changes include testing proving the changes are working correctly.
 
-## Continuous Integration
+== Continuous Integration
 
-Jenkinsfile Runner uses [ci.jenkins.io](http://ci.jenkins.io) as Continuous Integration server and uses Jenkins Pipeline to run builds.
-See https://ci.jenkins.io/blue/organizations/jenkins/Tools%2Fjenkinsfile-runner/ .
-The code for the build flow is stored in the [Jenkinsfile](Jenkinsfile) in the repository root.
+Jenkinsfile Runner uses https://ci.jenkins.io[ci.jenkins.io] as Continuous Integration server and uses Jenkins Pipeline to run builds.
+See the job https://ci.jenkins.io/blue/organizations/jenkins/Tools%2Fjenkinsfile-runner/[here].
+The code for the build flow is stored in the `Jenkinsfile` in the repository root.
 
 If you want to update that build flow (e.g. "add more checks"),
 just submit a pull request.

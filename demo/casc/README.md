@@ -32,7 +32,7 @@ CASC_JENKINS_CONFIG=config/jenkins.yaml java -jar ../../app/target/jenkinsfile-r
 ## Running the demo in Docker
 
 If you have not built the Docker image yet:
-(Refer to the [Packaging to Docker image](../../DOCKER.md) page for details on the
+(Refer to the [Packaging to Docker image](../../DOCKER.adoc) page for details on the
 Docker packaging process)
 
 ```bash
