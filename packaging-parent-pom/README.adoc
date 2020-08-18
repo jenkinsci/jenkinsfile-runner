@@ -1,5 +1,4 @@
 = Jenkinsfile Runner Packaging POM (Experimental)
-
 :toc:
 :toc-placement: preamble
 :toclevels: 3
@@ -8,9 +7,16 @@ This is an experimental parent POM for packaging custom Jenkinsfile Runner image
 It can be used for packaging of custom Jenkinsfile Runner bundles,
 but at the moment it has a lot of limitations.
 
+
+== Status
+
 The framework is not ready for public use,
 but you can try it out in your projects.
-See the link:/vanilla-package[Vanilla Package] definition for a usage example.
+Usage examples:
+
+* link:/vanilla-package[Vanilla Package] in this repository.
+* link:https://github.com/jenkinsci/ci.jenkins.io-runner/[ci.jenkins.io-runner],
+  starting from version 0.4.0
 
 == Known limitations
 

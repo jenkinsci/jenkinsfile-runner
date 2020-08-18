@@ -1,5 +1,4 @@
 = Extending Jenkinsfile Runner Docker images
-
 :toc:
 :toc-placement: preamble
 :toclevels: 3

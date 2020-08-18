@@ -1,5 +1,4 @@
 = Debugging Jenkinsfile Runner
-
 :toc:
 :toc-placement: preamble
 :toclevels: 3
