@@ -1,5 +1,4 @@
 = Jenkinsfile Runner Architecture overview
-
 :toc:
 :toc-placement: preamble
 :toclevels: 3

@@ -1,5 +1,4 @@
 = Jenkinsfile Runner (Incubating project)
-
 :toc:
 :toc-placement: preamble
 :toclevels: 3
