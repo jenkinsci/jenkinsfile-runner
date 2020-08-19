@@ -1,0 +1,263 @@
+= Jenkinsfile Runner (Incubating project)
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+https://github.com/jenkinsci/jenkinsfile-runner/releases/latest[image:https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog[GitHub release (latest by date including pre-releases)]]
+https://hub.docker.com/r/jenkins/jenkinsfile-runner[image:https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29[Docker Pulls]]
+https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors[image:https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner[GitHub contributors]]
+https://gitter.im/jenkinsci/jenkinsfile-runner[image:https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg[Gitter]]
+
+Jenkinsfile Runner packages Jenkins pipeline execution engine as a command line tool or as a Docker image.
+
+== Use-cases
+
+Target use cases include but not limited to:
+
+* Using Jenkins in a Function-as-a-Service context.
+* Assist editing and testing Jenkins Pipeline definitions and libraries locally.
+* Integration testing of Pipelines.
+
+This repository includes the Jenkinsfile Runner itself and the _Vanilla_ distribution.
+The Vanilla distribution includes the minimum required set of plugins for running pipelines,
+but it needs to be extended in order to run real-world pipelines.
+See the documentation below for more information.
+
+== Quick Demo
+
+The demo below demonstrates running of a simple Pipeline with Jenkinsfile Runner:
+
+image:./demo/cwp/recording.gif[Jenkinsfile Runner Demo]
+
+See link:./demo/cwp/[this directory] for the source codes of the demo.
+There are more demos available in the project.
+
+== Usage in command-line
+
+Jenkinsfile Runner can be run in the command line or in Docker.
+In case you want to run it in the command line just follow these steps:
+
+. Download the jar file available in https://repo.jenkins-ci.org/webapp/#/home[artifactory] or
+build the source code from this repository (see link:./CONTRIBUTING.adoc[contributing guidelines])
+. Prepare the execution environment
+. Run the command
+
+=== Preparation
+
+Find `jenkins.war` that represents the version of Jenkins that you’d like to use,
+then unzip it somewhere.
+
+....
+wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+unzip jenkins.war -d /tmp/jenkins
+....
+
+Next, create a directory and assemble all the plugins that you’d like to use with the build.
+One way to do this is to run the Jenkins setup wizard and install the default set of plugins.
+This is a gap intended to be filled with https://github.com/jenkinsci/configuration-as-code-plugin[configuration as code].
+
+....
+JENKINS_HOME=/tmp/jenkins_home java -jar jenkins.war
+# go to http://localhost:8080/, follow the installation step
+# and install the recommended set of plugins
+....
+
+=== Execution
+
+Say you have your Git repository checked out at `~/foo` that contains `Jenkinsfile` and your source code.
+You can now run Jenkinsfile Runner like this:
+
+....
+jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello" -a "param2=value2"]
+....
+
+Sample Jenkinsfile:
+
+[source,groovy]
+----
+$ cat ~/foo/Jenkinsfile
+pipeline {
+    agent any
+    parameters {
+        string(name: 'param1', defaultValue: '', description: 'Greeting message')
+        string(name: 'param2', defaultValue: '', description: '2nd parameter')
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Hello world!'
+                echo "message: ${params.param1}"
+                echo "param2: ${params.param2}"
+                sh 'ls -la'
+            }
+        }
+    }
+}
+----
+
+Output:
+
+....
+$ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/ -a "param1=Hello&param2=value2"
+Started
+Running in Durability level: PERFORMANCE_OPTIMIZED
+Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins8090792616816810094test/workspace/job
+[Pipeline] node
+[Pipeline] {
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] echo
+Hello world!
+[Pipeline] echo
+message: Hello
+[Pipeline] echo
+param2: value2
+[Pipeline] sh
+[job] Running shell script
++ ls -la
+total 12
+drwxrwxr-x 2 kohsuke kohsuke 4096 Feb 24 15:36 .
+drwxrwxr-x 4 kohsuke kohsuke 4096 Feb 24 15:36 ..
+-rw-rw-r-- 1 kohsuke kohsuke    0 Feb 24 15:36 abc
+-rw-rw-r-- 1 kohsuke kohsuke  179 Feb 24 15:36 Jenkinsfile
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+....
+
+The exit code reflects the result of the build.
+The `test` directory of this workspace includes a very simple example of Jenkinsfile that can be
+used to demo Jenkinsfile Runner.
+
+=== CLI options
+
+The executable of Jenkinsfile Runner allows its invocation with these CLI options:
+
+....
+ # Usage: jenkinsfile-runner -w [warPath] -p [pluginsDirPath] -f [jenkinsfilePath] [other options]
+ --runHome FILE              : Path to the empty Jenkins Home directory to use for
+                               this run. If not specified a temporary directory
+                               will be created. Note that the folder specified via
+                               --runHome will not be disposed after the run.
+ --runWorkspace FILE         : Path to the workspace of the run to be used within
+                               the node{} context. It applies to both Jenkins
+                               master and agents (or side containers) if any.
+                               Requires Jenkins 2.119 or above
+ -a (--arg)                  : Parameters to be passed to workflow job. Use
+                               multiple -a switches for multiple params
+ --cli                       : Launch interactive CLI. (default: false)
+ -u (--keep-undefined-parameters) : Keep undefined parameters if set, defaults
+                                    to false.
+-f (--file) FILE            : Path to Jenkinsfile (or directory containing a
+                               Jenkinsfile) to run, default to ./Jenkinsfile.
+ -ns (--no-sandbox)          : Disable workflow job execution within sandbox
+                               environment
+ -p (--plugins) FILE         : plugins required to run pipeline. Either a
+                               plugins.txt file or a /plugins installation
+                               directory. Defaults to plugins.txt.
+ -n (--job-name) VAL         : Name of the job the run belongs to, defaults to 'job'
+ -b (--build-number) N       : Build number of the run, defaults to 1.
+ -c (--cause) VAL            : A string describing the cause of the run.
+                               It will be attached to the build so that it appears in the
+                               build log and becomes available to plug-ins and pipeline steps.
+ -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
+                               specified). Defaults to latest LTS.
+ -w (--jenkins-war) FILE     : path to exploded jenkins war directory.
+ -v (--version)              : Display the current version
+ -h (--help)                 : Print this help
+
+where `-a`, `-ns`, `--runHome`, `--runWorkspace` and `-jv` are optional.
+....
+
+=== Passing parameters
+
+Any parameter values, for parameters defined on workflow job within `parameters` statement,
+can be passed to the Jenkinsfile Runner using `-a` or `--arg` switches in the key=value format.
+
+....
+$ ./app/target/appassembler/bin/jenkinsfile-runner \
+  -w /tmp/jenkins \
+  -p /tmp/jenkins_home/plugins \
+  -f ~/foo/ \
+  # pipeline has two parameters param1 and param2
+  -a "param1=Hello" \
+  -a "param2=value2"
+....
+
+== Usage in Docker
+
+=== Execution
+
+Jenkinsfile Runner can be launched simply as…
+
+....
+    docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins/jenkinsfile-runner
+....
+
+Advanced options:
+
+* `JAVA_OPTS` environment variable can be passed to pass extra JVM arguments to the image
+
+[source,bash]
+----
+docker run --rm -e JAVA_OPTS="-Xms 256m" -v $PWD/test:/workspace jenkins/jenkinsfile-runner
+----
+
+* In the Vanilla `Dockerfile` the master workspace is mapped to `/build`.
+  This directory can be exposed as a volume.
+  The Docker image generated with Custom War Packager maps the workspace to `/build` by default and
+  it can be exposed as well.
+  However it is possible to override that directory if both the `-v` docker option and the `--runWorkspace` Jenkinsfile Runner option are specified.
+* By default the JENKINS_HOME folder is randomly created and disposed afterwards.
+  With the `--runHome` parameter in combination with the `-v` Docker option it is possible to specify a folder.
+  e.g. `docker run -v /local/Jenkinsfile:/workspace/Jenkinsfile -v /local/jenkinsHome:/jenkinsHome ${JENKINSFILE_RUNNER_IMAGE} --runHome /jenkinsHome`.
+    This way you can access the build metadata in `<jenkinsHome>/jobs/job/builds/1`,
+    like the build.xml, logs, and workflow data, even after the container finished.
+* The `-ns` and `-a` options can be specified and passed to the image in the same way as the command line execution.
+ Using a non-sandbox environment may pose potential security risks.
+ We strongly encourage you not to use this mode unless it is strictly necessary and always with extreme care and at your own risk.
+* You may pass `--cli` to obtain an interactive Jenkins CLI session.
+  To get an interactive Jenkins CLI shell in the container, pass `-i -e FORCE_JENKINS_CLI=true` to `docker run` as extra parameters.
+* If you want to change default parameters for plugins or workspace,
+  you can get onto the container by overriding entrypoint - binary is placed in `/app/bin/jenkinsfile-runner`.
+
+[source,bash]
+----
+$ docker run --rm -it -v $PWD/test:/workspace --entrypoint bash jenkinsfile-runner:my-production-jenkins
+root@dec4c0f12478:/src# cp -r /app/jenkins /tmp/jenkins
+root@dec4c0f12478:/src# /app/bin/jenkinsfile-runner -w /tmp/jenkins -p /usr/share/jenkins/ref/plugins -f /workspace
+----
+
+== Extending Jenkinsfile Runner
+
+Jenkinsfile Runner provides a vanilla image which includes some plugins and configurations.
+Usually, it is not enough to run a real Jenkins Pipelines.
+It might be required to install extra plugins and tools,
+and then to configure Jenkins so that Pipelines can properly operate in the user environment.
+
+There are 2 ways to extend Jenkinsfile Runner:
+
+* Using low-level management tools, including the `--plugins` command included in CLI.
+* For Docker images only: using Custom WAR/Docker Packager which automates some build steps and allows managing Jenkinsfile Runner configuration via a single YAML file.
+
+For Docker images see link:./docs/using/EXTENDING_DOCKER.adoc[Extending Jenkinsfile Runner images] for more information and examples.
+
+== Reporting issues
+
+Please use https://github.com/jenkinsci/jenkinsfile-runner/issues[GitHub Issues] to report defects and improvement ideas.
+If you see a security issue in the component, please follow the
+https://jenkins.io/security/#reporting-vulnerabilities[vulnerability reporting guidelines].
+
+* https://github.com/jenkinsci/jenkinsfile-runner/issues[Open issues in GitHub]
+* https://issues.jenkins-ci.org/issues/?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened)%20AND%20component%20%3D%20jenkinsfile-runner[Open issues in Jenkins JIRA] (deprecated)
+
+== Further reading
+
+* link:/CONTRIBUTING.adoc[Contributing to Jenkinsfile Runner]
+* link:/docs/developer/README.adoc[Developer Documentation]
+* Slides:
+  https://docs.google.com/presentation/d/1y7YnAdnh5WY59g8oIGTsj8sLQ5KXgoV7uUCBkxcTU88/edit?usp=sharing[Under the hood of serverless Jenkins. Jenkinsfile Runner]

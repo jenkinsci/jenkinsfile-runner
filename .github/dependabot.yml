@@ -1,0 +1,23 @@
+version: 2
+updates:
+- package-ecosystem: "maven"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+
+  ignore:
+    - dependency-name: "org.jenkins-ci.main:jenkins-core"
+    # TODO(oleg-nenashev): Remove once versions are supplied by BOM in Jenkins 2.238+
+    - dependency-name: "args4j:args4j"
+    - dependency-name: "commons-collections:commons-collections"
+    - dependency-name: "commons-beanutils:commons-beanutils"
+    - dependency-name: "org.jenkins-ci:version-number"
+    
+
+- package-ecosystem: "docker"
+  directory: "/packaging/docker/unix/debian-jdk8"
+  schedule:
+    interval: "weekly"
+
+  ignore:
+    - dependency-name: "openjdk"

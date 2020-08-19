@@ -1,3 +1,0 @@
-node {
-    currentBuild.result = 'UNSTABLE'
-}

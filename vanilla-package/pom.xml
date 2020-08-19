@@ -3,69 +3,26 @@
 
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.0-beta-12-SNAPSHOT</version>
+    <artifactId>packaging-parent-pom</artifactId>
+    <version>1.0-beta-17-SNAPSHOT</version>
+    <relativePath>../packaging-parent-pom</relativePath>
   </parent>
 
   <artifactId>vanilla-package</artifactId>
   <description>Defines plugins which should be included into the Vanilla bundle</description>
 
-  <dependencies>
-    <!-- All Payload dependencies are inherited here -->
-    <!-- TODO(oleg-nenashev): payload-dependencies is not HPI, and hpi:assemble-dependencies does not include plugins unless listed explicitly here
-         Would be nice to deduplicate
-    -->
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-cps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-job</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-multibranch</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-scm-step</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-basic-steps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-durable-task-step</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-support</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>script-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.jenkins</groupId>
-      <artifactId>configuration-as-code</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>scm-api</artifactId>
-    </dependency>
+  <properties>
+    <jfr.name>jenkinsfile-runner-vanilla</jfr.name>
+    <jfr.packaging.skip.assembly>true</jfr.packaging.skip.assembly>
+  </properties>
 
+  <dependencies>
     <!-- Extra Dependencies for Vanilla -->
     <dependency>
       <groupId>org.jenkinsci.plugins</groupId>
       <artifactId>pipeline-model-definition</artifactId>
       <!--TODO: Use BOM? -->
-      <version>1.3.9</version>
+      <version>1.7.1</version>
       <exclusions>
         <!-- Upper bounds conflict with the Jenkins Core -->
         <exclusion>
@@ -82,53 +39,26 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>git</artifactId>
     </dependency>
-  </dependencies>
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>pipeline-as-yaml</artifactId>
+    </dependency>  
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>prepare-plugins-dir</id>
-            <phase>package</phase>
-            <goals>
-              <goal>assemble-dependencies</goal>
-            </goals>
-            <configuration>
-              <minimumJavaVersion>8</minimumJavaVersion>
-              <jenkinsCoreVersionOverride>${jenkins.version}</jenkinsCoreVersionOverride>
-              <outputDirectory>${project.build.directory}/plugins</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>prepare-war</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.jenkins-ci.main</groupId>
-                  <artifactId>jenkins-war</artifactId>
-                  <version>${jenkins.version}</version>
-                  <type>war</type>
-                  <outputDirectory>${project.build.directory}/war</outputDirectory>
-                  <destFileName>jenkins.war</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <!-- Tests -->
+    <!-- TODO(oleg_nenashev):
+      It is actually bundled into the Jenkins core due to https://issues.jenkins-ci.org/browse/JENKINS-63269 .
+      Declaring a test dependency here implicitly excludes it, should be safe
+      -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.stefanbirkner</groupId>
+      <artifactId>system-rules</artifactId>
+      <version>1.19.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>

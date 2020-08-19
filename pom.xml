@@ -28,17 +28,17 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.51</version>
+    <version>1.57</version>
     <relativePath />
   </parent>
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-beta-12-SNAPSHOT</version>
+  <version>1.0-beta-17-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
-  <description>Jenkinsfile runner parent</description>
+  <description>Jenkinsfile runner parent POM</description>
 
   <licenses>
     <license>
@@ -53,16 +53,15 @@ THE SOFTWARE.
     <module>setup</module>
     <module>payload-dependencies</module>
     <module>payload</module>
-    <module>app</module>
-    <module>tests</module>
-    <module>vanilla-package</module>
+    <module>packaging-parent-pom</module>
+    <!-- more modules come from profiles -->
   </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.176.2</jenkins.version>
-    <jetty.version>9.4.5.v20170502</jetty.version>
+    <jenkins.version>2.246</jenkins.version> <!-- Required for module versions in BOM: https://github.com/jenkinsci/jenkins/pull/4854 -->
+    <jetty.version>9.4.30.v20200611</jetty.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
   </properties>
@@ -71,30 +70,30 @@ THE SOFTWARE.
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.176.x</artifactId>
-        <version>3</version>
+        <artifactId>bom-2.235.x</artifactId>
+        <version>11</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
       <dependency>
+        <groupId>org.jenkins-ci.main</groupId>
+        <artifactId>jenkins-bom</artifactId>
+        <version>${jenkins.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Extra libraries -->
+      <dependency>
+        <groupId>io.jenkins.lib</groupId>
+        <artifactId>support-log-formatter</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <!-- TODO(oleg-nenashev): Remove after 2.238: https://github.com/jenkinsci/jenkins/pull/4702 -->
+      <dependency>
         <groupId>commons-collections</groupId>
         <artifactId>commons-collections</artifactId>
         <version>3.2.2</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-jdk14</artifactId>
-        <version>1.7.25</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jenkins-ci</groupId>
-        <artifactId>annotation-indexer</artifactId>
-        <version>1.12</version>
       </dependency>
       <dependency>
         <groupId>args4j</groupId>
@@ -102,43 +101,47 @@ THE SOFTWARE.
         <version>2.33</version>
       </dependency>
       <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>2.6</version>
+        <groupId>org.jenkins-ci</groupId>
+        <artifactId>version-number</artifactId>
+        <version>1.7</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.9.3</version>
       </dependency>
 
+      <!-- Plugins -->
       <!--TODO(oleg-nenashev): Remove once in BOM -->
       <dependency>
         <groupId>org.jenkins-ci.plugins.workflow</groupId>
         <artifactId>workflow-multibranch</artifactId>
-        <version>2.21</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.5</version>
+        <version>2.22</version>
       </dependency>
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
-        <version>2.3.1</version>
+        <version>2.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jenkins.plugins</groupId>
+        <artifactId>pipeline-as-yaml</artifactId>
+        <version>0.12-rc</version>
       </dependency>
 
-      <!-- TODO: Remove version override once BOM is updated to reference >=1.32 -->
+      <!-- Maven plugins -->
       <dependency>
-        <groupId>io.jenkins</groupId>
-        <artifactId>configuration-as-code</artifactId>
-        <version>1.32</version>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>3.15</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>annotations</artifactId>
-      <version>3.0.1</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
     </dependency>
   </dependencies>
 
@@ -199,4 +202,32 @@ THE SOFTWARE.
     <url>https://github.com/jenkinsci/jenkinsfile-runner</url>
     <tag>HEAD</tag>
   </scm>
+
+  <profiles>
+    <profile>
+      <id>package-app</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>app</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>package-vanilla</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>vanilla-package</module>
+      </modules>
+    </profile>
+    <profile>
+      <!-- Integration tests -->
+      <id>run-its</id>
+      <modules>
+        <module>tests</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

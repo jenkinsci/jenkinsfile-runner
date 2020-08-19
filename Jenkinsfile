@@ -29,15 +29,16 @@ for (int i = 0; i < platforms.size(); ++i) {
                         }
                     }
 
-                    // TODO: Add some tests first
                     stage('Archive') {
                         /* Archive the test results */
-                        // junit '**/target/surefire-reports/TEST-*.xml'
+                        junit '**/target/surefire-reports/TEST-*.xml'
 
-                        //if (label == 'linux') {
-                        //  archiveArtifacts artifacts: '**/target/**/*.jar'
-                        //  findbugs pattern: '**/target/findbugsXml.xml'
-                        //}
+                        if (label == 'linux') {
+                          // Artifacts are heavy, we do not archive them
+                          // archiveArtifacts artifacts: '**/target/**/*.jar'
+                          // TODO: enable FindBugs publishing once fully cleaned up
+                          // findbugs pattern: '**/target/findbugsXml.xml'
+                        }
                     }
                 }
             }
@@ -95,7 +96,7 @@ node('docker') {
                     def shortCommit = scmVars.GIT_COMMIT
                     imageTag = branchName.equals("master") ? "latest" : branchName
                     echo "Creating the container ${imageName}:${imageTag}"
-                    image = docker.build("${imageName}:${imageTag}", '--no-cache --rm .')
+                    sh "docker build -t ${imageName}:${imageTag} --no-cache --rm -f packaging/docker/unix/adoptopenjdk-8-hotspot/Dockerfile ."
                 }
             }
 
@@ -111,3 +112,4 @@ node('docker') {
     }
 }
 
+// TODO: Run integration tests
