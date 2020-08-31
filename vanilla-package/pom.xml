@@ -22,7 +22,7 @@
       <groupId>org.jenkinsci.plugins</groupId>
       <artifactId>pipeline-model-definition</artifactId>
       <!--TODO: Use BOM? -->
-      <version>1.7.1</version>
+      <version>1.7.2</version>
       <exclusions>
         <!-- Upper bounds conflict with the Jenkins Core -->
         <exclusion>
