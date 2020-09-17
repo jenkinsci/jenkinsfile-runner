@@ -12,11 +12,8 @@ import jenkins.model.Jenkins;
 
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
-import org.jenkinsci.plugins.workflow.flow.FlowDurabilityHint;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
-import org.jenkinsci.plugins.workflow.job.properties.DurabilityHintJobProperty;
-import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScriptFlowDefinition;
 
 import java.io.FileNotFoundException;
@@ -48,7 +45,7 @@ public class Runner {
         Jenkins j = Jenkins.getInstance();
         WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
         w.updateNextBuildNumber(bootstrap.buildNumber);
-        w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
+        w.setResumeBlocked(true);
         List<Action> workflowActionsList = new ArrayList<>(3);
 
         if (bootstrap.jenkinsfile.getName().endsWith(".yml")) {
