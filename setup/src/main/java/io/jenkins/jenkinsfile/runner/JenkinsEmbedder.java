@@ -316,6 +316,8 @@ public abstract class JenkinsEmbedder implements RootAction {
         jettyLevel(Level.WARNING);
         ServletContext webServer = createWebServer();
         File home = homeLoader.allocate();
+        setupHome(home);
+        // TODO looks like a remaining of Jenkins Test Harness not used at all in the jfr context
         for (JenkinsRecipe.Runner r : recipes) {
             r.decorateHome(this, home);
         }
@@ -327,6 +329,14 @@ public abstract class JenkinsEmbedder implements RootAction {
             jettyLevel(Level.INFO);
         }
     }
+
+    /**
+     * Prepare the newly allocated home with additional files
+     * Currently only Groovy Hooks
+     * @param home: the target home directory (freshly allocated)
+     * @throws IOException any issue during the copy should interrupt the execution
+     */
+    protected abstract void setupHome(File home) throws IOException;
 
     public PluginManager getPluginManager() {
         if (jenkins == null) {

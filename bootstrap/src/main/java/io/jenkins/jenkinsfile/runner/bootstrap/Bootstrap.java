@@ -74,6 +74,10 @@ public class Bootstrap {
             "Note that the folder specified via --runHome will not be disposed after the run.")
     public File runHome;
 
+    @CheckForNull
+    @Option(name = "--withHooks", usage = "Path to a directory containing Groovy Hooks to copy into init.groovy.d")
+    public File withHooks;
+
 
     private static final String DEFAULT_JOBNAME = "job";
 
