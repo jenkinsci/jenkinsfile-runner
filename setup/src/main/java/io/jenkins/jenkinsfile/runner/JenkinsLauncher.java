@@ -33,8 +33,9 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
             if(bootstrap.runHome.list().length > 0) {
                 throw new IllegalArgumentException("--runHome directory is not empty: " + bootstrap.runHome.getAbsolutePath());
             }
+
             //Override homeLoader to use existing directory instead of creating temporary one
-            this.homeLoader = new HudsonHomeLoader.UseExisting(bootstrap.runHome);
+            this.homeLoader = new HudsonHomeLoader.UseExisting(bootstrap.runHome.getAbsoluteFile());
         }
     }
 
