@@ -177,9 +177,7 @@ public class Bootstrap {
 
         if (this.pluginsDir == null) {
             this.pluginsDir = new File("plugins.txt");
-        }
-
-        if (!this.pluginsDir.exists()) {
+        } else if (!this.pluginsDir.exists()) {
             System.err.println("invalid plugins file.");
             System.exit(-1);
         }
