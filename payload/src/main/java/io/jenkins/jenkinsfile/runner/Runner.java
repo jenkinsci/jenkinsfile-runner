@@ -1,12 +1,12 @@
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.model.Action;
-import hudson.model.Cause;
-import hudson.model.CauseAction;
-import hudson.model.Failure;
-import hudson.model.ParametersAction;
-import hudson.model.StringParameterValue;
-import hudson.model.queue.QueueTaskFuture;
+import jenkins.model.Action;
+import jenkins.model.Cause;
+import jenkins.model.CauseAction;
+import jenkins.model.Failure;
+import jenkins.model.ParametersAction;
+import jenkins.model.StringParameterValue;
+import jenkins.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
 

@@ -23,8 +23,8 @@
  */
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.FilePath;
-import hudson.remoting.Which;
+import jenkins.FilePath;
+import jenkins.remoting.Which;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public final class WarExploder {
     public static File getExplodedDir() throws Exception {
         // rethrow an exception every time someone tries to do this, so that when explode()
         // fails, you can see the cause no matter which test case you look at.
-        // see http://www.nabble.com/Failing-tests-in-test-harness-module-on-hudson.ramfelt.se-td19258722.html
+        // see http://www.nabble.com/Failing-tests-in-test-harness-module-on-jenkins.ramfelt.se-td19258722.html
         if(FAILURE !=null)   throw new Exception("Failed to initialize exploded war", FAILURE);
         return EXPLODE_DIR;
     }
@@ -72,7 +72,7 @@ public final class WarExploder {
      * Explodes jenkins.war, if necessary, and returns its root dir.
      */
     private static File explode() throws Exception {
-        // are we in the Jenkins main workspace? If so, pick up hudson/main/war/resources
+        // are we in the Jenkins main workspace? If so, pick up jenkins/main/war/resources
         // this saves the effort of packaging a war file and makes the debug cycle faster
 
         File d = new File(".").getAbsoluteFile();

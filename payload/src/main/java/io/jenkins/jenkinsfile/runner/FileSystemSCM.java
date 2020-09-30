@@ -1,18 +1,18 @@
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Job;
-import hudson.model.Run;
-import hudson.model.TaskListener;
-import hudson.scm.ChangeLogParser;
-import hudson.scm.NullChangeLogParser;
-import hudson.scm.PollingResult;
-import hudson.scm.SCM;
-import hudson.scm.SCMDescriptor;
-import hudson.scm.SCMRevisionState;
-import hudson.util.DirScanner;
+import jenkins.Extension;
+import jenkins.FilePath;
+import jenkins.Launcher;
+import jenkins.model.Job;
+import jenkins.model.Run;
+import jenkins.model.TaskListener;
+import jenkins.scm.ChangeLogParser;
+import jenkins.scm.NullChangeLogParser;
+import jenkins.scm.PollingResult;
+import jenkins.scm.SCM;
+import jenkins.scm.SCMDescriptor;
+import jenkins.scm.SCMRevisionState;
+import jenkins.util.DirScanner;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
