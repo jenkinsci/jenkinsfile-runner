@@ -3,7 +3,7 @@ package io.jenkins.jenkinsfile.runner;
 /**
  * @author Matthias Rinck
  */
-class JenkinsfileRunnerCause extends jenkins.model.Cause {
+class JenkinsfileRunnerCause extends hudson.model.Cause {
 
   private String cause;
   

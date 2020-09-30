@@ -1,7 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
-import jenkins.model.Action;
-import jenkins.model.InvisibleAction;
+import hudson.model.Action;
+import hudson.model.InvisibleAction;
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowExecution;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowFactoryAction2;

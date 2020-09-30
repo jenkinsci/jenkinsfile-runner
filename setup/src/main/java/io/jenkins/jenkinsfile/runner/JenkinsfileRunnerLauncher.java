@@ -1,6 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
-import jenkins.security.ACL;
+import hudson.security.ACL;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 

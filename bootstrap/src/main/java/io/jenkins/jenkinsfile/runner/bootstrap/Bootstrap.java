@@ -1,6 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
-import jenkins.util.VersionNumber;
+import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.args4j.CmdLineException;
@@ -226,7 +226,7 @@ public class Bootstrap {
         if (this.jobName.isEmpty()) this.jobName = DEFAULT_JOBNAME;
 
         if (this.keepUndefinedParameters) {
-          System.setProperty("jenkins.model.ParametersAction.keepUndefinedParameters", "true");
+          System.setProperty("hudson.model.ParametersAction.keepUndefinedParameters", "true");
         }
     }
 

@@ -24,7 +24,7 @@
 package io.jenkins.jenkinsfile.runner.util;
 
 
-import jenkins.model.Computer;
+import hudson.model.Computer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +68,7 @@ public class ExecutionEnvironment {
      * the wrong test environment depending on when it's created.
      *
      * <p>
-     * Since the rest of Jenkins still relies on static {@link jenkins.model.Jenkins#theInstance}, changing this
+     * Since the rest of Hudson still relies on static {@link jenkins.model.Jenkins#theInstance}, changing this
      * to a static field for now shouldn't cause any problem. 
      */
     private static ExecutionEnvironment CURRENT;
