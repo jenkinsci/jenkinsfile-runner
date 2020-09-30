@@ -24,7 +24,7 @@
 package io.jenkins.jenkinsfile.runner.util;
 
 
-import jenkins.model.Computer;
+import hudson.model.Computer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

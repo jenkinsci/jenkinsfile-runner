@@ -24,33 +24,33 @@
  */
 package io.jenkins.jenkinsfile.runner;
 
-import jenkins.ClassicPluginStrategy;
-import jenkins.CloseProofOutputStream;
-import jenkins.DNSMultiCast;
-import jenkins.DescriptorExtensionList;
+import hudson.ClassicPluginStrategy;
+import hudson.CloseProofOutputStream;
+import hudson.DNSMultiCast;
+import hudson.DescriptorExtensionList;
 
-import jenkins.ExtensionList;
-import jenkins.Functions;
-import jenkins.Launcher;
-import jenkins.Main;
-import jenkins.PluginManager;
-import jenkins.WebAppMain;
-import jenkins.model.AbstractProject;
-import jenkins.model.Computer;
-import jenkins.model.DownloadService;
-import jenkins.model.Executor;
+import hudson.ExtensionList;
+import hudson.Functions;
+import hudson.Launcher;
+import hudson.Main;
+import hudson.PluginManager;
+import hudson.WebAppMain;
+import hudson.model.AbstractProject;
+import hudson.model.Computer;
+import hudson.model.DownloadService;
+import hudson.model.Executor;
 import jenkins.model.Jenkins;
-import jenkins.model.JDK;
-import jenkins.model.Queue;
-import jenkins.model.RootAction;
-import jenkins.model.TaskListener;
-import jenkins.model.UpdateSite;
-import jenkins.model.User;
-import jenkins.remoting.Which;
-import jenkins.tools.ToolProperty;
-import jenkins.util.PersistedList;
-import jenkins.util.StreamTaskListener;
-import jenkins.util.jna.GNUCLibrary;
+import hudson.model.JDK;
+import hudson.model.Queue;
+import hudson.model.RootAction;
+import hudson.model.TaskListener;
+import hudson.model.UpdateSite;
+import hudson.model.User;
+import hudson.remoting.Which;
+import hudson.tools.ToolProperty;
+import hudson.util.PersistedList;
+import hudson.util.StreamTaskListener;
+import hudson.util.jna.GNUCLibrary;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -88,7 +88,7 @@ import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
 
-import jenkins.init.InitMilestone;
+import hudson.init.InitMilestone;
 
 import java.nio.channels.ClosedByInterruptException;
 import java.util.logging.ConsoleHandler;
@@ -618,7 +618,7 @@ public abstract class JenkinsEmbedder implements RootAction {
     }
 
     /**
-     * Sometimes a part of a test case may ends up creeping into the serialization tree of {@link jenkins.model.Saveable#save()},
+     * Sometimes a part of a test case may ends up creeping into the serialization tree of {@link hudson.model.Saveable#save()},
      * so detect that and flag that as an error.
      */
     private Object writeReplace() {
@@ -651,7 +651,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         SPRING_LOGGER.setLevel(Level.WARNING);
         JETTY_LOGGER.setLevel(Level.WARNING);
 
-        // jenkins-behavior.js relies on this to decide whether it's running unit tests.
+        // hudson-behavior.js relies on this to decide whether it's running unit tests.
         Main.isUnitTest = true;
 
         // remove the upper bound of the POST data size in Jetty.

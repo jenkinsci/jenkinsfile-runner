@@ -23,7 +23,7 @@
  */
 package io.jenkins.jenkinsfile.runner.util;
 
-import jenkins.FilePath;
+import hudson.FilePath;
 
 import java.io.File;
 import java.io.IOException;

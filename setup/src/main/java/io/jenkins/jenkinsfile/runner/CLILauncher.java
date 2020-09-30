@@ -1,7 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
-import jenkins.cli.CLICommand;
-import jenkins.security.ACL;
+import hudson.cli.CLICommand;
+import hudson.security.ACL;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 
 import java.io.BufferedReader;

@@ -1,7 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
-import jenkins.ClassicPluginStrategy;
-import jenkins.util.PluginServletFilter;
+import hudson.ClassicPluginStrategy;
+import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
 import org.eclipse.jetty.security.AbstractLoginService;

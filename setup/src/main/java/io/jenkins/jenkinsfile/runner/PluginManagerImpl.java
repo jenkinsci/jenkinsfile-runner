@@ -1,6 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
-import jenkins.PluginManager;
+import hudson.PluginManager;
 
 import javax.servlet.ServletContext;
 import java.io.File;
