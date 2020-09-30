@@ -35,7 +35,7 @@
        </plugin>
       <!-- TODO(oleg_nenashev): Standalone JAR generation works by luck: https://github.com/jenkinsci/jenkinsfile-runner/issues/350
            META-INF definitions are not merged correctly, and extension annotations from the core might be overridden by plugins.
-           Custom container description handlers are required to handle META-INF/annotations/hudson.Extension though it might be replaced by META-INF/annotations/hudson.Extension.txt.
+           Custom container description handlers are required to handle META-INF/annotations/jenkins.Extension though it might be replaced by META-INF/annotations/jenkins.Extension.txt.
            FTR: https://maven.apache.org/plugins/maven-assembly-plugin/examples/single/using-container-descriptor-handlers.html
        -->
       <plugin>
