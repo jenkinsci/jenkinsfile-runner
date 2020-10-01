@@ -331,9 +331,9 @@ public abstract class JenkinsEmbedder implements RootAction {
     }
 
     /**
-     * Prepare the newly allocated home with additional files
+     * Prepare the newly allocated home with additional files.
      * Currently only Groovy Hooks
-     * @param home: the target home directory (freshly allocated)
+     * @param home the target home directory (freshly allocated)
      * @throws IOException any issue during the copy should interrupt the execution
      */
     protected abstract void setupHome(File home) throws IOException;
