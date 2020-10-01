@@ -137,14 +137,14 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
 
     @Override
     protected void setupHome(File home) throws IOException {
-        if(bootstrap.withHooks != null) {
-            if(!bootstrap.withHooks.isDirectory()) {
-                throw new IllegalArgumentException("--withHooks is not a directory: " + bootstrap.withHooks.getAbsolutePath());
+        if(bootstrap.withInitHooks != null) {
+            if(!bootstrap.withInitHooks.isDirectory()) {
+                throw new IllegalArgumentException("--withInitHooks is not a directory: " + bootstrap.withInitHooks.getAbsolutePath());
             }
-            if(bootstrap.withHooks.list().length == 0) {
-                throw new IllegalArgumentException("--withHooks directory does not contain any hook: " + bootstrap.withHooks.getAbsolutePath());
+            if(bootstrap.withInitHooks.list().length == 0) {
+                throw new IllegalArgumentException("--withInitHooks directory does not contain any hook: " + bootstrap.withInitHooks.getAbsolutePath());
             }
-            FileUtils.copyDirectory(bootstrap.withHooks, home.getAbsoluteFile().toPath().resolve("init.groovy.d").toFile());
+            FileUtils.copyDirectory(bootstrap.withInitHooks, home.getAbsoluteFile().toPath().resolve("init.groovy.d").toFile());
         }
     }
 

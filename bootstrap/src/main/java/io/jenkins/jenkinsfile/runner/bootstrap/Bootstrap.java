@@ -75,8 +75,8 @@ public class Bootstrap {
     public File runHome;
 
     @CheckForNull
-    @Option(name = "--withHooks", usage = "Path to a directory containing Groovy Hooks to copy into init.groovy.d")
-    public File withHooks;
+    @Option(name = "--withInitHooks", usage = "Path to a directory containing Groovy Init Hooks to copy into init.groovy.d")
+    public File withInitHooks;
 
 
     private static final String DEFAULT_JOBNAME = "job";
