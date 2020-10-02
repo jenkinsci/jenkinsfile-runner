@@ -239,8 +239,7 @@ public class Bootstrap {
     }
 
     private boolean isVersionSupported() throws IOException {
-        return new hudson.util.VersionNumber(this.version)
-                .isNewerThanOrEqualTo(new hudson.util.VersionNumber(this.getMininumJenkinsVersion()));
+        return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
     }
 
     private String readJenkinsPomProperty(String key) throws IOException {

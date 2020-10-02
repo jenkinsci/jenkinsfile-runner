@@ -40,7 +40,7 @@ import edu.umd.cs.findbugs.annotations.CheckForNull;
  *
  * @author Kohsuke Kawaguchi
  */
-public interface JenkinsHomeLoader {
+public interface HudsonHomeLoader {
     /** 
      * Returns a directory to be used as <tt>JENKINS_HOME</tt>
      *
@@ -50,9 +50,9 @@ public interface JenkinsHomeLoader {
     File allocate() throws Exception;
 
     /**
-     * Allocates a new empty directory, meaning this will emulate the fresh Jenkins installation.
+     * Allocates a new empty directory, meaning this will emulate the fresh Hudson installation.
      */
-    JenkinsHomeLoader NEW = new JenkinsHomeLoader() {
+    HudsonHomeLoader NEW = new HudsonHomeLoader() {
         public File allocate() throws IOException {
             return ExecutionEnvironment.get().temporaryDirectoryAllocator.allocate();
         }
@@ -61,7 +61,7 @@ public interface JenkinsHomeLoader {
     /**
      * Allocates a new directory by copying from an existing directory, or unzipping from a zip file.
      */
-    final class CopyExisting implements JenkinsHomeLoader {
+    final class CopyExisting implements HudsonHomeLoader {
         private final URL source;
 
         /**
@@ -92,7 +92,7 @@ public interface JenkinsHomeLoader {
                 if(src.getName().endsWith(".zip"))
                     new FilePath(src).unzip(new FilePath(target));
             } else {
-                File tmp = File.createTempFile("jenkins","zip");
+                File tmp = File.createTempFile("hudson","zip");
                 try {
                     FileUtils.copyURLToFile(source,tmp);
                     new FilePath(tmp).unzip(new FilePath(target));
@@ -108,7 +108,7 @@ public interface JenkinsHomeLoader {
      * Does not allocate a new directory but uses the specified one.
      * Since TemporaryDirectoryAllocator is not used this folder will not be affected by the dispose() at the end.
      */
-    final class UseExisting implements JenkinsHomeLoader {
+    final class UseExisting implements HudsonHomeLoader {
         private final File source;
 
         public UseExisting(File source) {
@@ -123,7 +123,7 @@ public interface JenkinsHomeLoader {
     /**
      * Allocates a new directory by copying from a test resource
      */
-    final class Local implements JenkinsHomeLoader {
+    final class Local implements HudsonHomeLoader {
         private final Method testMethod;
         private final String alterName;
 
