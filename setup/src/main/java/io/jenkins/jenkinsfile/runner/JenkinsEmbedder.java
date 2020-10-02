@@ -77,7 +77,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import io.jenkins.jenkinsfile.runner.util.ExecutionEnvironment;
-import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
+import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import io.jenkins.jenkinsfile.runner.util.JenkinsRecipe;
 import io.jenkins.jenkinsfile.runner.util.LenientRunnable;
 import io.jenkins.lib.support_log_formatter.SupportLogFormatter;
@@ -109,7 +109,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 
     public Jenkins jenkins;
 
-    protected JenkinsHomeLoader homeLoader = JenkinsHomeLoader.NEW;
+    protected HudsonHomeLoader homeLoader = HudsonHomeLoader.NEW;
 
     /**
      * TCP/IP port that the server is listening on.
@@ -185,7 +185,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         }
 
         try {
-            jenkins = newJenkins();
+            jenkins = newHudson();
             // If the initialization graph is corrupted, we cannot expect that Jenkins is in the good shape.
             // Likely it is an issue in @Initializer() definitions (see JENKINS-37759).
             // So we just fail the test.
@@ -194,7 +194,7 @@ public abstract class JenkinsEmbedder implements RootAction {
                         ". Likely there is an issue with the Initialization task graph (e.g. usage of @Initializer(after = InitMilestone.COMPLETED)). See JENKINS-37759 for more info");
             }
         } catch (Exception e) {
-            // if Jenkins instance fails to initialize, it leaves the instance field non-empty and break all the rest of the tests, so clean that up.
+            // if Hudson instance fails to initialize, it leaves the instance field non-empty and break all the rest of the tests, so clean that up.
             Field f = Jenkins.class.getDeclaredField("theInstance");
             f.setAccessible(true);
             f.set(null,null);
@@ -278,7 +278,7 @@ public abstract class JenkinsEmbedder implements RootAction {
             x.printStackTrace();
         }
 
-        // Jenkins creates ClassLoaders for plugins that hold on to file descriptors of its jar files,
+        // Hudson creates ClassLoaders for plugins that hold on to file descriptors of its jar files,
         // but because there's no explicit dispose method on ClassLoader, they won't get GC-ed until
         // at some later point, leading to possible file descriptor overflow. So encourage GC now.
         // see http://bugs.sun.com/view_bug.do?bug_id=4950148
@@ -312,7 +312,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * Creates a new instance of {@link jenkins.model.Jenkins}. If the derived class wants to create it in a different way,
      * you can override it.
      */
-    protected Jenkins newJenkins() throws Exception {
+    protected Hudson newHudson() throws Exception {
         jettyLevel(Level.WARNING);
         ServletContext webServer = createWebServer();
         File home = homeLoader.allocate();
@@ -384,7 +384,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 
     /**
      * Blocks until the ENTER key is hit.
-     * This is useful during debugging a test so that one can inspect the state of Jenkins through the web browser.
+     * This is useful during debugging a test so that one can inspect the state of Hudson through the web browser.
      */
     public void interactiveBreak() throws Exception {
         System.out.println("Jenkins is running at " + getURL());
@@ -394,7 +394,7 @@ public abstract class JenkinsEmbedder implements RootAction {
     /**
      * Pauses the execution until ENTER is hit in the console.
      * <p>
-     * This is often very useful so that you can interact with Jenkins
+     * This is often very useful so that you can interact with Hudson
      * from an browser, while developing a test case.
      */
     public void pause() throws IOException {
@@ -413,7 +413,7 @@ public abstract class JenkinsEmbedder implements RootAction {
     }
 
     /**
-     * Returns true if Jenkins is building something or going to build something.
+     * Returns true if Hudson is building something or going to build something.
      */
     public boolean isSomethingHappening() {
         if (!jenkins.getQueue().isEmpty())
@@ -425,14 +425,14 @@ public abstract class JenkinsEmbedder implements RootAction {
     }
 
     /**
-     * Waits until Jenkins finishes building everything, including those in the queue.
+     * Waits until Hudson finishes building everything, including those in the queue.
      */
     public void waitUntilNoActivity() throws Exception {
         waitUntilNoActivityUpTo(Integer.MAX_VALUE);
     }
 
     /**
-     * Waits until Jenkins finishes building everything, including those in the queue, or fail the test
+     * Waits until Hudson finishes building everything, including those in the queue, or fail the test
      * if the specified timeout milliseconds is
      */
     public void waitUntilNoActivityUpTo(int timeout) throws Exception {
@@ -592,11 +592,11 @@ public abstract class JenkinsEmbedder implements RootAction {
     }
 
     public JenkinsEmbedder withNewHome() {
-        return with(JenkinsHomeLoader.NEW);
+        return with(HudsonHomeLoader.NEW);
     }
 
     public JenkinsEmbedder withExistingHome(File source) throws Exception {
-        return with(new JenkinsHomeLoader.CopyExisting(source));
+        return with(new HudsonHomeLoader.CopyExisting(source));
     }
 
     /**
@@ -609,10 +609,10 @@ public abstract class JenkinsEmbedder implements RootAction {
         URL res = getClass().getResource(name);
         if(res==null)   throw new IllegalArgumentException("No such data set found: "+name);
 
-        return with(new JenkinsHomeLoader.CopyExisting(res));
+        return with(new HudsonHomeLoader.CopyExisting(res));
     }
 
-    public JenkinsEmbedder with(JenkinsHomeLoader homeLoader) {
+    public JenkinsEmbedder with(HudsonHomeLoader homeLoader) {
         this.homeLoader = homeLoader;
         return this;
     }
@@ -678,7 +678,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         ClassicPluginStrategy.useAntClassLoader = true;
 
         // DNS multicast support takes up a lot of time during tests, so just disable it altogether
-        // this also prevents tests from falsely advertising Jenkins
+        // this also prevents tests from falsely advertising Hudson
         DNSMultiCast.disabled = true;
 
         try {

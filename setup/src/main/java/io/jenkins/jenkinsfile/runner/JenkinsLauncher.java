@@ -3,7 +3,7 @@ package io.jenkins.jenkinsfile.runner;
 import hudson.ClassicPluginStrategy;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
-import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
+import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -35,7 +35,7 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
             }
 
             //Override homeLoader to use existing directory instead of creating temporary one
-            this.homeLoader = new JenkinsHomeLoader.UseExisting(bootstrap.runHome.getAbsoluteFile());
+            this.homeLoader = new HudsonHomeLoader.UseExisting(bootstrap.runHome.getAbsoluteFile());
         }
     }
 
