@@ -34,7 +34,7 @@ THE SOFTWARE.
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-beta-17-SNAPSHOT</version>
+  <version>1.0-beta-18-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
@@ -60,7 +60,7 @@ THE SOFTWARE.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.246</jenkins.version> <!-- Required for module versions in BOM: https://github.com/jenkinsci/jenkins/pull/4854 -->
+    <jenkins.version>2.249.1</jenkins.version>
     <jetty.version>9.4.30.v20200611</jetty.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
@@ -71,7 +71,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom-2.235.x</artifactId>
-        <version>11</version>
+        <version>12</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>

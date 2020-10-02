@@ -74,6 +74,10 @@ public class Bootstrap {
             "Note that the folder specified via --runHome will not be disposed after the run.")
     public File runHome;
 
+    @CheckForNull
+    @Option(name = "--withInitHooks", usage = "Path to a directory containing Groovy Init Hooks to copy into init.groovy.d")
+    public File withInitHooks;
+
 
     private static final String DEFAULT_JOBNAME = "job";
 
@@ -177,9 +181,7 @@ public class Bootstrap {
 
         if (this.pluginsDir == null) {
             this.pluginsDir = new File("plugins.txt");
-        }
-
-        if (!this.pluginsDir.exists()) {
+        } else if (!this.pluginsDir.exists()) {
             System.err.println("invalid plugins file.");
             System.exit(-1);
         }

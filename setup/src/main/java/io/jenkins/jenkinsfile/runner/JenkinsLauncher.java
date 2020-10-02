@@ -4,6 +4,7 @@ import hudson.ClassicPluginStrategy;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -14,6 +15,8 @@ import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,8 +36,9 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
             if(bootstrap.runHome.list().length > 0) {
                 throw new IllegalArgumentException("--runHome directory is not empty: " + bootstrap.runHome.getAbsolutePath());
             }
+
             //Override homeLoader to use existing directory instead of creating temporary one
-            this.homeLoader = new HudsonHomeLoader.UseExisting(bootstrap.runHome);
+            this.homeLoader = new HudsonHomeLoader.UseExisting(bootstrap.runHome.getAbsoluteFile());
         }
     }
 
@@ -130,6 +134,19 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
     public void after() throws Exception {
         jenkins = null;
         super.after();
+    }
+
+    @Override
+    protected void setupHome(File home) throws IOException {
+        if(bootstrap.withInitHooks != null) {
+            if(!bootstrap.withInitHooks.isDirectory()) {
+                throw new IllegalArgumentException("--withInitHooks is not a directory: " + bootstrap.withInitHooks.getAbsolutePath());
+            }
+            if(bootstrap.withInitHooks.list().length == 0) {
+                throw new IllegalArgumentException("--withInitHooks directory does not contain any hook: " + bootstrap.withInitHooks.getAbsolutePath());
+            }
+            FileUtils.copyDirectory(bootstrap.withInitHooks, home.getAbsoluteFile().toPath().resolve("init.groovy.d").toFile());
+        }
     }
 
     private static class JFRLoginService extends AbstractLoginService {
