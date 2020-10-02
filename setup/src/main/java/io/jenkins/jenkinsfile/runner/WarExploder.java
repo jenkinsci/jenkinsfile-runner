@@ -132,7 +132,7 @@ public final class WarExploder {
             new FileOutputStream(explodeDir + ".exploding").close();
             new FilePath(explodeDir).deleteRecursive();
             new FilePath(war).unzip(new FilePath(explodeDir));
-            if(!explodeDir.exists())    // this is supposed to be impossible, but I'm investigating HUDSON-2605
+            if(!explodeDir.exists())    // this is supposed to be impossible, but I'm investigating JENKINS-2605
                 throw new IOException("Failed to explode "+war);
             new FileOutputStream(timestamp).close();
             timestamp.setLastModified(war.lastModified());
