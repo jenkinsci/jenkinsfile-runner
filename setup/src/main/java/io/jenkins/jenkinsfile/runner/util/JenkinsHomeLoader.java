@@ -40,7 +40,7 @@ import edu.umd.cs.findbugs.annotations.CheckForNull;
  *
  * @author Kohsuke Kawaguchi
  */
-public interface HudsonHomeLoader {
+public interface JenkinsHomeLoader {
     /** 
      * Returns a directory to be used as <tt>JENKINS_HOME</tt>
      *
@@ -50,9 +50,9 @@ public interface HudsonHomeLoader {
     File allocate() throws Exception;
 
     /**
-     * Allocates a new empty directory, meaning this will emulate the fresh Hudson installation.
+     * Allocates a new empty directory, meaning this will emulate the fresh Jenkins installation.
      */
-    HudsonHomeLoader NEW = new HudsonHomeLoader() {
+    JenkinsHomeLoader NEW = new JenkinsHomeLoader() {
         public File allocate() throws IOException {
             return ExecutionEnvironment.get().temporaryDirectoryAllocator.allocate();
         }
@@ -61,7 +61,7 @@ public interface HudsonHomeLoader {
     /**
      * Allocates a new directory by copying from an existing directory, or unzipping from a zip file.
      */
-    final class CopyExisting implements HudsonHomeLoader {
+    final class CopyExisting implements JenkinsHomeLoader {
         private final URL source;
 
         /**
@@ -108,7 +108,7 @@ public interface HudsonHomeLoader {
      * Does not allocate a new directory but uses the specified one.
      * Since TemporaryDirectoryAllocator is not used this folder will not be affected by the dispose() at the end.
      */
-    final class UseExisting implements HudsonHomeLoader {
+    final class UseExisting implements JenkinsHomeLoader {
         private final File source;
 
         public UseExisting(File source) {
@@ -123,7 +123,7 @@ public interface HudsonHomeLoader {
     /**
      * Allocates a new directory by copying from a test resource
      */
-    final class Local implements HudsonHomeLoader {
+    final class Local implements JenkinsHomeLoader {
         private final Method testMethod;
         private final String alterName;
 
