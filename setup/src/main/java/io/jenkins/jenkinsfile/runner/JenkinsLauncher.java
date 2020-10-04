@@ -3,12 +3,8 @@ package io.jenkins.jenkinsfile.runner;
 import hudson.ClassicPluginStrategy;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
-// <<<<<<< master
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
-// =======
-// import io.jenkins.jenkinsfile.runner.util.HudsonHomeLoader;
 import org.apache.commons.io.FileUtils;
-// >>>>>>> master
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
