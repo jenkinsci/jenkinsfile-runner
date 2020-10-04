@@ -92,7 +92,7 @@ public interface JenkinsHomeLoader {
                 if(src.getName().endsWith(".zip"))
                     new FilePath(src).unzip(new FilePath(target));
             } else {
-                File tmp = File.createTempFile("jenkins","zip");
+                File tmp = File.createTempFile("hudson","zip");
                 try {
                     FileUtils.copyURLToFile(source,tmp);
                     new FilePath(tmp).unzip(new FilePath(target));
