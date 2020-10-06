@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -117,6 +118,12 @@ public class Bootstrap {
 
     @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
     public boolean cliOnly;
+
+    @Option(name = "--xml-credentials", usage = "XML credentials definitions to load")
+    public List<File> xmlCredentials;
+
+    @Option(name = "--xml-scm", usage = "XML definition of the SCM to use for the project")
+    public File xmlSCM;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
