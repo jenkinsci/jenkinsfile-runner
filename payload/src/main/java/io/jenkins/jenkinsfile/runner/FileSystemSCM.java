@@ -44,7 +44,8 @@ public class FileSystemSCM extends SCM {
 
     @Override
     public void checkout(@NonNull Run<?, ?> build, @NonNull Launcher launcher, @NonNull FilePath workspace, @NonNull TaskListener listener, @CheckForNull File changelogFile, @CheckForNull SCMRevisionState baseline) throws IOException, InterruptedException {
-        new FilePath(new File(dir)).copyRecursiveTo(new DirScanner.Glob("**/*", null, false), workspace, "**/*");
+        new FilePath(new File(dir == null ? "." : dir))
+                .copyRecursiveTo(new DirScanner.Glob("**/*", null, false), workspace, "**/*");
     }
 
     /**
