@@ -156,7 +156,7 @@ public class Bootstrap {
         }
 
         if (this.version != null && !isVersionSupported()) {
-            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
+            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). %n",
                     this.version,
                     this.getMininumJenkinsVersion());
             System.exit(-1);
@@ -267,13 +267,13 @@ public class Bootstrap {
             version = FileUtils.readFileToString(latestCore, StandardCharsets.US_ASCII);
         }
 
-        System.out.printf("Running pipeline on jenkins %s\n", version);
+        System.out.printf("Running pipeline on jenkins %s%n", version);
 
         File war = new File(cache, String.format("war/%s/jenkins-war-%s.war", version, version));
         if (!war.exists()) {
             war.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", version)));
-            System.out.printf("Downloading jenkins %s...\n", version);
+            System.out.printf("Downloading jenkins %s...%n", version);
             FileUtils.copyURLToFile(url, war);
         }
 
@@ -287,7 +287,7 @@ public class Bootstrap {
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
-            System.out.printf("Downloading jenkins plugin %s (%s)...\n", shortname, version);
+            System.out.printf("Downloading jenkins plugin %s (%s)...%n", shortname, version);
             FileUtils.copyURLToFile(url, plugin);
         }
 
