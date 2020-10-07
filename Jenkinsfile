@@ -25,7 +25,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     stage('Build') {
                         timeout(60) {
-                            infra.runMaven(['clean', 'package', '-Dmaven.test.failure.ignore=true', '-Denvironment=test'])
+                            infra.runMaven(['clean', 'verify', '-Dmaven.test.failure.ignore=true', '-Denvironment=test'])
                         }
                     }
 
@@ -34,10 +34,13 @@ for (int i = 0; i < platforms.size(); ++i) {
                         junit '**/target/surefire-reports/TEST-*.xml'
 
                         if (label == 'linux') {
-                          // Artifacts are heavy, we do not archive them
-                          // archiveArtifacts artifacts: '**/target/**/*.jar'
-                          // TODO: enable FindBugs publishing once fully cleaned up
-                          // findbugs pattern: '**/target/findbugsXml.xml'
+                            // Artifacts are heavy, we do not archive them
+                            // archiveArtifacts artifacts: '**/target/**/*.jar'
+                            
+                            recordIssues(
+                              enabledForFailure: true, aggregatingResults: true, 
+                              tools: [java(), spotBugs(pattern: '**/target/spotbugsXml.xml')]
+                            )
                         }
                     }
                 }
