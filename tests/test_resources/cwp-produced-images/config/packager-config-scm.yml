@@ -1,0 +1,92 @@
+bundle:
+  groupId: "io.jenkins.tools.custom-war-packager.demo"
+  artifactId: "jenkinsfile-runner"
+  vendor: "Jenkins project"
+  title: "Jenkinsfile Runner demo"
+  description: "Jenkinsfile Runner Docker Image, produced by Custom WAR Packager"
+buildSettings:
+  jenkinsfileRunner:
+    source:
+      groupId: "io.jenkins"
+      artifactId: "jenkinsfile-runner"
+      build:
+        noCache: true
+      source:
+        dir: "./.jenkinsfile-runner-test-framework/source"
+    docker:
+      base: "jenkins/jenkins:2.222.1"
+      tag: "jenkins-experimental/jenkinsfile-runner-demo"
+      build: false
+war:
+  groupId: "org.jenkins-ci.main"
+  artifactId: "jenkins-war"
+  source:
+    version: "2.222.1"
+plugins:
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-job"
+    source:
+      version: "2.24"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-cps"
+    source:
+      version: "2.48"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-api"
+    source:
+      version: "2.27"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-step-api"
+    source:
+      version: "2.14"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-scm-step"
+    source:
+      version: "2.11"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-basic-steps"
+    source:
+      version: "2.21"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "git"
+    source:
+      version: "4.4.4"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "pipeline-utility-steps"
+    source:
+      version: "2.1.0"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "cloudbees-folder"
+    source:
+      version: "6.4"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "credentials"
+    source:
+      version: "2.1.11"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "structs"
+    source:
+      version: "1.14"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "scm-api"
+    source:
+      version: "2.2.6"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "ssh-credentials"
+    source:
+      version: "1.12"
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "credentials-binding"
+    source:
+      version: "1.16"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-aggregator"
+    source:
+      version: "2.5"
+  - groupId: "io.jenkins"
+    artifactId: "configuration-as-code"
+    source:
+      version: "1.1"
+systemProperties: {
+    jenkins.model.Jenkins.slaveAgentPort: "50000",
+    jenkins.model.Jenkins.slaveAgentPortEnforce: "true"}

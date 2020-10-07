@@ -1,3 +1,4 @@
 demo
 tests/jenkinsfile-runner-test-framework
+tests/.jenkinsfile-runner-test-framework
 **/.git*

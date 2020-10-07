@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-12-SNAPSHOT</version>
+    <version>1.0-beta-18-SNAPSHOT</version>
   </parent>
 
   <artifactId>tests</artifactId>

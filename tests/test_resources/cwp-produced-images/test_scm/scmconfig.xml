@@ -1,0 +1,18 @@
+<hudson.plugins.git.GitSCM plugin="git@4.4.4">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+        <hudson.plugins.git.UserRemoteConfig>
+            <url>https://github.com/abayer/simple-clone-jenkinsfile-test.git</url>
+        </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+        <hudson.plugins.git.BranchSpec>
+            <name>master</name>
+        </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+        <hudson.plugins.git.extensions.impl.DisableRemotePoll/>
+    </extensions>
+</hudson.plugins.git.GitSCM>
