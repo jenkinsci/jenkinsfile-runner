@@ -2,11 +2,12 @@ package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import javax.annotation.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +73,10 @@ public class Bootstrap {
     @Option(name = "--runHome", usage = "Path to the empty Jenkins Home directory to use for this run. If not specified a temporary directory will be created. " +
             "Note that the folder specified via --runHome will not be disposed after the run.")
     public File runHome;
+
+    @CheckForNull
+    @Option(name = "--withInitHooks", usage = "Path to a directory containing Groovy Init Hooks to copy into init.groovy.d")
+    public File withInitHooks;
 
 
     private static final String DEFAULT_JOBNAME = "job";
@@ -139,7 +144,7 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    private void postConstruct(CmdLineParser parser) throws IOException {
+    public void postConstruct(CmdLineParser parser) throws IOException {
 
         if (showVersion) {
             System.out.println(getVersion());
@@ -151,7 +156,7 @@ public class Bootstrap {
         }
 
         if (this.version != null && !isVersionSupported()) {
-            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). \n",
+            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). %n",
                     this.version,
                     this.getMininumJenkinsVersion());
             System.exit(-1);
@@ -176,9 +181,7 @@ public class Bootstrap {
 
         if (this.pluginsDir == null) {
             this.pluginsDir = new File("plugins.txt");
-        }
-
-        if (!this.pluginsDir.exists()) {
+        } else if (!this.pluginsDir.exists()) {
             System.err.println("invalid plugins file.");
             System.exit(-1);
         }
@@ -232,20 +235,19 @@ public class Bootstrap {
     }
 
     private String getVersion() throws IOException {
-       return readPropertyFromPom("version");
+       return getClass().getPackage().getImplementationVersion();
     }
 
     private String getMininumJenkinsVersion() throws IOException {
-        return readPropertyFromPom("jenkins.version");
+        return readJenkinsPomProperty("jenkins.version");
     }
 
     private boolean isVersionSupported() throws IOException {
         return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
     }
 
-    private String readPropertyFromPom(String key) throws IOException {
-        String propertiesPath = "/META-INF/maven/io.jenkins.jenkinsfile-runner/jenkinsfile-runner/pom.properties";
-        try (InputStream pomProperties = this.getClass().getResourceAsStream(propertiesPath)) {
+    private String readJenkinsPomProperty(String key) throws IOException {
+        try (InputStream pomProperties = this.getClass().getResourceAsStream("/jenkins.properties")) {
             Properties props = new Properties();
             props.load(pomProperties);
             return props.getProperty(key);
@@ -265,13 +267,13 @@ public class Bootstrap {
             version = FileUtils.readFileToString(latestCore, StandardCharsets.US_ASCII);
         }
 
-        System.out.printf("Running pipeline on jenkins %s\n", version);
+        System.out.printf("Running pipeline on jenkins %s%n", version);
 
         File war = new File(cache, String.format("war/%s/jenkins-war-%s.war", version, version));
         if (!war.exists()) {
             war.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", version)));
-            System.out.printf("Downloading jenkins %s...\n", version);
+            System.out.printf("Downloading jenkins %s...%n", version);
             FileUtils.copyURLToFile(url, war);
         }
 
@@ -285,7 +287,7 @@ public class Bootstrap {
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("https://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
-            System.out.printf("Downloading jenkins plugin %s (%s)...\n", shortname, version);
+            System.out.printf("Downloading jenkins plugin %s (%s)...%n", shortname, version);
             FileUtils.copyURLToFile(url, plugin);
         }
 
@@ -305,6 +307,13 @@ public class Bootstrap {
         if (hasClass(appClassName)) {
             Class<?> c = Class.forName(appClassName);
             return ((IApp) c.newInstance()).run(this);
+        }
+
+        // Explode war if necessary
+        String warPath = warDir.getAbsolutePath();
+        if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
+            System.out.println("Exploding," + warPath +  "this might take some time.");
+            warDir = Util.explodeWar(warPath);
         }
 
         ClassLoader jenkins = createJenkinsWarClassLoader();

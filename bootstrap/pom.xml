@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-12-SNAPSHOT</version>
+    <version>1.0-beta-18-SNAPSHOT</version>
   </parent>
 
   <artifactId>bootstrap</artifactId>
@@ -21,7 +21,6 @@
     <dependency>
       <groupId>org.jenkins-ci</groupId>
       <artifactId>version-number</artifactId>
-      <version>1.7</version>
     </dependency>
   </dependencies>
 </project>

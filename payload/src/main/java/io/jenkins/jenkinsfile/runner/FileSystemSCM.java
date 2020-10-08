@@ -16,9 +16,9 @@ import hudson.util.DirScanner;
 import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -43,8 +43,9 @@ public class FileSystemSCM extends SCM {
     }
 
     @Override
-    public void checkout(@Nonnull Run<?, ?> build, @Nonnull Launcher launcher, @Nonnull FilePath workspace, @Nonnull TaskListener listener, @CheckForNull File changelogFile, @CheckForNull SCMRevisionState baseline) throws IOException, InterruptedException {
-        new FilePath(new File(dir)).copyRecursiveTo(new DirScanner.Glob("**/*", null, false), workspace, "**/*");
+    public void checkout(@NonNull Run<?, ?> build, @NonNull Launcher launcher, @NonNull FilePath workspace, @NonNull TaskListener listener, @CheckForNull File changelogFile, @CheckForNull SCMRevisionState baseline) throws IOException, InterruptedException {
+        new FilePath(new File(dir == null ? "." : dir))
+                .copyRecursiveTo(new DirScanner.Glob("**/*", null, false), workspace, "**/*");
     }
 
     /**
@@ -53,7 +54,7 @@ public class FileSystemSCM extends SCM {
      * Jenkinsfile Runner doesn't need to do polling, so this method is not needed.
      */
     @Override
-    public SCMRevisionState calcRevisionsFromBuild(@Nonnull Run<?, ?> build, @Nullable FilePath workspace, @Nullable Launcher launcher, @Nonnull TaskListener listener) throws IOException, InterruptedException {
+    public SCMRevisionState calcRevisionsFromBuild(@NonNull Run<?, ?> build, @Nullable FilePath workspace, @Nullable Launcher launcher, @NonNull TaskListener listener) throws IOException, InterruptedException {
         return SCMRevisionState.NONE;
     }
 
@@ -63,7 +64,7 @@ public class FileSystemSCM extends SCM {
      * Jenkinsfile Runner doesn't need to do polling, so this method is not needed.
      */
     @Override
-    public PollingResult compareRemoteRevisionWith(@Nonnull Job<?, ?> project, @Nullable Launcher launcher, @Nullable FilePath workspace, @Nonnull TaskListener listener, @Nonnull SCMRevisionState baseline) throws IOException, InterruptedException {
+    public PollingResult compareRemoteRevisionWith(@NonNull Job<?, ?> project, @Nullable Launcher launcher, @Nullable FilePath workspace, @NonNull TaskListener listener, @NonNull SCMRevisionState baseline) throws IOException, InterruptedException {
         return PollingResult.NO_CHANGES;
     }
 

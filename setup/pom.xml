@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-12-SNAPSHOT</version>
+    <version>1.0-beta-18-SNAPSHOT</version>
   </parent>
 
   <artifactId>setup</artifactId>
@@ -22,21 +22,61 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
 
-    <!--
-      These are for compilation only, and at runtime the user specified jenkins.war
-      and its content will be used.
-    -->
+    <!-- TODO(oleg-nenashev): Support excluding the Jenkins core components from the setup bundle.
+         It was supposed to work like that according to documentation by Kohsuke,
+         but it was not a case due to the jenkins-war dependency which was pulling the WAR file, Core and modules into the bundle.
+
+         Ideally the scope should be changed to provided so that the components are not included into the lightweight Jenkinsfile Runner app package.
+      -->
     <dependency>
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-core</artifactId>
       <version>${jenkins.version}</version>
-      <optional>true</optional>
     </dependency>
+
+    <!-- Jenkins Modules -->
+    <!-- NOTE(oleg_nenashev): Not all modules are actually needed, e.g. Agent Installer modules unlikely have any use-case in JFR.
+         At the same time, there are plugins which **may** depend on them.
+         Total size of modules is less than 400KB, so optimization is not required here for now.
+    -->
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>instance-identity</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>ssh-cli-auth</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>slave-installer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>windows-slave-installer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>launchd-slave-installer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>upstart-slave-installer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>systemd-slave-installer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>sshd</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
@@ -52,16 +92,16 @@
       <artifactId>commons-logging</artifactId>
     </dependency>
     <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.jenkins.lib</groupId>
       <artifactId>support-log-formatter</artifactId>
-      <version>1.0</version>
     </dependency>
-
     <dependency>
-      <groupId>org.jenkins-ci.main</groupId>
-      <artifactId>jenkins-war</artifactId>
-      <version>${jenkins.version}</version>
-      <type>executable-war</type>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
     </dependency>
   </dependencies>
 </project>

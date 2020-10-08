@@ -1,7 +1,0 @@
-#!/bin/sh
-
-if [ -n "$DEBUG" ] ; then
-  export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 $JAVA_OPTS"
-fi
-
-. /app/bin/jenkinsfile-runner

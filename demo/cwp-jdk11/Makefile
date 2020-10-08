@@ -16,7 +16,7 @@ clean:
 
 
 .copySource:
-	rsync -av --exclude='demo' $(shell pwd)/../../ $(shell pwd)/source
+	rsync -av --exclude='.git' --exclude='demo' --exclude='tests' --exclude='*/target/*' $(shell pwd)/../../ $(shell pwd)/source
 
 .build/cwp-cli-${CWP_VERSION}.jar:
 	rm -rf .build

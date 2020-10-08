@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-12-SNAPSHOT</version>
+    <version>1.0-beta-18-SNAPSHOT</version>
   </parent>
 
   <artifactId>jenkinsfile-runner</artifactId>
@@ -33,10 +33,15 @@
           </execution>
         </executions>
        </plugin>
+      <!-- TODO(oleg_nenashev): Standalone JAR generation works by luck: https://github.com/jenkinsci/jenkinsfile-runner/issues/350
+           META-INF definitions are not merged correctly, and extension annotations from the core might be overridden by plugins.
+           Custom container description handlers are required to handle META-INF/annotations/hudson.Extension though it might be replaced by META-INF/annotations/hudson.Extension.txt.
+           FTR: https://maven.apache.org/plugins/maven-assembly-plugin/examples/single/using-container-descriptor-handlers.html
+       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.3.0</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -46,6 +51,7 @@
           <archive>
             <manifest>
               <mainClass>io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
           </archive>
         </configuration>
@@ -63,28 +69,37 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <resources>
+            <resource>
+              <directory>src/main/resources-filtered</directory>
+              <filtering>true</filtering>
+            </resource>
+          </resources>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>

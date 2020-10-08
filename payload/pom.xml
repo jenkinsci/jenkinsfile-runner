@@ -4,19 +4,19 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-12-SNAPSHOT</version>
+    <version>1.0-beta-18-SNAPSHOT</version>
   </parent>
 
   <artifactId>payload</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
       <version>${project.version}</version>
     </dependency>

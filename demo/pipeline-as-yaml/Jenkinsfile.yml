@@ -1,0 +1,7 @@
+pipeline:
+  agent:
+    none:
+  stages:
+  - stage: "Print Hello"
+    steps:
+    - echo "Hello, YAML world!"

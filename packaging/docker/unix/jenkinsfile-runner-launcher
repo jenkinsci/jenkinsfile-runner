@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ -n "$DEBUG" ] ; then
+  export JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005 $JAVA_OPTS"
+fi
+if [ -n "$JDK_11" ] ; then
+  export JAVA_OPTS="--illegal-access=permit $JAVA_OPTS"
+fi
+
+if [ -f "/workspace/Jenkinsfile" ] ; then
+  JENKINSFILE_PATH="/workspace/Jenkinsfile"
+elif [ -f "/workspace/Jenkinsfile.yml" ] ; then
+  JENKINSFILE_PATH="/workspace/Jenkinsfile.yml"
+else
+  # Default fallback which delegates discovery to JFR
+  JENKINSFILE_PATH=/workspace
+fi
+
+/app/bin/jenkinsfile-runner \
+    --jenkins-war /app/jenkins \
+    --plugins /usr/share/jenkins/ref/plugins \
+    --file ${JENKINSFILE_PATH} \
+    --runWorkspace /build \
+    "$@"
