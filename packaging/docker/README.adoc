@@ -18,9 +18,10 @@ contributions are welcome!
 Folders in the repository represent the tag that will be assigned in DockerHub.
 The following format is used:
 
-```bash
+[source,bash]
+----
 ${JVM_VENDOR}-${JAVA_VERSION}[-${JVM_CLASSIFIER1}][-${JVM_CLASSIFIER2}]...[-${OS}]
-```
+----
 
 Examples: `adoptopenjdk-8-hotspot`, `adoptopnejdk-11-jre-alpine`
 

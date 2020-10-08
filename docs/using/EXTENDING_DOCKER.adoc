@@ -27,18 +27,20 @@ You can just create two files with the following content:
 
 plugins.txt::
 
-```
+[source]
+----
 slack
-```
+----
 
 Dockerfile::
 
-```
+[source]
+----
 FROM jenkins/jenkinsfile-runner
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN cd /app/jenkins && jar -cvf jenkins.war *
 RUN java -jar /app/bin/jenkins-plugin-manager.jar --war /app/jenkins/jenkins.war --plugin-file /usr/share/jenkins/ref/plugins.txt && rm /app/jenkins/jenkins.war
-```
+----
 
 Now you have a custom Jenkinsfile Runner image with your own plugins installed!
 See the https://github.com/jenkinsci/plugin-installation-manager-tool[Plugin Installation Manager Tool documentation] for more information about available features.
