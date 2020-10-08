@@ -16,4 +16,3 @@ test:
 	./tests-cwp.sh
 	./tests-cwp-jdk11.sh
 	./tests-negative-scenarios.sh
-	./tests-scm.sh

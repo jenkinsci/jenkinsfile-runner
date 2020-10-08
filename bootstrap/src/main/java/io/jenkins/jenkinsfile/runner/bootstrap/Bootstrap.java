@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +121,7 @@ public class Bootstrap {
     public boolean cliOnly;
 
     @Option(name = "--xml-credentials", usage = "XML credentials definitions to load")
-    public List<File> xmlCredentials;
+    public List<File> xmlCredentials = new ArrayList<>();
 
     @Option(name = "--xml-scm", usage = "XML definition of the SCM to use for the project")
     public File xmlSCM;

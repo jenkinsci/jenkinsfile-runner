@@ -1,6 +1,18 @@
 package io.jenkins.jenkinsfile.runner.vanilla;
 
+import hudson.EnvVars;
+import hudson.FilePath;
+import hudson.XmlFile;
+import hudson.model.TaskListener;
+import hudson.plugins.git.BranchSpec;
+import hudson.plugins.git.GitException;
+import hudson.plugins.git.GitSCM;
+import hudson.plugins.git.UserRemoteConfig;
+import hudson.plugins.git.extensions.impl.DisableRemotePoll;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.jenkinsci.plugins.gitclient.Git;
+import org.jenkinsci.plugins.gitclient.GitClient;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,9 +23,13 @@ import org.junit.rules.Timeout;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SmokeTest {
 
@@ -130,17 +146,67 @@ public class SmokeTest {
     public void helloWorldAsYaml() throws Throwable {
         File jenkinsfile = tmp.newFile("Jenkinsfile.yml");
         FileUtils.writeStringToFile(jenkinsfile,
-        "pipeline:\n" +
-        "  agent:\n" +
-        "    none:\n" +
-        "  stages:\n" +
-        "    - stage: \"Print Hello\"\n" +
-        "      steps:\n" +
-        "        - echo \"Hello, world!\""
-        , Charset.defaultCharset());
+                "pipeline:\n" +
+                        "  agent:\n" +
+                        "    none:\n" +
+                        "  stages:\n" +
+                        "    - stage: \"Print Hello\"\n" +
+                        "      steps:\n" +
+                        "        - echo \"Hello, world!\""
+                , Charset.defaultCharset());
 
         int result = JFRTestUtil.runAsCLI(jenkinsfile);
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
     }
+
+    @Test
+    public void checkoutSCM() throws Throwable {
+        Map<String,String> filesAndContents = new HashMap<>();
+        filesAndContents.put("README.md", "Test repository");
+
+        File jenkinsfile = new File(getClass().getResource("SmokeTest/checkoutSCM/Jenkinsfile").getFile());
+        String jfContent = FileUtils.readFileToString(jenkinsfile, Charset.defaultCharset());
+        filesAndContents.put("Jenkinsfile", jfContent);
+
+        String scmConfigPath = createTestRepoWithContentAndSCMConfigXML(filesAndContents, "master");
+
+        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("--xml-scm", scmConfigPath));
+        assertThat("JFR should be executed successfully", result, equalTo(0));
+        assertThat(systemOut.getLog(), containsString("README.md exists with content 'Test repository'"));
+    }
+
+    private String createTestRepoWithContentAndSCMConfigXML(Map<String,String> filesAndContents, String branch) throws Exception {
+        File gitDir = tmp.newFolder();
+        FilePath gitDirPath = new FilePath(gitDir);
+        GitClient git = Git.with(TaskListener.NULL, new EnvVars()).in(gitDir).getClient();
+        git.init();
+        PersonIdent johnDoe = new PersonIdent("John Doe", "john@doe.com");
+        for (String fileName : filesAndContents.keySet()) {
+            FilePath file = gitDirPath.child(fileName);
+            try {
+                file.write(filesAndContents.get(fileName), null);
+            } catch (Exception e) {
+                throw new GitException("unable to write file", e);
+            }
+            git.add(fileName);
+        }
+        git.setAuthor(johnDoe);
+        git.setCommitter(johnDoe);
+        git.commit("Test commit");
+
+        GitSCM scm = new GitSCM(
+                Collections.singletonList(new UserRemoteConfig(gitDir.getAbsolutePath(), "origin", "", null)),
+                Collections.singletonList(new BranchSpec(branch)),
+                false, Collections.emptyList(),
+                null, null,
+                Collections.emptyList());
+        scm.getExtensions().add(new DisableRemotePoll()); // don't work on a file:// repository
+
+        XmlFile scmConfig = new XmlFile(tmp.newFile());
+        scmConfig.write(scm);
+
+        return scmConfig.getFile().getAbsolutePath();
+    }
 }
+
