@@ -5,7 +5,8 @@ In order to allow users to choose Jenkins version as
 well as plugins, it creates a classloader hierarchy and different portion of the code
 runs in different classloader.
 
-```
+[source]
+----
        +----------+       +-----------+
        | System   |       | Bootstrap |
        +----+-----+       +-----------+
@@ -21,7 +22,7 @@ runs in different classloader.
               ++---------+
               |Payload   |
               +----------+
-```
+----
 
 The `Boot` classloader is what comes from `java -cp` in the wrapper script.
 This is the first to execute, but it contains all sorts of jars and missing
