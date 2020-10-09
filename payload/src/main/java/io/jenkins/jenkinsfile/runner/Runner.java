@@ -9,14 +9,12 @@ import hudson.model.Action;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Failure;
-import hudson.model.Items;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
 import hudson.scm.SCM;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
-
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -56,15 +54,15 @@ public class Runner {
         w.setResumeBlocked(true);
         List<Action> workflowActionsList = new ArrayList<>(3);
 
-        if (bootstrap.xmlCredentials.size() > 0) {
+        if (bootstrap.credentials.size() > 0) {
             CredentialsStore store = getStore();
             if (store == null) {
                 throw new RuntimeException("Credentials specified but could not find credentials store");
             }
             Domain globalDomain = Domain.global();
 
-            for (File xcf : bootstrap.xmlCredentials) {
-                StandardUsernameCredentials creds = loadCredentialsFromXML(xcf);
+            for (File xcf : bootstrap.credentials) {
+                StandardUsernameCredentials creds = CredentialContainer.loadFromYAML(xcf);
                 store.addCredentials(globalDomain, creds);
             }
         }
@@ -73,8 +71,8 @@ public class Runner {
           w.setDefinition(new PipelineAsYamlScriptFlowDefinition(
             FileUtils.readFileToString(bootstrap.jenkinsfile),!bootstrap.noSandBox));
         } else {
-            if (bootstrap.xmlSCM != null) {
-                SCM scm = loadSCMFromXML(bootstrap.xmlSCM);
+            if (bootstrap.scm != null) {
+                SCM scm = SCMContainer.loadFromYAML(bootstrap.scm);
                 w.setDefinition(new CpsScmFlowDefinition(scm, bootstrap.jenkinsfile.getName()));
             } else {
                 w.setDefinition(new CpsScmFlowDefinition(
@@ -114,14 +112,6 @@ public class Runner {
     private CauseAction createCauseAction(String cause) {
       Cause c = new JenkinsfileRunnerCause(cause);
       return new CauseAction(c);
-    }
-
-    private StandardUsernameCredentials loadCredentialsFromXML(File xmlCreds) {
-        return (StandardUsernameCredentials) Items.XSTREAM2.fromXML(xmlCreds);
-    }
-
-    private SCM loadSCMFromXML(File xmlSCM) {
-        return (SCM) Items.XSTREAM2.fromXML(xmlSCM);
     }
 
     private CredentialsStore getStore() {

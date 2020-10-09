@@ -120,11 +120,11 @@ public class Bootstrap {
     @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
     public boolean cliOnly;
 
-    @Option(name = "--xml-credentials", usage = "XML credentials definitions to load")
-    public List<File> xmlCredentials = new ArrayList<>();
+    @Option(name = "--credentials", usage = "YAML credentials definitions to load")
+    public List<File> credentials = new ArrayList<>();
 
-    @Option(name = "--xml-scm", usage = "XML definition of the SCM to use for the project")
-    public File xmlSCM;
+    @Option(name = "--scm", usage = "YAML definition of the SCM to use for the project")
+    public File scm;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
