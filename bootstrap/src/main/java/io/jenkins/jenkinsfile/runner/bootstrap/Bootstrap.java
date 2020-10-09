@@ -286,7 +286,7 @@ public class Bootstrap {
         File plugin = new File(cache, String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
-            final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
+            final URL url = new URL(getMirrorURL(String.format("https://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
             System.out.printf("Downloading jenkins plugin %s (%s)...%n", shortname, version);
             FileUtils.copyURLToFile(url, plugin);
         }
@@ -299,7 +299,7 @@ public class Bootstrap {
             return url;
         }
 
-        return url.replace("http://updates.jenkins.io/download", this.mirror);
+        return url.replace("https://updates.jenkins.io/download", this.mirror);
     }
 
     public int run() throws Throwable {
