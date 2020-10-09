@@ -14,9 +14,3 @@ This example is using Jenkinsfile Runner base image for building projects with J
 Image is available on Docker Hub: https://hub.docker.com/r/jenkins4eval/jenkinsfile-runner/tags
 
 Source code for the image is on GitHub: https://github.com/jenkinsci/jenkinsfile-runner-image-packs/tree/main/maven
-
-### Run (without Docker)
-
-```shell
-java -jar ../../app/target/jenkinsfile-runner-standalone.jar -p ../../vanilla-package/target/plugins/ -w ../../vanilla-package/target/war/jenkins.war -f . 
-```
