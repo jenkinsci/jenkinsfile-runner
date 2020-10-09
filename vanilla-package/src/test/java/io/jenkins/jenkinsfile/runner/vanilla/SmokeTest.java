@@ -163,13 +163,14 @@ public class SmokeTest {
         Map<String,String> filesAndContents = new HashMap<>();
         filesAndContents.put("README.md", "Test repository");
 
+        String credsPath = getClass().getResource("SmokeTest/checkoutSCM/credentials.yaml").getFile();
         File jenkinsfile = new File(getClass().getResource("SmokeTest/checkoutSCM/Jenkinsfile").getFile());
         String jfContent = FileUtils.readFileToString(jenkinsfile, Charset.defaultCharset());
         filesAndContents.put("Jenkinsfile", jfContent);
 
         String scmConfigPath = createTestRepoWithContentAndSCMConfigYAML(filesAndContents, "master");
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath));
+        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath, "--credentials", credsPath));
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("README.md exists with content 'Test repository'"));
     }
@@ -193,10 +194,15 @@ public class SmokeTest {
         git.setCommitter(johnDoe);
         git.commit("Test commit");
 
+        Map<String,Object> remoteConfig = Stream.of(new Object[][]{
+                { "url", gitDir.getAbsolutePath() },
+                { "credentialsId", "user1" }
+        }).collect(Collectors.toMap(data -> (String) data[0], data -> data[1]));
+
         Map<String,Object> config = Collections.singletonMap("scm",
                 Collections.singletonMap("git",
                         Stream.of(new Object[][]{
-                                { "userRemoteConfigs", Collections.singletonList(Collections.singletonMap("url", gitDir.getAbsolutePath())) },
+                                { "userRemoteConfigs", Collections.singletonList(remoteConfig) },
                                 { "branches", Collections.singletonList(Collections.singletonMap("name", "master")) }
                         }).collect(Collectors.toMap(data -> (String) data[0], data -> data[1]))));
 

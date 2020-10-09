@@ -1,9 +1,9 @@
 package io.jenkins.jenkinsfile.runner;
 
+import com.cloudbees.plugins.credentials.Credentials;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.CredentialsStore;
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
-import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials;
 import com.cloudbees.plugins.credentials.domains.Domain;
 import hudson.model.Action;
 import hudson.model.Cause;
@@ -62,7 +62,7 @@ public class Runner {
             Domain globalDomain = Domain.global();
 
             for (File xcf : bootstrap.credentials) {
-                StandardUsernameCredentials creds = CredentialContainer.loadFromYAML(xcf);
+                Credentials creds = CredentialContainer.loadFromYAML(xcf);
                 store.addCredentials(globalDomain, creds);
             }
         }

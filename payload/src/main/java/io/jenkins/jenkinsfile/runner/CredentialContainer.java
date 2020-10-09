@@ -1,6 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
-import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials;
+import com.cloudbees.plugins.credentials.Credentials;
 import io.jenkins.plugins.casc.ConfigurationContext;
 import io.jenkins.plugins.casc.ConfiguratorException;
 import io.jenkins.plugins.casc.ConfiguratorRegistry;
@@ -14,18 +14,18 @@ import java.nio.file.Path;
 import java.util.Collections;
 
 public class CredentialContainer {
-    private final StandardUsernameCredentials creds;
+    private final Credentials credential;
 
     @DataBoundConstructor
-    public CredentialContainer(StandardUsernameCredentials creds) {
-        this.creds = creds;
+    public CredentialContainer(Credentials credential) {
+        this.credential = credential;
     }
 
-    public StandardUsernameCredentials getCreds() {
-        return creds;
+    public Credentials getCredential() {
+        return credential;
     }
 
-    public static StandardUsernameCredentials loadFromYAML(File input) throws ConfiguratorException {
+    public static Credentials loadFromYAML(File input) throws ConfiguratorException {
         ConfiguratorRegistry registry = ConfiguratorRegistry.get();
         ConfigurationContext context = new ConfigurationContext(registry);
 
@@ -35,6 +35,6 @@ public class CredentialContainer {
 
         CredentialContainer container = (CredentialContainer) registry.lookupOrFail(CredentialContainer.class).configure(config, context);
 
-        return container.getCreds();
+        return container.getCredential();
     }
 }
