@@ -18,14 +18,10 @@ Target use cases include but not limited to:
 * Assist editing and testing Jenkins Pipeline definitions and libraries locally.
 * Integration testing of Pipelines.
 
-This repository includes the Jenkinsfile Runner itself and the _Vanilla_ distribution.
-The Vanilla distribution includes the minimum required set of plugins for running pipelines,
-but it needs to be extended in order to run real-world pipelines.
-See the documentation below for more information.
-
 == Quick Demo
 
-The demo below demonstrates running of a simple Pipeline with Jenkinsfile Runner:
+The demo below demonstrates running of a simple Pipeline with Jenkinsfile Runner.
+It is based on the _Vanilla_ distribution which includes the minimum required set of plugins for running pipelines.
 
 image:./demo/cwp/recording.gif[Jenkinsfile Runner Demo]
 
@@ -190,9 +186,26 @@ $ ./app/target/appassembler/bin/jenkinsfile-runner \
 
 == Usage in Docker
 
-=== Execution
+Containerized Pipeline execution is one of the main Jenkinsfile Runner use-cases.
+The project provides official Docker images which can be used and extended for custom use-cases.
 
-Jenkinsfile Runner can be launched simply as…
+=== Vanilla Distribution
+
+This repository provides the _Vanilla_ distribution.
+This package includes the minimum required set of plugins for running pipelines,
+but it needs to be extended in order to run real-world pipelines.
+The image is available in the https://hub.docker.com/r/jenkins/jenkinsfile-runner[jenkins/jenkinsfile-runner] repository on DockerHub.
+
+=== Image Packs
+
+There is a https://github.com/jenkinsci/jenkinsfile-runner-image-packs[Jenkinsfile Runner Image Packs] repository.
+It provides additional Docker images for common use-cases, e.g. for building Java projects with Maven or Gradle.
+Each image includes a set of Jenkins plugins, configurations and Pipeline libraries which are commonly used in the desired technology stack.
+Image packs are available in the experimental https://hub.docker.com/r/jenkins/jenkinsfile-runner[jenkins4eval/jenkinsfile-runner] repository on DockerHub.
+
+=== Running Jenkinsfile Runner in Docker
+
+Jenkinsfile Runner images can be launched simply as…
 
 ....
     docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins/jenkinsfile-runner
