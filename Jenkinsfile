@@ -25,7 +25,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     stage('Build') {
                         timeout(60) {
-                            infra.runMaven(['clean', 'verify', '-Dmaven.test.failure.ignore=true', '-Denvironment=test'])
+                            infra.runMaven(['clean', 'verify', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco'])
                         }
                     }
 
@@ -41,6 +41,8 @@ for (int i = 0; i < platforms.size(); ++i) {
                               enabledForFailure: true, aggregatingResults: true, 
                               tools: [java(), spotBugs(pattern: '**/target/spotbugsXml.xml')]
                             )
+
+                            publishCoverage adapters: [jacocoAdapter(mergeToOneReport: true, path: 'vanilla-package/target/site/jacoco-aggregate/*.xml')]
                         }
                     }
                 }
