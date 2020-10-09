@@ -6,63 +6,62 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Set version
-      id: set-version
-      run: |
-        version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-        echo "::set-output name=project-version::$version"
-        echo "::set-env name=PROJECT_VERSION::$version"
-    - run: echo $PROJECT_VERSION
-    - name: Fetch artifact
-      id: fetch-artifact
-      run: |
-        GROUP_ID=io/jenkins/jenkinsfile-runner
-        ARTIFACT_ID=jenkinsfile-runner
-        FILE_NAME=jenkinsfile-runner
-        PROJECT_VERSION=${{ steps.set-version.outputs.project-version }}
-        echo "::set-output name=file-name::$FILE_NAME"
-        wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION-sources.jar \
-          -O $FILE_NAME-$PROJECT_VERSION-sources.jar
-        wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION.jar \
-          -O $FILE_NAME-$PROJECT_VERSION.jar
-        wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION.zip \
-          -O $FILE_NAME-$PROJECT_VERSION.zip           
-    - name: Upload artifact Sources Jar
-      id: upload-artifact-sources-jar
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }} 
-        asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}-sources.jar
-        asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}-sources.jar
-        asset_content_type: application/java-archive
-    - name: Upload artifact Uber Jar
-      id: upload-artifact-uber-jar
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }} 
-        asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.jar
-        asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.jar
-        asset_content_type: application/java-archive
-    - name: Upload artifact vanilla package
-      id: upload-artifact-vanilla-package
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }} 
-        asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.zip
-        asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.zip
-        asset_content_type: application/zip
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Set version
+        id: set-version
+        run: |
+          version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=project-version::$version"
+          echo "::set-env name=PROJECT_VERSION::$version"
+      - run: echo $PROJECT_VERSION
+      - name: Fetch artifact
+        id: fetch-artifact
+        run: |
+          GROUP_ID=io/jenkins/jenkinsfile-runner
+          ARTIFACT_ID=jenkinsfile-runner
+          FILE_NAME=jenkinsfile-runner
+          PROJECT_VERSION=${{ steps.set-version.outputs.project-version }}
+          echo "::set-output name=file-name::$FILE_NAME"
+          wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION-sources.jar \
+            -O $FILE_NAME-$PROJECT_VERSION-sources.jar
+          wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION.jar \
+            -O $FILE_NAME-$PROJECT_VERSION.jar
+          wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION.zip \
+            -O $FILE_NAME-$PROJECT_VERSION.zip
+      - name: Upload artifact Sources Jar
+        id: upload-artifact-sources-jar
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}-sources.jar
+          asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}-sources.jar
+          asset_content_type: application/java-archive
+      - name: Upload artifact Uber Jar
+        id: upload-artifact-uber-jar
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.jar
+          asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.jar
+          asset_content_type: application/java-archive
+      - name: Upload artifact vanilla package
+        id: upload-artifact-vanilla-package
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.zip
+          asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.zip
+          asset_content_type: application/zip
