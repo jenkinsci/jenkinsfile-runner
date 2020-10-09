@@ -12,7 +12,6 @@ import hudson.model.Failure;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
-import hudson.scm.SCM;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.FileUtils;
@@ -21,7 +20,6 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScriptFlowDefinition;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -54,26 +52,18 @@ public class Runner {
         w.setResumeBlocked(true);
         List<Action> workflowActionsList = new ArrayList<>(3);
 
-        if (bootstrap.credentials.size() > 0) {
-            CredentialsStore store = getStore();
-            if (store == null) {
-                throw new RuntimeException("Credentials specified but could not find credentials store");
-            }
-            Domain globalDomain = Domain.global();
-
-            for (File xcf : bootstrap.credentials) {
-                Credentials creds = CredentialContainer.loadFromYAML(xcf);
-                store.addCredentials(globalDomain, creds);
-            }
-        }
         if (bootstrap.jenkinsfile.getName().endsWith(".yml")) {
           // We do not use SCM definition here due to https://github.com/jenkinsci/pipeline-as-yaml-plugin/issues/28
           w.setDefinition(new PipelineAsYamlScriptFlowDefinition(
             FileUtils.readFileToString(bootstrap.jenkinsfile),!bootstrap.noSandBox));
         } else {
             if (bootstrap.scm != null) {
-                SCM scm = SCMContainer.loadFromYAML(bootstrap.scm);
-                w.setDefinition(new CpsScmFlowDefinition(scm, bootstrap.jenkinsfile.getName()));
+                SCMContainer scm = SCMContainer.loadFromYAML(bootstrap.scm);
+                Credentials fromSCM = scm.getCredential();
+                if (fromSCM != null) {
+                    addCredentials(fromSCM);
+                }
+                w.setDefinition(new CpsScmFlowDefinition(scm.getSCM(), bootstrap.jenkinsfile.getName()));
             } else {
                 w.setDefinition(new CpsScmFlowDefinition(
                         new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
@@ -146,5 +136,14 @@ public class Runner {
                 Thread.sleep(retryInterval);
             }
         }
+    }
+
+    private void addCredentials(Credentials creds) throws IOException {
+        CredentialsStore store = getStore();
+        if (store == null) {
+            throw new RuntimeException("Credentials specified but could not find credentials store");
+        }
+        Domain globalDomain = Domain.global();
+        store.addCredentials(globalDomain, creds);
     }
 }

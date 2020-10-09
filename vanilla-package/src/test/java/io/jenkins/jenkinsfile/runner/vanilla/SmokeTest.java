@@ -163,16 +163,16 @@ public class SmokeTest {
         Map<String,String> filesAndContents = new HashMap<>();
         filesAndContents.put("README.md", "Test repository");
 
-        String credsPath = getClass().getResource("SmokeTest/checkoutSCM/credentials.yaml").getFile();
         File jenkinsfile = new File(getClass().getResource("SmokeTest/checkoutSCM/Jenkinsfile").getFile());
         String jfContent = FileUtils.readFileToString(jenkinsfile, Charset.defaultCharset());
         filesAndContents.put("Jenkinsfile", jfContent);
 
         String scmConfigPath = createTestRepoWithContentAndSCMConfigYAML(filesAndContents, "master");
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath, "--credentials", credsPath));
+        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath));
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("README.md exists with content 'Test repository'"));
+        assertThat(systemOut.getLog(), containsString("using credential user1"));
     }
 
     private String createTestRepoWithContentAndSCMConfigYAML(Map<String,String> filesAndContents, String branch) throws Exception {
@@ -199,13 +199,22 @@ public class SmokeTest {
                 { "credentialsId", "user1" }
         }).collect(Collectors.toMap(data -> (String) data[0], data -> data[1]));
 
-        Map<String,Object> config = Collections.singletonMap("scm",
+        Map<String,Object> config = new HashMap<>();
+        config.put("scm",
                 Collections.singletonMap("git",
                         Stream.of(new Object[][]{
                                 { "userRemoteConfigs", Collections.singletonList(remoteConfig) },
-                                { "branches", Collections.singletonList(Collections.singletonMap("name", "master")) }
+                                { "branches", Collections.singletonList(Collections.singletonMap("name", branch)) }
                         }).collect(Collectors.toMap(data -> (String) data[0], data -> data[1]))));
 
+        config.put("credential",
+                Collections.singletonMap("usernamePassword",
+                        Stream.of(new String[][]{
+                                { "scope", "GLOBAL" },
+                                { "id", "user1" },
+                                { "username", "Administrator" },
+                                { "password", "secret" },
+                        }).collect(Collectors.toMap(data -> data[0], data -> data[1]))));
 
         File scmConfig = tmp.newFile();
         Yaml yaml = new Yaml();

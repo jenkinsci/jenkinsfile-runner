@@ -1,5 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
+import com.cloudbees.plugins.credentials.Credentials;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import hudson.scm.SCM;
 import io.jenkins.plugins.casc.ConfigurationContext;
 import io.jenkins.plugins.casc.ConfiguratorException;
@@ -15,17 +17,24 @@ import java.util.Collections;
 
 public class SCMContainer {
     private final SCM scm;
+    private final Credentials credential;
 
     @DataBoundConstructor
-    public SCMContainer(SCM scm) {
+    public SCMContainer(SCM scm, Credentials credential) {
         this.scm = scm;
+        this.credential = credential;
     }
 
     public SCM getSCM() {
         return scm;
     }
 
-    public static SCM loadFromYAML(File input) throws ConfiguratorException {
+    @CheckForNull
+    public Credentials getCredential() {
+        return credential;
+    }
+
+    public static SCMContainer loadFromYAML(File input) throws ConfiguratorException {
         ConfiguratorRegistry registry = ConfiguratorRegistry.get();
         ConfigurationContext context = new ConfigurationContext(registry);
 
@@ -33,8 +42,6 @@ public class SCMContainer {
 
         Mapping config = YamlUtils.loadFrom(Collections.singletonList(ys), context);
 
-        SCMContainer container = (SCMContainer) registry.lookupOrFail(SCMContainer.class).configure(config, context);
-
-        return container.getSCM();
+        return (SCMContainer) registry.lookupOrFail(SCMContainer.class).configure(config, context);
     }
 }
