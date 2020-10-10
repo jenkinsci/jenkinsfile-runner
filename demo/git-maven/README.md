@@ -1,11 +1,10 @@
-Demo: Git and Maven
-===================
+# Demo: Git and Maven
 
 Demonstrates a simple Pipeline which checks out from the Git repository and then runs a Maven build.
 
-### Run with Docker
+## Run with Docker
 
-```
+```bash
 docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins4eval/jenkinsfile-runner:maven
 ```
 
