@@ -252,14 +252,6 @@ THE SOFTWARE.
               </execution>
             </executions>
           </plugin>
-          <!-- TODO: delete once https://github.com/jenkinsci/pom/pull/138 is integrated -->
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${maven-surefire-plugin.version}</version>
-            <configuration>
-              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true ${argLine}</argLine>
-            </configuration>
-          </plugin>
         </plugins>
       </build>
     </profile>
