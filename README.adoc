@@ -160,6 +160,10 @@ The executable of Jenkinsfile Runner allows its invocation with these CLI option
  -c (--cause) VAL            : A string describing the cause of the run.
                                It will be attached to the build so that it appears in the
                                build log and becomes available to plug-ins and pipeline steps.
+--scm FILE                   : A YAML file defining the SCM and optional credentials to use
+                               with the SCM. If given, the SCM will be checked out into the
+                               workspace automatically in Declarative Pipelines, and will be
+                               available for use with `checkout scm` in Scripted Pipelines.
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
  -w (--jenkins-war) FILE     : path to exploded jenkins war directory.
