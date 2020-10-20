@@ -19,19 +19,6 @@
   <dependencies>
     <!-- Extra Dependencies for Vanilla -->
     <dependency>
-      <groupId>org.jenkinsci.plugins</groupId>
-      <artifactId>pipeline-model-definition</artifactId>
-      <!--TODO: Use BOM? -->
-      <version>1.7.2</version>
-      <exclusions>
-        <!-- Upper bounds conflict with the Jenkins Core -->
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>pipeline-utility-steps</artifactId>
     </dependency>
@@ -39,10 +26,6 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>git</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.jenkins.plugins</groupId>
-      <artifactId>pipeline-as-yaml</artifactId>
-    </dependency>  
 
     <!-- Tests -->
     <!-- TODO(oleg_nenashev):
