@@ -13,6 +13,7 @@
 
   <properties>
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
+    <jfr.version>${project.parent.version}</jfr.version>
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
     <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
@@ -57,22 +58,22 @@
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -174,7 +175,7 @@
                     <artifactItem>
                       <groupId>io.jenkins.jenkinsfile-runner</groupId>
                       <artifactId>packaging-parent-pom</artifactId>
-                      <version>${project.parent.version}</version>
+                      <version>${jfr.version}</version>
                       <classifier>assembly-zip-config</classifier>
                       <type>xml</type>
                       <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
@@ -183,7 +184,7 @@
                     <artifactItem>
                       <groupId>io.jenkins.jenkinsfile-runner</groupId>
                       <artifactId>packaging-parent-pom</artifactId>
-                      <version>${project.parent.version}</version>
+                      <version>${jfr.version}</version>
                       <classifier>jenkins-properties</classifier>
                       <type>xml</type>
                       <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
