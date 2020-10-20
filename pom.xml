@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.57</version>
+    <version>1.60</version>
     <relativePath />
   </parent>
 
@@ -70,8 +70,8 @@ THE SOFTWARE.
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.235.x</artifactId>
-        <version>13</version>
+        <artifactId>bom-2.249.x</artifactId>
+        <version>15</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -89,35 +89,13 @@ THE SOFTWARE.
         <artifactId>support-log-formatter</artifactId>
         <version>1.0</version>
       </dependency>
-      <!-- TODO(oleg-nenashev): Remove after 2.238: https://github.com/jenkinsci/jenkins/pull/4702 -->
-      <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
-        <version>3.2.2</version>
-      </dependency>
-      <dependency>
-        <groupId>args4j</groupId>
-        <artifactId>args4j</artifactId>
-        <version>2.33</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jenkins-ci</groupId>
-        <artifactId>version-number</artifactId>
-        <version>1.7</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-beanutils</groupId>
-        <artifactId>commons-beanutils</artifactId>
-        <version>1.9.3</version>
+      <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.11</version>
       </dependency>
 
       <!-- Plugins -->
-      <!--TODO(oleg-nenashev): Remove once in BOM -->
-      <dependency>
-        <groupId>org.jenkins-ci.plugins.workflow</groupId>
-        <artifactId>workflow-multibranch</artifactId>
-        <version>2.22</version>
-      </dependency>
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
@@ -127,13 +105,6 @@ THE SOFTWARE.
         <groupId>io.jenkins.plugins</groupId>
         <artifactId>pipeline-as-yaml</artifactId>
         <version>0.12-rc</version>
-      </dependency>
-
-      <!-- Maven plugins -->
-      <dependency>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <version>3.17</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
