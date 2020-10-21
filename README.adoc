@@ -164,6 +164,8 @@ The executable of Jenkinsfile Runner allows its invocation with these CLI option
                                with the SCM. If given, the SCM will be checked out into the
                                workspace automatically in Declarative Pipelines, and will be
                                available for use with `checkout scm` in Scripted Pipelines.
+                               Note that an SCM cannot currently be used with YAML pipelines.
+                               See link:./docs/using/SCM.adoc[this doc for more details].
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
  -w (--jenkins-war) FILE     : path to exploded jenkins war directory.

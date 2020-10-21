@@ -11,7 +11,8 @@ you can specify a YAML file containing the definition of the SCM to checkout in 
 == Specifying an SCM definition on the CLI
 
 Add the `--scm (path to YAML file)` option to your `jenkinsfile-runner` invocation.
-Nothing else needs to be changed.
+Nothing else needs to be changed. Note that Pipeline as YAML is not currently supported
+with the `--scm` option.
 
 == SCM YAML format
 

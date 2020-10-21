@@ -3,6 +3,7 @@ package io.jenkins.jenkinsfile.runner;
 import com.cloudbees.plugins.credentials.Credentials;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.CredentialsStore;
+import com.cloudbees.plugins.credentials.CredentialsUnavailableException;
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
 import com.cloudbees.plugins.credentials.domains.Domain;
 import hudson.model.Action;
@@ -61,7 +62,12 @@ public class Runner {
                 SCMContainer scm = SCMContainer.loadFromYAML(bootstrap.scm);
                 Credentials fromSCM = scm.getCredential();
                 if (fromSCM != null) {
-                    addCredentials(fromSCM);
+                    try {
+                        addCredentials(fromSCM);
+                    } catch (IOException | CredentialsUnavailableException e) {
+                        System.err.printf("could not create credentials: %s%n", e.getMessage());
+                        return -1;
+                    }
                 }
                 w.setDefinition(new CpsScmFlowDefinition(scm.getSCM(), bootstrap.jenkinsfile.getName()));
             } else {
@@ -138,10 +144,10 @@ public class Runner {
         }
     }
 
-    private void addCredentials(Credentials creds) throws IOException {
+    private void addCredentials(Credentials creds) throws IOException, CredentialsUnavailableException {
         CredentialsStore store = getStore();
         if (store == null) {
-            throw new RuntimeException("Credentials specified but could not find credentials store");
+            throw new CredentialsUnavailableException("Credentials specified but could not find credentials store");
         }
         Domain globalDomain = Domain.global();
         store.addCredentials(globalDomain, creds);
