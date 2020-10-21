@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 public abstract class JenkinsLauncher extends JenkinsEmbedder {
     protected final Bootstrap bootstrap;
 
+    private static final Logger LOGGER = Logger.getLogger(JenkinsLauncher.class.getName());
+
     public JenkinsLauncher(Bootstrap bootstrap) {
         this.bootstrap = bootstrap;
         if(bootstrap.runHome != null) {
@@ -119,9 +121,14 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
      * We don't want to clutter console with log messages, so kill of any unimportant ones.
      */
     private void setLogLevels() {
-        Logger.getLogger("").setLevel(Level.WARNING);
-        // Prevent warnings for plugins with old plugin POM (JENKINS-54425)
-        Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
+        if (System.getProperty("java.util.logging.config.file") == null) {
+            Logger.getLogger("").setLevel(Level.WARNING);
+            // Prevent warnings for plugins with old plugin POM (JENKINS-54425)
+            Logger.getLogger(ClassicPluginStrategy.class.getName()).setLevel(Level.SEVERE);
+        } else {
+            // Rely on the user-supplied logging configuration
+            LOGGER.log(Level.INFO, "Will not override system loggers, because the 'java.util.logging.config.file' system property is set");
+        }
     }
 
     /**
