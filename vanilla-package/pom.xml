@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>packaging-parent-pom</artifactId>
-    <version>1.0-beta-19-SNAPSHOT</version>
+    <version>1.0-beta-19</version>
     <relativePath>../packaging-parent-pom</relativePath>
   </parent>
 
