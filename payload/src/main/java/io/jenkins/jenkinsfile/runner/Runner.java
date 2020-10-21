@@ -1,5 +1,11 @@
 package io.jenkins.jenkinsfile.runner;
 
+import com.cloudbees.plugins.credentials.Credentials;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
+import com.cloudbees.plugins.credentials.CredentialsStore;
+import com.cloudbees.plugins.credentials.CredentialsUnavailableException;
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
+import com.cloudbees.plugins.credentials.domains.Domain;
 import hudson.model.Action;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
@@ -9,7 +15,6 @@ import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import jenkins.model.Jenkins;
-
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -37,11 +42,11 @@ public class Runner {
      */
     public int run(Bootstrap bootstrap) throws Exception {
         try {
-          Jenkins.checkGoodName(bootstrap.jobName); 
+          Jenkins.checkGoodName(bootstrap.jobName);
         } catch (Failure e) {
-          System.err.println(String.format("invalid job name: '%s': %s", bootstrap.jobName, e.getMessage())); 
+          System.err.println(String.format("invalid job name: '%s': %s", bootstrap.jobName, e.getMessage()));
           return -1;
-        } 
+        }
         Jenkins j = Jenkins.getInstance();
         WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
         w.updateNextBuildNumber(bootstrap.buildNumber);
@@ -53,9 +58,23 @@ public class Runner {
           w.setDefinition(new PipelineAsYamlScriptFlowDefinition(
             FileUtils.readFileToString(bootstrap.jenkinsfile),!bootstrap.noSandBox));
         } else {
-          w.setDefinition(new CpsScmFlowDefinition(
-            new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
-          workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
+            if (bootstrap.scm != null) {
+                SCMContainer scm = SCMContainer.loadFromYAML(bootstrap.scm);
+                Credentials fromSCM = scm.getCredential();
+                if (fromSCM != null) {
+                    try {
+                        addCredentials(fromSCM);
+                    } catch (IOException | CredentialsUnavailableException e) {
+                        System.err.printf("could not create credentials: %s%n", e.getMessage());
+                        return -1;
+                    }
+                }
+                w.setDefinition(new CpsScmFlowDefinition(scm.getSCM(), bootstrap.jenkinsfile.getName()));
+            } else {
+                w.setDefinition(new CpsScmFlowDefinition(
+                        new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
+            }
+            workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
         }
 
         if (bootstrap.workflowParameters != null && bootstrap.workflowParameters.size() > 0) {
@@ -91,6 +110,17 @@ public class Runner {
       return new CauseAction(c);
     }
 
+    private CredentialsStore getStore() {
+        CredentialsStore store = null;
+        for (CredentialsStore s : CredentialsProvider.lookupStores(Jenkins.get())) {
+            if (s.getProvider() instanceof SystemCredentialsProvider.ProviderImpl) {
+                store = s;
+                break;
+            }
+        }
+        return store;
+    }
+
     private void writeLogTo(PrintStream out) throws IOException, InterruptedException {
         final int retryCnt = 10;
 
@@ -112,5 +142,14 @@ public class Runner {
                 Thread.sleep(retryInterval);
             }
         }
+    }
+
+    private void addCredentials(Credentials creds) throws IOException, CredentialsUnavailableException {
+        CredentialsStore store = getStore();
+        if (store == null) {
+            throw new CredentialsUnavailableException("Credentials specified but could not find credentials store");
+        }
+        Domain globalDomain = Domain.global();
+        store.addCredentials(globalDomain, creds);
     }
 }

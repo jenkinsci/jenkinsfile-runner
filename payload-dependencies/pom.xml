@@ -63,6 +63,10 @@
       <artifactId>scm-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.jenkins</groupId>
+      <artifactId>configuration-as-code</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.jenkins.plugins</groupId>
       <artifactId>pipeline-as-yaml</artifactId>
     </dependency>

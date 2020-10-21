@@ -16,6 +16,31 @@
     <jfr.packaging.skip.assembly>true</jfr.packaging.skip.assembly>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-testResources</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+              <resources>
+                <resource>
+                  <directory>src/test/resources</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <!-- Extra Dependencies for Vanilla -->
     <dependency>

@@ -1,5 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -7,7 +8,6 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import edu.umd.cs.findbugs.annotations.CheckForNull;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -117,6 +117,9 @@ public class Bootstrap {
 
     @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
     public boolean cliOnly;
+
+    @Option(name = "--scm", usage = "YAML definition of the SCM, with optional credentials, to use for the project")
+    public File scm;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler

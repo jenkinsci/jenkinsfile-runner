@@ -1,0 +1,52 @@
+= Using `checkout scm` with Jenkinsfile Runner
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+By default, Jenkinsfile Runner will use the directory containing the Jenkinsfile as
+the workspace for builds. However, this will not work correctly with external agents
+or plugins that expect to interact with the SCM. In order to enable these behaviors,
+you can specify a YAML file containing the definition of the SCM to checkout in the build.
+
+== Specifying an SCM definition on the CLI
+
+Add the `--scm (path to YAML file)` option to your `jenkinsfile-runner` invocation.
+Nothing else needs to be changed. Note that Pipeline as YAML is not currently supported
+with the `--scm` option.
+
+== SCM YAML format
+
+The SCM YAML format matches with Jenkins Configuration-as-Code syntax. For example:
+
+[source,yaml]
+----
+scm:
+  git:
+    userRemoteConfigs:
+    - url: https://github.com/jenkinsci/jenkinsfile-runner.git
+    branches:
+    - name: master
+----
+
+== Specifying and using credentials with `checkout scm`
+
+You can specify credentials to be used when checking out the configured SCM by
+adding the credentials definition to your YAML and referencing the ID in the SCM's
+configuration. For example:
+
+[source,yaml]
+----
+credential:
+  usernamePassword:
+    password: secret
+    scope: GLOBAL
+    id: user1
+    username: user1
+scm:
+  git:
+    userRemoteConfigs:
+    - url: https://github.com/jenkinsci/jenkinsfile-runner.git
+      credentialsId: user1
+    branches:
+    - name: master
+----
