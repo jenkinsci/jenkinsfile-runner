@@ -270,6 +270,7 @@ https://jenkins.io/security/#reporting-vulnerabilities[vulnerability reporting g
 
 == Further reading
 
+* link:docs/using/TROUBLESHOOTING.adoc[Troubleshooting Guide]
 * link:/CONTRIBUTING.adoc[Contributing to Jenkinsfile Runner]
 * link:/docs/developer/README.adoc[Developer Documentation]
 * Slides:

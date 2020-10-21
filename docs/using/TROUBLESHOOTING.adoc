@@ -1,0 +1,42 @@
+= Troubleshooting Jenkinsfile Runner
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+This section provides some tips and tricks about diagnosing Jenkinsfile Runner when it does not work as expected.
+
+== Logging
+
+By default, Jenkinsfile Runner exposes only a limited subset of Jenkins system logs.
+Log entries get propagated to system out only when the severity is `WARNING` or higher.
+It might become a problem when troubleshooting advanced use-cases.
+For example, external agent connection issues will be commonly reported on the `INFO` level and hence not visible by default.
+
+//FIXME(oleg): Official documentation for Java Util Logging is scarse
+//http://tutorials.jenkov.com/java-logging/configuration.html is a separate good link
+
+It is possible to override the logging configuration by specifying a `java.util.logging.config.file` system property.
+With this property it is possible to pass a link:https://www.logicbig.com/tutorials/core-java-tutorial/logging/loading-properties.html[custom configuration file]
+for the Java Util Logging subsystem used in Jenkins.
+Please refer to the Java Util Logging documentation for more information about the configuration file and available options.
+
+To setup custom logging:
+
+* When running Jenkinsfile Runner as a JAR file, pass a system property as a JVM argument
+** `java -Djava.util.logging.config.file=${YOUR_LOG_CONFIG_PATH} -jar jenkinsfile-runner.jar ...`
+* When using the official Docker images, pass a `JAVA_OPTS` environment variable and file through the volume.
+** `docker run --rm ... -v ${YOUR_LOG_CONFIG_PATH}:/jenkinsfile-runner/logging.properties -e JAVA_OPTS='-Djava.util.logging.config.file=/jenkinsfile-runner/logging.properties' jenkins/jenkinsfile-runner`
+
+== Debugging
+
+As a last resort, you can debug Jenkinsfile Runner.
+See the link:../developer/DEBUG.adoc[Debugging Guide] for more information.
+
+== Asking for help in the community
+
+If you experience an issue and cannot troubleshoot it,
+you can raise it in the community channels.
+Please note that the Jenkins community and Jenkinsfile Runner maintainers provide no SLA.
+
+* https://github.com/jenkinsci/jenkinsfile-runner/issues[Issue Tracker]
+* https://gitter.im/jenkinsci/jenkinsfile-runner[Chat on Gitter]
