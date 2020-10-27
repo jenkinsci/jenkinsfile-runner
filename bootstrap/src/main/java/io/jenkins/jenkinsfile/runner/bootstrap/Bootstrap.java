@@ -18,6 +18,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +44,7 @@ public class Bootstrap {
 
     @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
     public String version;
-    
+
     /**
      * Where to load plugins from?
      */
@@ -108,7 +111,7 @@ public class Bootstrap {
 
     @Option(name = "-v", aliases = { "--version" }, usage = "Prints the current Jenkinsfile Runner version")
     public boolean showVersion;
-  
+
     @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
     public boolean help;
 
@@ -237,7 +240,7 @@ public class Bootstrap {
         }
     }
 
-    private String getVersion() throws IOException {
+    private String getVersion() {
        return getClass().getPackage().getImplementationVersion();
     }
 
@@ -338,12 +341,12 @@ public class Bootstrap {
         }
     }
 
-    public ClassLoader createJenkinsWarClassLoader() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        return new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
-                .collectJars(new File(warDir,"WEB-INF/lib"))
+    public ClassLoader createJenkinsWarClassLoader() throws PrivilegedActionException {
+        return AccessController.doPrivileged((PrivilegedExceptionAction<ClassLoader>) () -> new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
+                .collectJars(new File(warDir, "WEB-INF/lib"))
                 // servlet API needs to be visible to jenkins.war
-                .collectJars(new File(getAppRepo(),"javax/servlet"))
-                .make();
+                .collectJars(new File(getAppRepo(), "javax/servlet"))
+                .make());
     }
 
     public ClassLoader createSetupClassLoader(ClassLoader jenkins) throws IOException {
