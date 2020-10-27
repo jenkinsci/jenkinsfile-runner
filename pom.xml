@@ -61,7 +61,7 @@ THE SOFTWARE.
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
     <jenkins.version>2.249.1</jenkins.version>
-    <jetty.version>9.4.32.v20200930</jetty.version>
+    <jetty.version>9.4.33.v20201020</jetty.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
   </properties>
