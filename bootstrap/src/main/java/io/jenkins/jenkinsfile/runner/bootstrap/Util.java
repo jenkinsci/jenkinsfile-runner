@@ -15,35 +15,36 @@ import java.util.jar.JarFile;
 public class Util {
 
     public static File explodeWar(String jarPath) throws IOException {
-        JarFile jarfile = new JarFile(new File(jarPath));
-        Enumeration<JarEntry> enu = jarfile.entries();
+        try (JarFile jarfile = new JarFile(new File(jarPath))) {
+            Enumeration<JarEntry> enu = jarfile.entries();
 
-        // Get current working directory path
-        Path currentPath = FileSystems.getDefault().getPath("").toAbsolutePath();
-        //Create Temporary directory
-        Path path = Files.createTempDirectory(currentPath.toAbsolutePath(), "jenkinsfile-runner");
-        File destDir = path.toFile();
+            // Get current working directory path
+            Path currentPath = FileSystems.getDefault().getPath("").toAbsolutePath();
+            //Create Temporary directory
+            Path path = Files.createTempDirectory(currentPath.toAbsolutePath(), "jenkinsfile-runner");
+            File destDir = path.toFile();
 
-        while(enu.hasMoreElements()) {
-            JarEntry je = enu.nextElement();
-            File file = new File(destDir, je.getName());
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file = new File(destDir, je.getName());
-            }
-            if (je.isDirectory()) {
-                continue;
-            }
-            InputStream is = jarfile.getInputStream(je);
-
-            try (FileOutputStream fo = new FileOutputStream(file)) {
-                while (is.available() > 0) {
-                    fo.write(is.read());
+            while (enu.hasMoreElements()) {
+                JarEntry je = enu.nextElement();
+                File file = new File(destDir, je.getName());
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    file = new File(destDir, je.getName());
                 }
-                fo.close();
-                is.close();
+                if (je.isDirectory()) {
+                    continue;
+                }
+                InputStream is = jarfile.getInputStream(je);
+
+                try (FileOutputStream fo = new FileOutputStream(file)) {
+                    while (is.available() > 0) {
+                        fo.write(is.read());
+                    }
+                    fo.close();
+                    is.close();
+                }
             }
+            return destDir;
         }
-        return destDir;
     }
 }
