@@ -5,6 +5,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class ClassLoaderBuilder {
     }
 
     public ClassLoader make() {
-        return new URLClassLoader(jars.toArray(new URL[jars.size()]),parent);
+        return AccessController.doPrivileged((PrivilegedAction<URLClassLoader>) () -> new URLClassLoader(jars.toArray(
+                new URL[jars.size()]), parent));
     }
 }
