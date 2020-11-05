@@ -1,8 +1,6 @@
 package io.jenkins.jenkinsfile.runner.vanilla;
 
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
-
-import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
@@ -29,9 +27,9 @@ public class JFRTestUtil {
     @CheckReturnValue
     public static int run(File jenkinsfile) throws Throwable {
         Bootstrap jfr = new Bootstrap();
-        File vanillaTarget = new File(FilenameUtils.getName("target"));
-        jfr.warDir = new File(vanillaTarget, FilenameUtils.getName("war"));
-        jfr.pluginsDir = new File(vanillaTarget, FilenameUtils.getName("plugins"));
+        File vanillaTarget = new File("target");
+        jfr.warDir = new File(vanillaTarget, "war");
+        jfr.pluginsDir = new File(vanillaTarget, "plugins");
         jfr.jenkinsfile = jenkinsfile;
 
         //TODO: PostConstruct is not invoked
@@ -52,9 +50,9 @@ public class JFRTestUtil {
      */
     @CheckReturnValue
     public static int runAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable, CmdLineException {
-        File vanillaTarget = new File(FilenameUtils.getName("target"));
-        File warDir = new File(vanillaTarget, FilenameUtils.getName("war"));
-        File pluginsDir = new File(vanillaTarget, FilenameUtils.getName("plugins"));
+        File vanillaTarget = new File("target");
+        File warDir = new File(vanillaTarget, "war");
+        File pluginsDir = new File(vanillaTarget, "plugins");
         assertTrue("Jenkins WAR directory must exist when running tests", warDir.exists());
         assertTrue("Plugins directory must exist when running tests", pluginsDir.exists());
 

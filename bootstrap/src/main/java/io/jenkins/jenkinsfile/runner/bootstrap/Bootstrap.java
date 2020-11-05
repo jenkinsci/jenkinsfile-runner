@@ -147,7 +147,7 @@ public class Bootstrap {
     /**
      * Directory used as cache for downloaded artifacts.
      */
-    private File cache = new File(FilenameUtils.getName(System.getProperty("user.home") + "/.jenkinsfile-runner/"));
+    private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
     public void postConstruct(CmdLineParser parser) throws IOException {
@@ -178,15 +178,15 @@ public class Bootstrap {
             Runtime.getRuntime().halt(0);
         }
 
-        if (this.jenkinsfile == null) this.jenkinsfile = new File(FilenameUtils.getName("Jenkinsfile"));
+        if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
         if (!this.cliOnly && !this.jenkinsfile.exists()) {
             System.err.println("no Jenkinsfile in current directory.");
             System.exit(-1);
         }
-        if (this.jenkinsfile.isDirectory()) this.jenkinsfile = new File(this.jenkinsfile, FilenameUtils.getName("Jenkinsfile"));
+        if (this.jenkinsfile.isDirectory()) this.jenkinsfile = new File(this.jenkinsfile, "Jenkinsfile");
 
         if (this.pluginsDir == null) {
-            this.pluginsDir = new File(FilenameUtils.getName("plugins.txt"));
+            this.pluginsDir = new File("plugins.txt");
         } else if (!this.pluginsDir.exists()) {
             System.err.println("invalid plugins file.");
             System.exit(-1);
@@ -264,7 +264,7 @@ public class Bootstrap {
         if (version == null) {
             System.out.println("No explicit version has been selected, using latest LTS");
 
-            File latestCore = new File(cache, FilenameUtils.getName("war/latest.txt"));
+            File latestCore = new File(cache, "war/latest.txt");
             latestCore.getParentFile().mkdirs();
             // Check once a day
             if (!latestCore.exists() || latestCore.lastModified() < CACHE_EXPIRE) {
@@ -275,7 +275,7 @@ public class Bootstrap {
 
         System.out.printf("Running pipeline on jenkins %s%n", version);
 
-        File war = new File(cache, FilenameUtils.getName(String.format("war/%s/jenkins-war-%s.war", version, version)));
+        File war = new File(cache, String.format("war/%s/jenkins-war-%s.war", version, version));
         if (!war.exists()) {
             war.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", version)));
@@ -288,8 +288,8 @@ public class Bootstrap {
 
     private void installPlugin(String shortname, String version) throws IOException {
 
-        final File install = new File(pluginsDir, FilenameUtils.getName(shortname + ".jpi"));
-        File plugin = new File(cache, FilenameUtils.getName(String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version)));
+        final File install = new File(pluginsDir, shortname + ".jpi");
+        File plugin = new File(cache, String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("https://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
@@ -317,7 +317,7 @@ public class Bootstrap {
 
         // Explode war if necessary
         String warPath = warDir.getAbsolutePath();
-        if(FilenameUtils.getExtension(warPath).equals("war") && new File(FilenameUtils.getName(warPath)).isFile()) {
+        if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
             System.out.println("Exploding," + warPath +  "this might take some time.");
             warDir = Util.explodeWar(warPath);
         }
@@ -333,7 +333,7 @@ public class Bootstrap {
         } catch (ClassNotFoundException e) {
             if (setup instanceof URLClassLoader) {
                 throw new ClassNotFoundException(e.getMessage() + " not found in " + getAppRepo() + ","
-                        + new File(warDir, FilenameUtils.getName("WEB-INF/lib")) + " " + Arrays.toString(((URLClassLoader) setup).getURLs()),
+                        + new File(warDir, "WEB-INF/lib") + " " + Arrays.toString(((URLClassLoader) setup).getURLs()),
                         e);
             } else {
                 throw e;
@@ -343,9 +343,9 @@ public class Bootstrap {
 
     public ClassLoader createJenkinsWarClassLoader() throws PrivilegedActionException {
         return AccessController.doPrivileged((PrivilegedExceptionAction<ClassLoader>) () -> new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
-                .collectJars(new File(warDir, FilenameUtils.getName("WEB-INF/lib")))
+                .collectJars(new File(warDir, "WEB-INF/lib"))
                 // servlet API needs to be visible to jenkins.war
-                .collectJars(new File(getAppRepo(), FilenameUtils.getName("javax/servlet")))
+                .collectJars(new File(getAppRepo(), "javax/servlet"))
                 .make());
     }
 
@@ -381,6 +381,6 @@ public class Bootstrap {
     }
 
     public File getAppRepo() {
-        return new File(FilenameUtils.getName(System.getProperty("app.repo")));
+        return new File(System.getProperty("app.repo"));
     }
 }

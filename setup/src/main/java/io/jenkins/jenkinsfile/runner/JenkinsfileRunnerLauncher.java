@@ -7,8 +7,6 @@ import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FilenameUtils;
-
 /**
  * Set up of Jenkins environment for executing a single Jenkinsfile.
  *
@@ -29,14 +27,14 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher {
     @Override
     protected int doLaunch() throws Exception {
         // so that test code has all the access to the system
-    	ACL.impersonate(ACL.SYSTEM);
+        ACL.impersonate(ACL.SYSTEM);
         Class<?> c = bootstrap.hasClass(RUNNER_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
         return (int)c.getMethod("run", Bootstrap.class).invoke(c.newInstance(), bootstrap);
     }
 
     private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
         ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
-                .collectJars(new File(bootstrap.getAppRepo(), FilenameUtils.getName("io/jenkins/jenkinsfile-runner/payload")))
+                .collectJars(new File(bootstrap.getAppRepo(), "io/jenkins/jenkinsfile-runner/payload"))
                 .make();
 
         return cl.loadClass(RUNNER_CLASS_NAME);

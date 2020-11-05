@@ -62,6 +62,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,7 +84,6 @@ import io.jenkins.lib.support_log_formatter.SupportLogFormatter;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -135,7 +135,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 
     private boolean origDefaultUseCache = true;
 
-    //private static final Charset UTF8 = Charset.forName("UTF-8"); 	//REMOVED UNUSED VARAIBLE
+    private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public Jenkins getInstance() {
         return jenkins;
@@ -163,7 +163,7 @@ public abstract class JenkinsEmbedder implements RootAction {
             // Disables caching here.
             // Though defaultUseCache is a static field,
             // its setter and getter are provided as instance methods.
-            URLConnection aConnection = new File(FilenameUtils.getName(".")).toURI().toURL().openConnection();
+            URLConnection aConnection = new File(".").toURI().toURL().openConnection();
             origDefaultUseCache = aConnection.getDefaultUseCaches();
             aConnection.setDefaultUseCaches(false);
         }
@@ -226,8 +226,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * By default, we load updates from local proxy to avoid network traffic as much as possible.
      */
     protected void configureUpdateCenter() throws Exception {
-        
-    	//final String updateCenterUrl;		//REMOVED UNUSED VARAIBLE
+        final String updateCenterUrl;
         jettyLevel(Level.INFO);
 
         // don't waste bandwidth talking to the update center
@@ -288,7 +287,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 
         // restore defaultUseCache
         if(Functions.isWindows()) {
-            URLConnection aConnection = new File(FilenameUtils.getName(".")).toURI().toURL().openConnection();
+            URLConnection aConnection = new File(".").toURI().toURL().openConnection();
             aConnection.setDefaultUseCaches(origDefaultUseCache);
         }
     }
@@ -514,7 +513,7 @@ public abstract class JenkinsEmbedder implements RootAction {
                     shortName = m.getMainAttributes().getValue("Short-Name");
                     if(shortName ==null)
                         throw new Error(jpl +" doesn't have the Short-Name attribute");
-                    FileUtils.copyURLToFile(jpl, new File(home, FilenameUtils.getName("plugins/" + shortName + ".jpl")));
+                    FileUtils.copyURLToFile(jpl, new File(home, "plugins/" + shortName + ".jpl"));
                 }
 
                 void resolveDependencies(List<Jpl> jpls) throws Exception {
@@ -552,7 +551,7 @@ public abstract class JenkinsEmbedder implements RootAction {
                                 throw new IOException("Could not resolve " + dep + " in " + System.getProperty("java.class.path"));
                             }
 
-                            File dst = new File(home, FilenameUtils.getName("plugins/" + artifactId + ".jpi"));
+                            File dst = new File(home, "plugins/" + artifactId + ".jpi");
                             if(!dst.exists() || dst.lastModified()!=dependencyJar.lastModified()) {
                                 try {
                                     FileUtils.copyFile(dependencyJar, dst);
@@ -583,12 +582,12 @@ public abstract class JenkinsEmbedder implements RootAction {
                 while (jellies.hasMoreElements()) {
                     URL jellyU = jellies.nextElement();
                     if (jellyU.getProtocol().equals("file")) {
-                        File jellyF = new File(FilenameUtils.getName(jellyU.toURI().toString()));
+                        File jellyF = new File(jellyU.toURI());
                         File classes = jellyF.getParentFile();
                         if (classes.getName().equals("classes")) {
                             File target = classes.getParentFile();
                             if (target.getName().equals("target")) {
-                                File hpi = new File(target, FilenameUtils.getName(artifactId + ".hpi"));
+                                File hpi = new File(target, artifactId + ".hpi");
                                 if (hpi.isFile()) {
                                     return hpi;
                                 }
@@ -648,7 +647,7 @@ public abstract class JenkinsEmbedder implements RootAction {
             Dispatcher.TRACE = true;
             MetaClass.NO_CACHE=true;
             // load resources from the source dir.
-            File dir = new File(FilenameUtils.getName("src/main/resources"));
+            File dir = new File("src/main/resources");
             if(dir.exists() && MetaClassLoader.debugLoader==null)
                 try {
                     MetaClassLoader.debugLoader = new MetaClassLoader(

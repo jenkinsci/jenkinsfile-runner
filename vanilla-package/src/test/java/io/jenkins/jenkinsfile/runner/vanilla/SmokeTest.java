@@ -5,7 +5,6 @@ import hudson.FilePath;
 import hudson.model.TaskListener;
 import hudson.plugins.git.GitException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.jenkinsci.plugins.gitclient.Git;
 import org.jenkinsci.plugins.gitclient.GitClient;
@@ -56,7 +55,7 @@ public class SmokeTest {
 
     @Test
     public void shouldFailWithWrongJenkinsfile() throws Throwable {
-        File jenkinsfile = new File(tmp.getRoot(), FilenameUtils.getName("Jenkinsfile"));
+        File jenkinsfile = new File(tmp.getRoot(), "Jenkinsfile");
 
         int result = JFRTestUtil.run(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
@@ -67,7 +66,7 @@ public class SmokeTest {
     @Test
     @Ignore
     public void shouldHangWhenPipelineHangs() throws Throwable {
-        File jenkinsfile = new File(tmp.getRoot(), FilenameUtils.getName("Jenkinsfile"));
+        File jenkinsfile = new File(tmp.getRoot(), "Jenkinsfile");
         FileUtils.writeStringToFile(jenkinsfile, "stage('Hang!') {\n" +
                 "    node {\n" +
                 "        while(true) {\n" +
@@ -164,7 +163,7 @@ public class SmokeTest {
         Map<String,String> filesAndContents = new HashMap<>();
         filesAndContents.put("README.md", "Test repository");
 
-        File jenkinsfile = new File(FilenameUtils.getName(getClass().getResource("SmokeTest/checkoutSCM/Jenkinsfile").getFile()));
+        File jenkinsfile = new File(getClass().getResource("SmokeTest/checkoutSCM/Jenkinsfile").getFile());
         String jfContent = FileUtils.readFileToString(jenkinsfile, Charset.defaultCharset());
         filesAndContents.put("Jenkinsfile", jfContent);
 

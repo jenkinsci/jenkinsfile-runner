@@ -13,8 +13,7 @@ import hudson.scm.SCM;
 import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
 import hudson.util.DirScanner;
-
-import org.apache.commons.io.FilenameUtils;
+import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
@@ -45,7 +44,7 @@ public class FileSystemSCM extends SCM {
 
     @Override
     public void checkout(@NonNull Run<?, ?> build, @NonNull Launcher launcher, @NonNull FilePath workspace, @NonNull TaskListener listener, @CheckForNull File changelogFile, @CheckForNull SCMRevisionState baseline) throws IOException, InterruptedException {
-        new FilePath(new File(FilenameUtils.getName(dir == null ? "." : dir)))
+        new FilePath(new File(dir == null ? "." : dir))
                 .copyRecursiveTo(new DirScanner.Glob("**/*", null, false), workspace, "**/*");
     }
 
