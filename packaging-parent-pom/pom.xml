@@ -34,7 +34,6 @@
       <plugin>
         <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
         <artifactId>maven-antrun-extended-plugin</artifactId>
-        <version>1.43</version>
         <inherited>false</inherited>
         <executions>
           <execution>
