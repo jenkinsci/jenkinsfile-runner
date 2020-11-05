@@ -31,6 +31,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.io.FilenameUtils;
+
 import jenkins.model.Jenkins;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
@@ -75,11 +78,11 @@ public final class WarExploder {
         // are we in the Jenkins main workspace? If so, pick up hudson/main/war/resources
         // this saves the effort of packaging a war file and makes the debug cycle faster
 
-        File d = new File(".").getAbsoluteFile();
+        File d = new File(FilenameUtils.getName(".")).getAbsoluteFile();
 
         for( ; d!=null; d=d.getParentFile()) {
-            if(new File(d,".jenkins").exists()) {
-                File dir = new File(d,"war/target/jenkins");
+            if(new File(d, FilenameUtils.getName(".jenkins")).exists()) {
+                File dir = new File(d, FilenameUtils.getName("war/target/jenkins"));
                 if(dir.exists()) {
                     LOGGER.log(Level.INFO, "Using jenkins.war resources from {0}", dir);
                     return dir;
@@ -89,7 +92,7 @@ public final class WarExploder {
 
         final File war;
         if (JENKINS_WAR_PATH != null) {
-            war = new File(JENKINS_WAR_PATH).getAbsoluteFile();
+            war = new File(FilenameUtils.getName(JENKINS_WAR_PATH)).getAbsoluteFile();
             LOGGER.log(Level.INFO, "Using a predefined WAR file {0} define by the {1} system property",
                     new Object[] {war, JENKINS_WAR_PATH_PROPERTY_NAME});
             if (!war.exists()) {
@@ -107,7 +110,7 @@ public final class WarExploder {
                 File core = Which.jarFile(Jenkins.class); // will fail with IllegalArgumentException if have neither jenkins-war.war nor jenkins-core.jar in ${java.class.path}
                 String version = core.getParentFile().getName();
                 if (core.getName().equals("jenkins-core-" + version + ".jar") && core.getParentFile().getParentFile().getName().equals("jenkins-core")) {
-                    war = new File(new File(new File(core.getParentFile().getParentFile().getParentFile(), "jenkins-war"), version), "jenkins-war-" + version + ".war");
+                    war = new File(new File(new File(core.getParentFile().getParentFile().getParentFile(), FilenameUtils.getName("jenkins-war")), version), "jenkins-war-" + version + ".war");
                     if (!war.isFile()) {
                         throw new AssertionError(war + " does not yet exist. Prime your development environment by running `mvn validate`.");
                     }
@@ -119,13 +122,13 @@ public final class WarExploder {
         }
 
         // TODO this assumes that the CWD of the Maven process is the plugin ${basedir}, which may not be the case
-        File buildDirectory = new File(System.getProperty("buildDirectory", "target"));
-        File explodeDir = new File(buildDirectory, "jenkins-for-test").getAbsoluteFile();
+        File buildDirectory = new File(FilenameUtils.getName(System.getProperty("buildDirectory", "target")));
+        File explodeDir = new File(buildDirectory, FilenameUtils.getName("jenkins-for-test")).getAbsoluteFile();
         explodeDir.getParentFile().mkdirs();
-        while (new File(explodeDir + ".exploding").isFile()) {
-            explodeDir = new File(explodeDir + "x");
+        while (new File(FilenameUtils.getName(explodeDir + ".exploding")).isFile()) {
+            explodeDir = new File(FilenameUtils.getName(explodeDir + "x"));
         }
-        File timestamp = new File(explodeDir,".timestamp");
+        File timestamp = new File(explodeDir, FilenameUtils.getName(".timestamp"));
 
         if(!timestamp.exists() || (timestamp.lastModified()!=war.lastModified())) {
             LOGGER.log(Level.INFO, "Exploding {0} into {1}", new Object[] {war, explodeDir});
@@ -136,7 +139,7 @@ public final class WarExploder {
                 throw new IOException("Failed to explode "+war);
             new FileOutputStream(timestamp).close();
             timestamp.setLastModified(war.lastModified());
-            new File(explodeDir + ".exploding").delete();
+            new File(FilenameUtils.getName(explodeDir + ".exploding")).delete();
         } else {
             LOGGER.log(Level.INFO, "Picking up existing exploded jenkins.war at {0}", explodeDir.getAbsolutePath());
         }

@@ -11,11 +11,12 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.commons.io.FilenameUtils;
 
 public class Util {
 
     public static File explodeWar(String jarPath) throws IOException {
-        try (JarFile jarfile = new JarFile(new File(jarPath))) {
+        try (JarFile jarfile = new JarFile(new File(FilenameUtils.getName(jarPath)))) {
             Enumeration<JarEntry> enu = jarfile.entries();
 
             // Get current working directory path
@@ -26,10 +27,10 @@ public class Util {
 
             while (enu.hasMoreElements()) {
                 JarEntry je = enu.nextElement();
-                File file = new File(destDir, je.getName());
+                File file = new File(destDir, FilenameUtils.getName(je.getName()));
                 if (!file.exists()) {
                     file.getParentFile().mkdirs();
-                    file = new File(destDir, je.getName());
+                    file = new File(destDir, FilenameUtils.getName(je.getName()));
                 }
                 if (je.isDirectory()) {
                     continue;
