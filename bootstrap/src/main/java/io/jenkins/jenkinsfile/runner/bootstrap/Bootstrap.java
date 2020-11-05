@@ -154,7 +154,7 @@ public class Bootstrap {
 
         if (showVersion) {
             System.out.println(getVersion());
-            System.exit(0);
+            Runtime.getRuntime().halt(0);
         }
 
         if (System.getenv("FORCE_JENKINS_CLI") != null) {
@@ -175,7 +175,7 @@ public class Bootstrap {
             System.out.println("\nUsage: jenkinsfile-runner [options] [params]\n");
             System.out.println("Options:");
             parser.printUsage(System.out);
-            System.exit(0);
+            Runtime.getRuntime().halt(0);
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
