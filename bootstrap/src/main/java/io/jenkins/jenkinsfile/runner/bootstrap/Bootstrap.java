@@ -275,7 +275,7 @@ public class Bootstrap {
 
         System.out.printf("Running pipeline on jenkins %s%n", version);
 
-        File war = new File(cache, String.format("war/%s/jenkins-war-%s.war", version, version));
+        File war = new File(cache, FilenameUtils.getName(String.format("war/%s/jenkins-war-%s.war", version, version)));
         if (!war.exists()) {
             war.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", version)));
@@ -288,8 +288,8 @@ public class Bootstrap {
 
     private void installPlugin(String shortname, String version) throws IOException {
 
-        final File install = new File(pluginsDir, shortname + ".jpi");
-        File plugin = new File(cache, String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
+        final File install = new File(pluginsDir, FilenameUtils.getName(shortname + ".jpi"));
+        File plugin = new File(cache, FilenameUtils.getName(String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version)));
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
             final URL url = new URL(getMirrorURL(String.format("https://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
@@ -317,7 +317,7 @@ public class Bootstrap {
 
         // Explode war if necessary
         String warPath = warDir.getAbsolutePath();
-        if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
+        if(FilenameUtils.getExtension(FilenameUtils.getName(warPath)).equals("war") && new File(warPath).isFile()) {
             System.out.println("Exploding," + warPath +  "this might take some time.");
             warDir = Util.explodeWar(warPath);
         }
