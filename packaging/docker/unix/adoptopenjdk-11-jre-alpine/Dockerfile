@@ -25,7 +25,7 @@ RUN echo "Optimizing plugins..." && \
 FROM adoptopenjdk/openjdk11:jre-11.0.7_10-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
-ENV JENKINS_PM_VERSION 2.0.1
+ENV JENKINS_PM_VERSION 2.0.3
 ENV JENKINS_PM_URL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/plugin-management-parent-pom-$JENKINS_PM_VERSION/jenkins-plugin-manager-$JENKINS_PM_VERSION.jar
 USER root
 RUN apk add --update --no-cache wget git \
