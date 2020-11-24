@@ -63,6 +63,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -643,16 +645,20 @@ public abstract class JenkinsEmbedder implements RootAction {
 
         {// enable debug assistance, since tests are often run from IDE
             Dispatcher.TRACE = true;
-            MetaClass.NO_CACHE=true;
+            MetaClass.NO_CACHE = true;
             // load resources from the source dir.
             File dir = new File("src/main/resources");
-            if(dir.exists() && MetaClassLoader.debugLoader==null)
-                try {
-                    MetaClassLoader.debugLoader = new MetaClassLoader(
-                        new URLClassLoader(new URL[]{dir.toURI().toURL()}));
-                } catch (MalformedURLException e) {
-                    throw new AssertionError(e);
-                }
+            if (dir.exists() && MetaClassLoader.debugLoader == null) {
+                AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                    try {
+                        MetaClassLoader.debugLoader = new MetaClassLoader(
+                                new URLClassLoader(new URL[]{dir.toURI().toURL()}));
+                    } catch (MalformedURLException e) {
+                        throw new AssertionError(e);
+                    }
+                    return null;
+                });
+            }
         }
 
         // suppress some logging which we do not much care about here
