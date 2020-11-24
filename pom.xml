@@ -61,7 +61,7 @@ THE SOFTWARE.
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.249.1</jenkins.version>
+    <jenkins.version>2.263</jenkins.version>
     <jetty.version>9.4.34.v20201102</jetty.version>
     <jenkins-test-harness.version>2.71</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
@@ -72,7 +72,7 @@ THE SOFTWARE.
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.249.x</artifactId>
+        <artifactId>bom-2.263.x</artifactId>
         <version>18</version>
         <scope>import</scope>
         <type>pom</type>
