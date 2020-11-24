@@ -70,9 +70,10 @@ demos['cwp'] = {
             }
         }
     }
-} */
+}
 
 parallel(demos)
+ */
 
 node('docker') {
     ws("container_${branchName}_${buildNumber}") {
