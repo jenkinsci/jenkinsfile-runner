@@ -39,7 +39,11 @@ public class Bootstrap {
     /**
      * Exploded jenkins.war
      */
-    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-jv" })
+    @Option(name = "-w", aliases = { "--jenkins-war" },
+            usage = "Path to exploded jenkins war directory." +
+                    "Depending on packaging, it may contain the entire WAR " +
+                    "or just resources to be loaded by the WAR file, for example Groovy hooks or extra libraries.",
+            forbids = { "-jv" })
     public File warDir;
 
     @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")

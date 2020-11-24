@@ -52,6 +52,13 @@
       <artifactId>git</artifactId>
     </dependency>
 
+    <!-- Upper bounds -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.9</version>
+    </dependency>
+
     <!-- Tests -->
     <!-- TODO(oleg_nenashev):
       It is actually bundled into the Jenkins core due to https://issues.jenkins-ci.org/browse/JENKINS-63269 .
