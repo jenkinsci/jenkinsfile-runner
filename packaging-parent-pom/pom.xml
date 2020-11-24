@@ -9,11 +9,11 @@
 
   <artifactId>packaging-parent-pom</artifactId>
   <packaging>pom</packaging>
-  <description>Parent POM </description>
+  <description>Jenkinsfile Runner: Packaging Parent POM for building custom bundles</description>
 
   <properties>
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
-    <jfr.version>${project.parent.version}</jfr.version>
+    <jfr.version>1.0-beta-20</jfr.version>
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
     <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
@@ -29,26 +29,58 @@
 
   <build>
     <finalName>${jfr.name}</finalName>
+
     <plugins>
-      <!-- Packaging Parent steps only -->
       <plugin>
-        <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-        <artifactId>maven-antrun-extended-plugin</artifactId>
-        <inherited>false</inherited>
+        <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <phase>package</phase>
+            <id>retrieve-packaging-resources</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>run</goal>
+              <!-- we use copy as this is a dependency from outside the reactor -->
+              <goal>copy</goal>
             </goals>
             <configuration>
-              <tasks>
-                <attachArtifact file="${project.build.directory}/../src/main/resources/assembly/zip.xml" type="xml" classifier="assembly-zip-config" />
-                <attachArtifact file="${project.build.directory}/../src/main/resources-filtered/jenkins.properties" type="xml" classifier="jenkins-properties" />
-              </tasks>
+              <skip>${jfr.packaging.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>packaging-parent-pom-resources</artifactId>
+                  <version>${jfr.version}</version>
+                  <classifier>assembly-zip-config</classifier>
+                  <type>xml</type>
+                  <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
+                  <destFileName>zip.xml</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>packaging-parent-pom-resources</artifactId>
+                  <version>${jfr.version}</version>
+                  <classifier>jenkins-properties</classifier>
+                  <type>xml</type>
+                  <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
+                  <destFileName>jenkins.properties</destFileName>
+                </artifactItem>
+              </artifactItems>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <skip>${jfr.packaging.skip}</skip>
+          <resources>
+            <resource>
+              <directory>${project.build.directory}/generated-sources/resources-filtered</directory>
+              <filtering>true</filtering>
+            </resource>
+          </resources>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -151,81 +183,6 @@
 
   <profiles>
     <profile>
-      <id>jfr-build-parent-pom</id>
-      <activation>
-        <file>
-          <exists>${project.build.directory}/../parent-pom-marker.txt</exists>
-        </file>
-      </activation>
-      <properties>
-        <jfr.packaging.skip>true</jfr.packaging.skip>
-      </properties>
-    </profile>
-    <profile>
-      <id>jfr-build-package</id>
-      <activation>
-        <file>
-          <missing>${project.build.directory}/../parent-pom-marker.txt</missing>
-        </file>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>retrieve-packaging-resources</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <!-- we use copy as this is a dependency from outside the reactor -->
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <skip>${jfr.packaging.skip}</skip>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-                      <artifactId>packaging-parent-pom</artifactId>
-                      <version>${project.parent.version}</version>
-                      <classifier>assembly-zip-config</classifier>
-                      <type>xml</type>
-                      <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
-                      <destFileName>zip.xml</destFileName>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-                      <artifactId>packaging-parent-pom</artifactId>
-                      <version>${project.parent.version}</version>
-                      <classifier>jenkins-properties</classifier>
-                      <type>xml</type>
-                      <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
-                      <destFileName>jenkins.properties</destFileName>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.2.0</version>
-            <configuration>
-              <skip>${jfr.packaging.skip}</skip>
-              <resources>
-                <resource>
-                  <directory>${project.build.directory}/generated-sources/resources-filtered</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
       <id>jfr-package-app</id>
       <activation>
         <file>
@@ -257,6 +214,35 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <profile>
+      <!-- TODO: Remove after the 1.0 Beta 20 release -->
+      <id>beta-20-development</id>
+      <activation>
+        <file>
+          <exists>${project.build.directory}/../jfr-main-repo-marker.txt</exists>
+        </file>
+      </activation>
+      <properties>
+        <jfr.version>1.0-beta-20-SNAPSHOT</jfr.version>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-release-plugin</artifactId>
+            <configuration>
+              <releaseProfiles>beta-20-development-release-profile</releaseProfiles>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>beta-20-development-release-profile</id>
+      <properties>
+        <jfr.version>1.0-beta-20</jfr.version>
+      </properties>
     </profile>
 
     <profile>

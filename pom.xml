@@ -53,6 +53,7 @@ THE SOFTWARE.
     <module>setup</module>
     <module>payload-dependencies</module>
     <module>payload</module>
+    <module>packaging-parent-resources</module>
     <module>packaging-parent-pom</module>
     <!-- more modules come from profiles -->
   </modules>
