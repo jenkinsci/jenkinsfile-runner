@@ -62,7 +62,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -134,8 +134,6 @@ public abstract class JenkinsEmbedder implements RootAction {
     private PluginManager pluginManager = null;
 
     private boolean origDefaultUseCache = true;
-
-    private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public Jenkins getInstance() {
         return jenkins;
@@ -238,7 +236,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         //TODO: Mock UC?
         // sites.add(new UpdateSite("default", updateCenterUrl));
     }
-    
+
     private static void dumpThreads() {
         ThreadInfo[] threadInfos = Functions.getThreadInfos();
         Functions.ThreadGroupMap m = Functions.sortThreadsAndGetGroupMap(threadInfos);
@@ -398,7 +396,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      */
     public void interactiveBreak() throws Exception {
         System.out.println("Jenkins is running at " + getURL());
-        new BufferedReader(new InputStreamReader(System.in)).readLine();
+        new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).readLine();
     }
 
     /**
@@ -408,7 +406,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * from an browser, while developing a test case.
      */
     public void pause() throws IOException {
-        new BufferedReader(new InputStreamReader(System.in)).readLine();
+        new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).readLine();
     }
 
     /**
@@ -598,7 +596,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 
                 return null;
             }
-            
+
     }
 
     public JenkinsEmbedder withNewHome() {
