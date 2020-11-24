@@ -31,11 +31,12 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
 
     public JenkinsLauncher(Bootstrap bootstrap) {
         this.bootstrap = bootstrap;
-        if(bootstrap.runHome != null) {
-            if(!bootstrap.runHome.isDirectory()) {
+        if (bootstrap.runHome != null) {
+            String[] list = bootstrap.runHome.list();
+            if (!bootstrap.runHome.isDirectory() || list == null) {
                 throw new IllegalArgumentException("--runHome is not a directory: " + bootstrap.runHome.getAbsolutePath());
             }
-            if(bootstrap.runHome.list().length > 0) {
+            if (list.length > 0) {
                 throw new IllegalArgumentException("--runHome directory is not empty: " + bootstrap.runHome.getAbsolutePath());
             }
 
@@ -145,11 +146,12 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
 
     @Override
     protected void setupHome(File home) throws IOException {
-        if(bootstrap.withInitHooks != null) {
-            if(!bootstrap.withInitHooks.isDirectory()) {
+        if (bootstrap.withInitHooks != null) {
+            String[] list = bootstrap.withInitHooks.list();
+            if (!bootstrap.withInitHooks.isDirectory() || list == null) {
                 throw new IllegalArgumentException("--withInitHooks is not a directory: " + bootstrap.withInitHooks.getAbsolutePath());
             }
-            if(bootstrap.withInitHooks.list().length == 0) {
+            if (list.length == 0) {
                 throw new IllegalArgumentException("--withInitHooks directory does not contain any hook: " + bootstrap.withInitHooks.getAbsolutePath());
             }
             FileUtils.copyDirectory(bootstrap.withInitHooks, home.getAbsoluteFile().toPath().resolve("init.groovy.d").toFile());
