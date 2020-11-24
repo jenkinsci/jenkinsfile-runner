@@ -11,6 +11,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.jenkins-ci.main</groupId>
+      <artifactId>jenkins-core</artifactId>
+      <version>${jenkins.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
       <version>${project.version}</version>
