@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-20</version>
+    <version>1.0-beta-21-SNAPSHOT</version>
   </parent>
 
   <artifactId>packaging-parent-pom</artifactId>
@@ -13,7 +13,7 @@
 
   <properties>
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
-    <jfr.version>1.0-beta-20</jfr.version>
+    <jfr.version>1.0-beta-21-SNAPSHOT</jfr.version>
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
     <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
