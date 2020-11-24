@@ -7,7 +7,16 @@
     <version>1.0-beta-20-SNAPSHOT</version>
   </parent>
 
+  <!-- TODO: Consider switching to a Plugin Parent POM -->
   <artifactId>payload-dependencies</artifactId>
+  <name>Jenkinsfile Runner: Plugin dependencies</name>
+  <description>Declares a minimum set of plugins required for Jenkinsfile Runner execution</description>
+  <packaging>hpi</packaging>
+
+  <properties>
+    <!-- There is nothing to test here -->
+    <skipTests>true</skipTests>
+  </properties>
 
   <!--
     Payload needs to depend on the presence of many other plugins,
@@ -20,8 +29,8 @@
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-core</artifactId>
       <version>${jenkins.version}</version>
+      <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-cps</artifactId>
@@ -78,5 +87,49 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>jackson2-api</artifactId>
     </dependency>
+
+    <!-- For injected tests, when we decide to enable them -->
+    <dependency>
+      <groupId>org.jenkins-ci.main</groupId>
+      <artifactId>jenkins-war</artifactId>
+      <version>${jenkins.version}</version>
+      <type>executable-war</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.main</groupId>
+      <artifactId>jenkins-test-harness</artifactId>
+      <version>${jenkins-test-harness.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>test-annotations</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <showDeprecation>true</showDeprecation>
+          <webApp>
+            <contextPath>/jenkins</contextPath>
+          </webApp>
+          <minimumJavaVersion>1.${java.level}</minimumJavaVersion>
+          <systemProperties>
+            <hudson.Main.development>${hudson.Main.development}</hudson.Main.development>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
