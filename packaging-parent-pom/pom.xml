@@ -89,22 +89,22 @@
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${jfr.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
