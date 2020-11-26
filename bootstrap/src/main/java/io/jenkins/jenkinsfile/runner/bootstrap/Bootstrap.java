@@ -1,12 +1,13 @@
 package io.jenkins.jenkinsfile.runner.bootstrap;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.util.VersionNumber;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -25,103 +26,118 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
+ * Main entry point for the Jenkinsfile Runner execution.
+ *
  * @author Kohsuke Kawaguchi
+ * @author Oleg Nenashev
  */
-public class Bootstrap {
+@Command(name = "jenkinsfile-runner", versionProvider = Bootstrap.VersionProviderImpl.class, sortOptions = false, mixinStandardHelpOptions = true)
+public class Bootstrap implements Callable<Integer> {
 
     public static final long CACHE_EXPIRE = System.currentTimeMillis() - 24 * 3600 * 1000;
     private static final String WORKSPACES_DIR_SYSTEM_PROPERTY = "jenkins.model.Jenkins.workspacesDir";
+    private static final String DEFAULT_JOBNAME = "job";
+    @CheckForNull
+    private static Properties JFR_PROPERTIES = null;
 
     /**
      * Exploded jenkins.war
      */
-    @Option(name = "-w", aliases = { "--jenkins-war" }, usage = "path to exploded jenkins war directory.", forbids = { "-jv" })
+    @Option(names = { "-w", "--jenkins-war" },
+            description = "path to exploded jenkins war directory") //,  = { "-jv" })
     public File warDir;
-
-    @Option(name = "-jv", aliases = { "--jenkins-version"}, usage = "jenkins version to use (only in case 'warDir' is not specified). Defaults to latest LTS.")
-    public String version;
 
     /**
      * Where to load plugins from?
      */
-    @Option(name = "-p", aliases = { "--plugins" }, usage = "plugins required to run pipeline. Either a plugins.txt file or a /plugins installation directory. Defaults to plugins.txt.")
+    @Option(names = { "-p", "--plugins" },
+            description = "plugins required to run pipeline. Either a plugins.txt file or a /plugins installation directory. Defaults to plugins.txt")
     public File pluginsDir;
-
-    @Option(name = "-m", aliases = {"--mirror"}, usage = "mirror site of Jenkins, defaults to http://updates.jenkins.io/download. Get the mirror list from http://mirrors.jenkins-ci.org/status.html.")
-    public String mirror;
 
     /**
      * Checked out copy of the working space.
      */
-    @Option(name = "-f", aliases = { "--file" }, usage = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, default to ./Jenkinsfile.")
+    @Option(names = { "-f", "--file" },
+            description = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, default to ./Jenkinsfile")
     public File jenkinsfile;
 
     /**
      * Workspace for the Run
      */
     @CheckForNull
-    @Option(name = "--runWorkspace", usage = "Path to the workspace of the run to be used within the node{} context. " +
-            "It applies to both Jenkins master and agents (or side containers) if any. " +
-            "Requires Jenkins 2.119 or above")
+    @Option(names = "--runWorkspace",
+            description = "Path to the workspace of the run to be used within the node{} context. " +
+                    "It applies to both Jenkins master and agents (or side containers) if any. " +
+                    "Requires Jenkins 2.119 or above")
     public File runWorkspace;
+
+    @Option(names = { "-jv", "--jenkins-version"},
+            description = "jenkins version to use (only in case 'warDir' is not specified). Defaults to the latest LTS")
+    public String version;
+
+    @Option(names = { "-m", "--mirror"},
+            description = "mirror site of Jenkins, defaults to http://updates.jenkins.io/download. Get the mirror list from http://mirrors.jenkins-ci.org/status.html")
+    public String mirror;
 
     /**
      * Jenkins Home for the Run.
      */
     @CheckForNull
-    @Option(name = "--runHome", usage = "Path to the empty Jenkins Home directory to use for this run. If not specified a temporary directory will be created. " +
-            "Note that the folder specified via --runHome will not be disposed after the run.")
+    @Option(names = "--runHome",
+            description = "Path to the empty Jenkins Home directory to use for this run. If not specified a temporary directory will be created. " +
+            "Note that the folder specified via --runHome will not be disposed after the run")
     public File runHome;
 
     @CheckForNull
-    @Option(name = "--withInitHooks", usage = "Path to a directory containing Groovy Init Hooks to copy into init.groovy.d")
+    @Option(names = "--withInitHooks",
+            description = "Path to a directory containing Groovy Init Hooks to copy into init.groovy.d")
     public File withInitHooks;
-
-
-    private static final String DEFAULT_JOBNAME = "job";
 
     /**
      * Job name for the Run.
      */
-    @Option(name = "-n", aliases = { "--job-name"}, usage = "Name of the job the run belongs to")
+    @Option(names = { "-n", "--job-name"},
+            description = "Name of the job the run belongs to")
     public String jobName = DEFAULT_JOBNAME;
 
     /**
      * Cause of the Run.
      */
-    @Option(name = "-c", aliases = { "--cause"}, usage = "Cause of the run")
+    @Option(names = { "-c", "--cause"},
+            description = "Cause of the run")
     public String cause;
 
     /**
      * BuildNumber of the Run.
      */
-    @Option(name = "-b", aliases = { "--build-number"}, usage = "Build number of the run")
+    @Option(names = { "-b", "--build-number"},
+            description = "Build number of the run")
     public int buildNumber = 1;
 
-    @Option(name = "-a", aliases = { "--arg" }, usage = "Parameters to be passed to workflow job. Use multiple -a switches for multiple params")
+    @Option(names = { "-a", "--arg" },
+            description = "Parameters to be passed to the build. Use multiple -a switches for multiple params")
     @CheckForNull
     public Map<String,String> workflowParameters;
 
-    @Option(name = "-ns", aliases = { "--no-sandbox" }, usage = "Disable workflow job execution within sandbox environment")
+    @Option(names = { "-ns", "--no-sandbox" },
+            description = "Disable workflow job execution within sandbox environment")
     public boolean noSandBox;
 
-    @Option(name = "-v", aliases = { "--version" }, usage = "Prints the current Jenkinsfile Runner version")
-    public boolean showVersion;
-
-    @Option(name = "-h", aliases = { "--help"}, usage = "Prints help information.", help = true, forbids = { "-v", "-w", "-p", "-f", "--runWorkspace" })
-    public boolean help;
-
-    @Option(name = "-u", aliases = { "--keep-undefined-parameters"}, usage = "Keep undefined parameters if set")
+    @Option(names = { "-u", "--keep-undefined-parameters" },
+            description = "Keep undefined parameters if set")
     public boolean keepUndefinedParameters = false;
 
-    @Option(name = "--cli", usage = "Launch interactive CLI.", forbids = { "-v", "--runWorkspace", "-a", "-ns" })
+    @Option(names = "--cli",
+            description = "Launch interactive CLI") //, forbids = { "-v", "--runWorkspace", "-a", "-ns" })
     public boolean cliOnly;
 
-    @Option(name = "--scm", usage = "YAML definition of the SCM, with optional credentials, to use for the project")
+    @Option(names = "--scm",
+            description = "YAML definition of the SCM, with optional credentials, to use for the project")
     public File scm;
 
     public static void main(String[] args) throws Throwable {
@@ -130,17 +146,18 @@ public class Bootstrap {
             System.console().readLine();
         }
 
-        final Bootstrap bootstrap = new Bootstrap();
-        CmdLineParser parser = new CmdLineParser(bootstrap);
+        int exitCode = new CommandLine(new Bootstrap()).execute(args);
+        System.exit(exitCode);
+    }
+
+    @Override
+    @SuppressFBWarnings("DM_EXIT")
+    public Integer call() {
         try {
-            parser.parseArgument(args);
-            bootstrap.postConstruct(parser);
-            final int status = bootstrap.run();
-            System.exit(status);
-        } catch (CmdLineException e) {
-            // handling of wrong arguments
-            System.err.println(e.getMessage());
-            parser.printUsage(System.err);
+            postConstruct();
+            return runJenkinsfile();
+        } catch (Throwable ex) {
+            throw new RuntimeException("Unhandled exception", ex);
         }
     }
 
@@ -150,12 +167,7 @@ public class Bootstrap {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
-    public void postConstruct(CmdLineParser parser) throws IOException {
-
-        if (showVersion) {
-            System.out.println(getVersion());
-            System.exit(0);
-        }
+    public void postConstruct() throws IOException {
 
         if (System.getenv("FORCE_JENKINS_CLI") != null) {
             this.cliOnly = true;
@@ -164,18 +176,12 @@ public class Bootstrap {
         if (this.version != null && !isVersionSupported()) {
             System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). %n",
                     this.version,
-                    this.getMininumJenkinsVersion());
+                    getMininumJenkinsVersion());
             System.exit(-1);
         }
 
         if (warDir == null) {
             warDir= getJenkinsWar();
-        }
-        if (help) {
-            System.out.println("\nUsage: jenkinsfile-runner [options] [params]\n");
-            System.out.println("Options:");
-            parser.printUsage(System.out);
-            System.exit(0);
         }
 
         if (this.jenkinsfile == null) this.jenkinsfile = new File("Jenkinsfile");
@@ -240,22 +246,29 @@ public class Bootstrap {
         }
     }
 
-    private String getVersion() {
-       return getClass().getPackage().getImplementationVersion();
+    static class VersionProviderImpl implements CommandLine.IVersionProvider {
+        @Override
+        public String[] getVersion() throws Exception {
+            return new String[] { readJenkinsPomProperty("jfr.version") };
+        }
     }
 
-    private String getMininumJenkinsVersion() throws IOException {
-        return readJenkinsPomProperty("jenkins.version");
+    private static String getMininumJenkinsVersion() throws IOException {
+        return readJenkinsPomProperty("minimum.jenkins.version");
     }
 
     private boolean isVersionSupported() throws IOException {
-        return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(this.getMininumJenkinsVersion()));
+        return new VersionNumber(this.version).isNewerThanOrEqualTo(new VersionNumber(getMininumJenkinsVersion()));
     }
 
-    private String readJenkinsPomProperty(String key) throws IOException {
-        try (InputStream pomProperties = this.getClass().getResourceAsStream("/jenkins.properties")) {
+    private static String readJenkinsPomProperty(String key) throws IOException {
+        if (JFR_PROPERTIES != null) {
+            return JFR_PROPERTIES.getProperty(key);
+        }
+        try (InputStream pomProperties = Bootstrap.class.getResourceAsStream("/jfr.properties")) {
             Properties props = new Properties();
             props.load(pomProperties);
+            JFR_PROPERTIES = props;
             return props.getProperty(key);
         }
     }
@@ -308,11 +321,11 @@ public class Bootstrap {
         return url.replace("https://updates.jenkins.io/download", this.mirror);
     }
 
-    public int run() throws Throwable {
+    public int runJenkinsfile() throws Throwable {
         String appClassName = "io.jenkins.jenkinsfile.runner.App";
         if (hasClass(appClassName)) {
             Class<?> c = Class.forName(appClassName);
-            return ((IApp) c.newInstance()).run(this);
+            return  ((IApp) c.newInstance()).run(this);
         }
 
         // Explode war if necessary

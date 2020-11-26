@@ -6,6 +6,8 @@ import org.kohsuke.args4j.CmdLineParser;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
+import picocli.CommandLine;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +35,7 @@ public class JFRTestUtil {
         jfr.jenkinsfile = jenkinsfile;
 
         //TODO: PostConstruct is not invoked
-        return jfr.run();
+        return jfr.runJenkinsfile();
     }
 
     /**
@@ -66,11 +68,6 @@ public class JFRTestUtil {
         }
 
         String[] args = cmd.toArray(new String[0]);
-
-        final Bootstrap bootstrap = new Bootstrap();
-        CmdLineParser parser = new CmdLineParser(bootstrap);
-        parser.parseArgument(args);
-        bootstrap.postConstruct(parser);
-        return bootstrap.run();
+        return new CommandLine(new Bootstrap()).execute(args);
     }
 }
