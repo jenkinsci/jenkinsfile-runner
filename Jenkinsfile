@@ -54,7 +54,6 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
-/* FIXME: Custom WAR Packager needs a fix to support the new packaging mode
 stage('Verify Custom WAR Packager demo')
 Map demos = [:]
 demos['cwp'] = {
@@ -73,7 +72,6 @@ demos['cwp'] = {
 }
 
 parallel(demos)
- */
 
 node('docker') {
     ws("container_${branchName}_${buildNumber}") {
