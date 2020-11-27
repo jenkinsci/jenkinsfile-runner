@@ -26,7 +26,7 @@ RUN echo "Optimizing plugins..." && \
 FROM adoptopenjdk/openjdk8:jdk8u252-b09-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
-ENV JENKINS_PM_VERSION 2.1.3
+ENV JENKINS_PM_VERSION 2.2.0
 ENV JENKINS_PM_URL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/${JENKINS_PM_VERSION}/jenkins-plugin-manager-${JENKINS_PM_VERSION}.jar
 
 USER root
