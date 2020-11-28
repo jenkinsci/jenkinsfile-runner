@@ -51,21 +51,22 @@ public class Bootstrap implements Callable<Integer> {
     @Option(names = { "-w", "--jenkins-war" },
             description = "Path to exploded jenkins war directory." +
                     "Depending on packaging, it may contain the entire WAR " +
-                    "or just resources to be loaded by the WAR file, for example Groovy hooks or extra libraries.") //,  = { "-jv" })
+                    "or just resources to be loaded by the WAR file, for example Groovy hooks or extra libraries.")
+    @CheckForNull
     public File warDir;
 
     /**
      * Where to load plugins from?
      */
     @Option(names = { "-p", "--plugins" },
-            description = "plugins required to run pipeline. Either a plugins.txt file or a /plugins installation directory. Defaults to plugins.txt")
+            description = "Plugins required to run pipeline. Either a plugins.txt file or a /plugins installation directory. Defaults to plugins.txt")
     public File pluginsDir;
 
     /**
      * Checked out copy of the working space.
      */
     @Option(names = { "-f", "--file" },
-            description = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, defaults to ./Jenkinsfile")
+            description = "Path to Jenkinsfile or directory containing a Jenkinsfile, defaults to ./Jenkinsfile")
     public File jenkinsfile;
 
     /**
@@ -79,7 +80,8 @@ public class Bootstrap implements Callable<Integer> {
     public File runWorkspace;
 
     @Option(names = { "-jv", "--jenkins-version"},
-            description = "jenkins version to use (only in case 'warDir' is not specified). Defaults to the latest LTS")
+            description = "Jenkins version to use if Jenkins WAR is not specified by --jenkins-war. Defaults to the latest LTS")
+    @CheckForNull
     public String version;
 
     @Option(names = { "-m", "--mirror"},
@@ -175,13 +177,17 @@ public class Bootstrap implements Callable<Integer> {
             this.cliOnly = true;
         }
 
+        // Process the Jenkins version
+        if (this.version != null && this.warDir != null) {
+            System.err.printf("Error: --jenkins-war and --jenkins-version are mutually exclusive options");
+            System.exit(-1);
+        }
         if (this.version != null && !isVersionSupported()) {
-            System.err.printf("Jenkins version [%s] not suported by this jenkinsfile-runner version (requires %s). %n",
+            System.err.printf("Jenkins version [%s] not supported by this jenkinsfile-runner version (requires %s). %n",
                     this.version,
                     getMininumJenkinsVersion());
             System.exit(-1);
         }
-
         if (warDir == null) {
             warDir= getJenkinsWar();
         }
