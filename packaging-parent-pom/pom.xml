@@ -13,7 +13,9 @@
 
   <properties>
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
-    <jfr.version>1.0-beta-21-SNAPSHOT</jfr.version>
+    <!-- FIXME: Support for this parameter is coming in the next JFR release -->
+    <jfr.version>1.0-beta-20</jfr.version>
+
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
     <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
@@ -47,7 +49,7 @@
                 <artifactItem>
                   <groupId>io.jenkins.jenkinsfile-runner</groupId>
                   <artifactId>packaging-parent-pom-resources</artifactId>
-                  <version>${jfr.version}</version>
+                  <version>${project.parent.version}</version>
                   <classifier>assembly-zip-config</classifier>
                   <type>xml</type>
                   <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
@@ -56,7 +58,7 @@
                 <artifactItem>
                   <groupId>io.jenkins.jenkinsfile-runner</groupId>
                   <artifactId>packaging-parent-pom-resources</artifactId>
-                  <version>${jfr.version}</version>
+                  <version>${project.parent.version}</version>
                   <classifier>jenkins-properties</classifier>
                   <type>xml</type>
                   <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
@@ -89,22 +91,22 @@
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
-      <version>${jfr.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>setup</artifactId>
-      <version>${jfr.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload</artifactId>
-      <version>${jfr.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
-      <version>${jfr.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-collections</groupId>
@@ -123,7 +125,7 @@
     <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>payload-dependencies</artifactId>
-      <version>${jfr.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
   </dependencies>
 
@@ -160,35 +162,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-
-    <profile>
-      <!-- TODO: Remove after the 1.0 Beta 20 release -->
-      <id>beta-20-development</id>
-      <activation>
-        <file>
-          <exists>${project.build.directory}/../jfr-main-repo-marker.txt</exists>
-        </file>
-      </activation>
-      <properties>
-        <jfr.version>1.0-beta-20-SNAPSHOT</jfr.version>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-release-plugin</artifactId>
-            <configuration>
-              <releaseProfiles>beta-20-development-release-profile</releaseProfiles>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>beta-20-development-release-profile</id>
-      <properties>
-        <jfr.version>1.0-beta-20</jfr.version>
-      </properties>
     </profile>
 
     <profile>
