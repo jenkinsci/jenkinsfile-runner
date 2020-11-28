@@ -19,7 +19,7 @@ jobs:
         run: |
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "::set-output name=project-version::$version"
-          echo "::set-env name=PROJECT_VERSION::$version"
+          echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
       - run: echo $PROJECT_VERSION
       - name: Fetch artifact
         id: fetch-artifact
