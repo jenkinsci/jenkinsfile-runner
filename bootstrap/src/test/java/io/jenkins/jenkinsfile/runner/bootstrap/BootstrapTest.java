@@ -13,6 +13,11 @@ public class BootstrapTest {
     }
 
     @Test
+    public void printsSubcommandHelp() {
+        assertCommandSuccess("help", "cli");
+    }
+
+    @Test
     public void printsVersion() {
         assertCommandSuccess("--version");
         assertCommandSuccess("-V");
@@ -21,7 +26,7 @@ public class BootstrapTest {
     @Test
     public void supportsMultipleArguments() {
         Bootstrap bootstrap = assertCommandSuccess("--arg=ARG1=value1", "--arg=ARG2=value2", "--version");
-        assertEquals("Wrong number of parameters was parsed", bootstrap.workflowParameters.size(), 2);
+        assertEquals("Wrong number of parameters was parsed", bootstrap.pipelineRunOptions.workflowParameters.size(), 2);
     }
 
     private Bootstrap assertCommandSuccess(String ... args) throws AssertionError {

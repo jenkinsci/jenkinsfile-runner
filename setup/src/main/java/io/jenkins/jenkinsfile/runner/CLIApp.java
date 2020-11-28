@@ -2,22 +2,22 @@ package io.jenkins.jenkinsfile.runner;
 
 import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunCLICommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 
 /**
- * App handler for {@link RunJenkinsfileCommand}.
+ * App handler for {@link RunCLICommand}.
  * This code runs after Jetty and Jenkins classloaders are set up correctly.
  */
-public class App implements IApp {
-
+public class CLIApp implements IApp {
     @Override
     public int run(JenkinsLauncherCommand command) throws Throwable {
-        if (!(command instanceof RunJenkinsfileCommand)) {
+        if (!(command instanceof RunCLICommand)) {
             throw new IllegalStateException(
                     String.format("%s is invoked with a wrong class type. Required=%s, got=%s",
-                            App.class, RunJenkinsfileCommand.class, command.getClass()));
+                            CLIApp.class, RunCLICommand.class, command.getClass()));
         }
-        JenkinsfileRunnerLauncher launcher = new JenkinsfileRunnerLauncher((RunJenkinsfileCommand) command);
+        CLILauncher launcher = new CLILauncher((RunCLICommand) command);
         return launcher.launch();
     }
 }

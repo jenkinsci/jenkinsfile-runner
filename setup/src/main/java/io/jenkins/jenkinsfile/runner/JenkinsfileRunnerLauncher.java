@@ -1,8 +1,10 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.security.ACL;
-import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +14,11 @@ import java.io.IOException;
  *
  * @author Kohsuke Kawaguchi
  */
-public class JenkinsfileRunnerLauncher extends JenkinsLauncher {
+public class JenkinsfileRunnerLauncher extends JenkinsLauncher<RunJenkinsfileCommand> {
     private static final String RUNNER_CLASS_NAME = "io.jenkins.jenkinsfile.runner.Runner";
 
-    public JenkinsfileRunnerLauncher(Bootstrap bootstrap) {
-        super(bootstrap);
+    public JenkinsfileRunnerLauncher(RunJenkinsfileCommand command) {
+        super(command);
     }
 
     //TODO: add support of timeout
@@ -26,15 +28,16 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher {
      */
     @Override
     protected int doLaunch() throws Exception {
+        final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
         // so that test code has all the access to the system
         ACL.impersonate(ACL.SYSTEM);
-        Class<?> c = bootstrap.hasClass(RUNNER_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
-        return (int)c.getMethod("run", Bootstrap.class).invoke(c.newInstance(), bootstrap);
+        Class<?> c = command.hasClass(RUNNER_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
+        return (int)c.getMethod("run", PipelineRunOptions.class).invoke(c.newInstance(), command.pipelineRunOptions);
     }
 
     private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
         ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
-                .collectJars(new File(bootstrap.getAppRepo(), "io/jenkins/jenkinsfile-runner/payload"))
+                .collectJars(new File(command.getAppRepo(), "io/jenkins/jenkinsfile-runner/payload"))
                 .make();
 
         return cl.loadClass(RUNNER_CLASS_NAME);

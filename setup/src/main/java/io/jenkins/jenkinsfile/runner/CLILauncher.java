@@ -2,7 +2,7 @@ package io.jenkins.jenkinsfile.runner;
 
 import hudson.cli.CLICommand;
 import hudson.security.ACL;
-import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunCLICommand;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,9 +15,9 @@ import java.util.Locale;
 /**
  * Sets up a Jenkins environment that provides an interactive CLI.
  */
-public class CLILauncher extends JenkinsLauncher {
-    public CLILauncher(Bootstrap bootstrap) {
-        super(bootstrap);
+public class CLILauncher extends JenkinsLauncher<RunCLICommand> {
+    public CLILauncher(RunCLICommand command) {
+        super(command);
     }
 
     @Override

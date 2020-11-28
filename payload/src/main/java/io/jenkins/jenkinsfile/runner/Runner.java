@@ -13,7 +13,7 @@ import hudson.model.Failure;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
-import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
@@ -40,26 +40,26 @@ public class Runner {
     /**
      * Main entry point invoked by the setup module
      */
-    public int run(Bootstrap bootstrap) throws Exception {
+    public int run(PipelineRunOptions runOptions) throws Exception {
         try {
-          Jenkins.checkGoodName(bootstrap.jobName);
+          Jenkins.checkGoodName(runOptions.jobName);
         } catch (Failure e) {
-          System.err.println(String.format("invalid job name: '%s': %s", bootstrap.jobName, e.getMessage()));
+          System.err.println(String.format("invalid job name: '%s': %s", runOptions.jobName, e.getMessage()));
           return -1;
         }
         Jenkins j = Jenkins.getInstance();
-        WorkflowJob w = j.createProject(WorkflowJob.class, bootstrap.jobName);
-        w.updateNextBuildNumber(bootstrap.buildNumber);
+        WorkflowJob w = j.createProject(WorkflowJob.class, runOptions.jobName);
+        w.updateNextBuildNumber(runOptions.buildNumber);
         w.setResumeBlocked(true);
         List<Action> workflowActionsList = new ArrayList<>(3);
 
-        if (bootstrap.jenkinsfile.getName().endsWith(".yml")) {
+        if (runOptions.jenkinsfile.getName().endsWith(".yml")) {
           // We do not use SCM definition here due to https://github.com/jenkinsci/pipeline-as-yaml-plugin/issues/28
           w.setDefinition(new PipelineAsYamlScriptFlowDefinition(
-            FileUtils.readFileToString(bootstrap.jenkinsfile),!bootstrap.noSandBox));
+            FileUtils.readFileToString(runOptions.jenkinsfile),!runOptions.noSandBox));
         } else {
-            if (bootstrap.scm != null) {
-                SCMContainer scm = SCMContainer.loadFromYAML(bootstrap.scm);
+            if (runOptions.scm != null) {
+                SCMContainer scm = SCMContainer.loadFromYAML(runOptions.scm);
                 Credentials fromSCM = scm.getCredential();
                 if (fromSCM != null) {
                     try {
@@ -69,20 +69,20 @@ public class Runner {
                         return -1;
                     }
                 }
-                w.setDefinition(new CpsScmFlowDefinition(scm.getSCM(), bootstrap.jenkinsfile.getName()));
+                w.setDefinition(new CpsScmFlowDefinition(scm.getSCM(), runOptions.jenkinsfile.getName()));
             } else {
                 w.setDefinition(new CpsScmFlowDefinition(
-                        new FileSystemSCM(bootstrap.jenkinsfile.getParent()), bootstrap.jenkinsfile.getName()));
+                        new FileSystemSCM(runOptions.jenkinsfile.getParent()), runOptions.jenkinsfile.getName()));
             }
-            workflowActionsList.add(new SetJenkinsfileLocation(bootstrap.jenkinsfile, !bootstrap.noSandBox));
+            workflowActionsList.add(new SetJenkinsfileLocation(runOptions.jenkinsfile, !runOptions.noSandBox));
         }
 
-        if (bootstrap.workflowParameters != null && bootstrap.workflowParameters.size() > 0) {
-          workflowActionsList.add(createParametersAction(bootstrap));
+        if (runOptions.workflowParameters != null && runOptions.workflowParameters.size() > 0) {
+          workflowActionsList.add(createParametersAction(runOptions));
         }
 
-        if (bootstrap.cause != null) {
-          workflowActionsList.add(createCauseAction(bootstrap.cause));
+        if (runOptions.cause != null) {
+          workflowActionsList.add(createCauseAction(runOptions.cause));
         }
 
         Action[] workflowActions = workflowActionsList.toArray(new Action[0]);
@@ -97,8 +97,8 @@ public class Runner {
         return b.getResult().ordinal;
     }
 
-    private Action createParametersAction(Bootstrap bootstrap) {
-      return new ParametersAction(bootstrap.workflowParameters
+    private Action createParametersAction(PipelineRunOptions runOptions) {
+      return new ParametersAction(runOptions.workflowParameters
             .entrySet()
             .stream()
             .map(e -> new StringParameterValue(e.getKey(), e.getValue()))
