@@ -4,7 +4,7 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 @Restricted(NoExternalUse.class)
-/*package*/ class PayloadDependencies {
+public class PayloadDependencies {
 
     // Placeholder class
 
