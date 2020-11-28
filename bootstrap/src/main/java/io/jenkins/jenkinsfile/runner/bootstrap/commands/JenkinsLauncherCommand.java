@@ -53,14 +53,6 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     @SuppressFBWarnings("DM_EXIT")
     public Integer call() throws IllegalStateException {
         try {
-            // TODO: Remove it: Compatibility mode for Docker images
-            if (System.getenv("FORCE_JENKINS_CLI") != null) {
-                System.out.println("WARNING: Using the CLI compatibility mode. Use the 'cli' subcommand instead of passing the environment variable");
-                RunCLICommand command = new RunCLICommand();
-                command.launcherOptions = this.getLauncherOptions();
-                command.postConstruct();
-                return command.runJenkinsfileRunnerApp();
-            }
             postConstruct();
             return runJenkinsfileRunnerApp();
         } catch (Throwable ex) {

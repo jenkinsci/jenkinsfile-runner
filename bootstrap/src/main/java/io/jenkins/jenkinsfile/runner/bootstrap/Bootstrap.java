@@ -25,7 +25,15 @@ public class Bootstrap implements Callable<Integer> {
     public PipelineRunOptions pipelineRunOptions;
 
     @CommandLine.Mixin
-    public JenkinsLauncherOptions launcherSettings;
+    public JenkinsLauncherOptions launcherOptions;
+
+    /**
+     * @deprecated Replaced by {@link RunCLICommand}
+     */
+    @Deprecated
+    @CommandLine.Option(names = "--cli", hidden = true,
+            description = "Launch interactive CLI")
+    public boolean cliMode;
 
     public static void main(String[] args) throws Throwable {
         // break for attaching profiler
@@ -42,8 +50,21 @@ public class Bootstrap implements Callable<Integer> {
      */
     @Override
     public Integer call() throws IllegalStateException {
+        // TODO: Remove it: Compatibility mode for Docker images
+        if (cliMode || System.getenv("FORCE_JENKINS_CLI") != null) {
+            try {
+                System.out.println("WARNING: Using the deprecated CLI mode. Use the 'cli' subcommand instead of passing the argument or an environment variable");
+                RunCLICommand command = new RunCLICommand();
+                command.launcherOptions = launcherOptions;
+                command.postConstruct();
+                return command.runJenkinsfileRunnerApp();
+            } catch (Throwable ex) {
+                throw new RuntimeException("Unhandled exception", ex);
+            }
+        }
+
         RunJenkinsfileCommand command = new RunJenkinsfileCommand();
-        command.launcherOptions = launcherSettings;
+        command.launcherOptions = launcherOptions;
         command.pipelineRunOptions = pipelineRunOptions;
         return command.call();
     }
