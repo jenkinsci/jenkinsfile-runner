@@ -49,7 +49,9 @@ public class Bootstrap implements Callable<Integer> {
      * Exploded jenkins.war
      */
     @Option(names = { "-w", "--jenkins-war" },
-            description = "path to exploded jenkins war directory") //,  = { "-jv" })
+            description = "Path to exploded jenkins war directory." +
+                    "Depending on packaging, it may contain the entire WAR " +
+                    "or just resources to be loaded by the WAR file, for example Groovy hooks or extra libraries.") //,  = { "-jv" })
     public File warDir;
 
     /**
@@ -63,7 +65,7 @@ public class Bootstrap implements Callable<Integer> {
      * Checked out copy of the working space.
      */
     @Option(names = { "-f", "--file" },
-            description = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, default to ./Jenkinsfile")
+            description = "Path to Jenkinsfile (or directory containing a Jenkinsfile) to run, defaults to ./Jenkinsfile")
     public File jenkinsfile;
 
     /**

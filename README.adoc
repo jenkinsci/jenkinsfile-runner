@@ -168,7 +168,9 @@ The executable of Jenkinsfile Runner allows its invocation with these CLI option
                                See link:./docs/using/SCM.adoc[this doc for more details].
  -jv (--jenkins-version) VAL : jenkins version to use (only in case 'warDir' is not
                                specified). Defaults to latest LTS.
- -w (--jenkins-war) FILE     : path to exploded jenkins war directory.
+ -w (--jenkins-war) FILE     : Path to exploded Jenkins WAR directory. Depending on packaging,
+                               it may contain the entire WAR file or just resources to be loaded
+                               by the WAR file, for example Groovy hooks or extra libraries.
  -v (--version)              : Display the current version
  -h (--help)                 : Print this help
 

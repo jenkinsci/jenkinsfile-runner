@@ -4,16 +4,18 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-20-SNAPSHOT</version>
+    <version>1.0-beta-23-SNAPSHOT</version>
   </parent>
 
   <artifactId>packaging-parent-pom</artifactId>
   <packaging>pom</packaging>
-  <description>Parent POM </description>
+  <description>Jenkinsfile Runner: Packaging Parent POM for building custom bundles</description>
 
   <properties>
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
-    <jfr.version>${project.parent.version}</jfr.version>
+    <!-- FIXME: Support for this parameter is coming in the next JFR release -->
+    <jfr.version>1.0-beta-20</jfr.version>
+
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
     <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
@@ -29,26 +31,58 @@
 
   <build>
     <finalName>${jfr.name}</finalName>
+
     <plugins>
-      <!-- Packaging Parent steps only -->
       <plugin>
-        <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-        <artifactId>maven-antrun-extended-plugin</artifactId>
-        <inherited>false</inherited>
+        <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <phase>package</phase>
+            <id>retrieve-packaging-resources</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>run</goal>
+              <!-- we use copy as this is a dependency from outside the reactor -->
+              <goal>copy</goal>
             </goals>
             <configuration>
-              <tasks>
-                <attachArtifact file="${project.build.directory}/../src/main/resources/assembly/zip.xml" type="xml" classifier="assembly-zip-config" />
-                <attachArtifact file="${project.build.directory}/../src/main/resources-filtered/jenkins.properties" type="xml" classifier="jenkins-properties" />
-              </tasks>
+              <skip>${jfr.packaging.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>packaging-parent-pom-resources</artifactId>
+                  <version>${project.parent.version}</version>
+                  <classifier>assembly-zip-config</classifier>
+                  <type>xml</type>
+                  <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
+                  <destFileName>zip.xml</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>packaging-parent-pom-resources</artifactId>
+                  <version>${project.parent.version}</version>
+                  <classifier>jenkins-properties</classifier>
+                  <type>xml</type>
+                  <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
+                  <destFileName>jenkins.properties</destFileName>
+                </artifactItem>
+              </artifactItems>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <skip>${jfr.packaging.skip}</skip>
+          <resources>
+            <resource>
+              <directory>${project.build.directory}/generated-sources/resources-filtered</directory>
+              <filtering>true</filtering>
+            </resource>
+          </resources>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -87,144 +121,15 @@
       <artifactId>annotation-indexer</artifactId>
     </dependency>
 
-    <!-- All Payload plugin dependencies are inherited here -->
-    <!-- TODO(oleg-nenashev): payload-dependencies is not HPI, and hpi:assemble-dependencies does not include plugins unless listed explicitly here
-         Would be nice to deduplicate
-    -->
+    <!-- Pulls in the plugin and all transitive deps -->
     <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-cps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-job</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-multibranch</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-scm-step</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-basic-steps</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-durable-task-step</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins.workflow</groupId>
-      <artifactId>workflow-support</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>script-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.jenkins</groupId>
-      <artifactId>configuration-as-code</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>scm-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.jenkins.plugins</groupId>
-      <artifactId>pipeline-as-yaml</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkinsci.plugins</groupId>
-      <artifactId>pipeline-model-definition</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>jackson2-api</artifactId>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
+      <artifactId>payload-dependencies</artifactId>
+      <version>${project.parent.version}</version>
     </dependency>
   </dependencies>
 
   <profiles>
-    <profile>
-      <id>jfr-build-parent-pom</id>
-      <activation>
-        <file>
-          <exists>${project.build.directory}/../parent-pom-marker.txt</exists>
-        </file>
-      </activation>
-      <properties>
-        <jfr.packaging.skip>true</jfr.packaging.skip>
-      </properties>
-    </profile>
-    <profile>
-      <id>jfr-build-package</id>
-      <activation>
-        <file>
-          <missing>${project.build.directory}/../parent-pom-marker.txt</missing>
-        </file>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>retrieve-packaging-resources</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <!-- we use copy as this is a dependency from outside the reactor -->
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <skip>${jfr.packaging.skip}</skip>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-                      <artifactId>packaging-parent-pom</artifactId>
-                      <version>${project.parent.version}</version>
-                      <classifier>assembly-zip-config</classifier>
-                      <type>xml</type>
-                      <outputDirectory>${project.build.directory}/generated-sources/assembly</outputDirectory>
-                      <destFileName>zip.xml</destFileName>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-                      <artifactId>packaging-parent-pom</artifactId>
-                      <version>${project.parent.version}</version>
-                      <classifier>jenkins-properties</classifier>
-                      <type>xml</type>
-                      <outputDirectory>${project.build.directory}/generated-sources/resources-filtered</outputDirectory>
-                      <destFileName>jenkins.properties</destFileName>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.2.0</version>
-            <configuration>
-              <skip>${jfr.packaging.skip}</skip>
-              <resources>
-                <resource>
-                  <directory>${project.build.directory}/generated-sources/resources-filtered</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <id>jfr-package-app</id>
       <activation>

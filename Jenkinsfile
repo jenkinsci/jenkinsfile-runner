@@ -54,7 +54,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
-stage('Verify demos')
+stage('Verify Custom WAR Packager demo')
 Map demos = [:]
 demos['cwp'] = {
     node('docker') {
@@ -63,20 +63,6 @@ demos['cwp'] = {
                 checkout scm
                 stage('CWP') {
                     dir('demo/cwp') {
-                        sh "make clean buildInDocker run"
-                    }
-                }
-            }
-        }
-    }
-}
-demos['databound'] = {
-    node('docker') {
-        timestamps {
-            ws("databound_${branchName}_${buildNumber}") {
-                checkout scm
-                stage('Databound') {
-                    dir('demo/databound') {
                         sh "make clean buildInDocker run"
                     }
                 }
