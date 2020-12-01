@@ -93,7 +93,7 @@ Resume disabled by user, switching to high-performance, low-durability mode.
 [Pipeline] {
 [Pipeline] // stage
 [Pipeline] stage
-[Pipeline] { (Print hello')
+[Pipeline] { (Print hello)
 [Pipeline] echo
 Hello world!
 [Pipeline] }
