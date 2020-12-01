@@ -19,6 +19,7 @@ public class BootstrapTest {
 
     @Test
     public void printsVersion() {
+        assertCommandSuccess("version");
         assertCommandSuccess("--version");
         assertCommandSuccess("-V");
     }

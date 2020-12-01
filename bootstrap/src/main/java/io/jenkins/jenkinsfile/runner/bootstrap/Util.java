@@ -25,8 +25,12 @@ public class Util {
     public static class VersionProviderImpl implements CommandLine.IVersionProvider {
         @Override
         public String[] getVersion() throws Exception {
-            return new String[] { readJenkinsPomProperty("jfr.version") };
+            return new String[] { getJenkinsfileRunnerVersion() };
         }
+    }
+
+    public static String getJenkinsfileRunnerVersion() throws IOException {
+        return readJenkinsPomProperty("jfr.version");
     }
 
     public static String getMininumJenkinsVersion() throws IOException {
