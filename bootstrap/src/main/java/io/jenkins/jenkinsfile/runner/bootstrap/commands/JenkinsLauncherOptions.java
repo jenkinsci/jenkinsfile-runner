@@ -34,7 +34,7 @@ public class JenkinsLauncherOptions {
     public String version;
 
     @CommandLine.Option(names = { "-m", "--mirror"},
-            description = "mirror site of Jenkins, defaults to http://updates.jenkins.io/download. Get the mirror list from http://mirrors.jenkins-ci.org/status.html")
+            description = "Download mirror site of Jenkins, defaults to http://updates.jenkins.io/download. Get the mirror list from http://mirrors.jenkins-ci.org/status.html")
     public String mirror;
 
     /**
