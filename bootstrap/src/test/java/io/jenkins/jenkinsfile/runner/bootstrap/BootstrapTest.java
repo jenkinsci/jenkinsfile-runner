@@ -15,6 +15,7 @@ public class BootstrapTest {
     @Test
     public void printsSubcommandHelp() {
         assertCommandSuccess("help", "cli");
+        assertCommandSuccess("cli", "--help");
     }
 
     @Test

@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Oleg Nenashev
  * @since TODO
  */
-@CommandLine.Command(name="run", description = "Runs Jenkinsfile")
+@CommandLine.Command(name="run", description = "Runs Jenkinsfile", mixinStandardHelpOptions = true)
 public class RunJenkinsfileCommand extends JenkinsLauncherCommand {
 
     @CommandLine.Mixin
