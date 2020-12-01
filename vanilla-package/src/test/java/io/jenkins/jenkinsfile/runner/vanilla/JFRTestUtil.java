@@ -1,8 +1,10 @@
 package io.jenkins.jenkinsfile.runner.vanilla;
 
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
@@ -24,25 +26,27 @@ import static org.junit.Assert.assertTrue;
 public class JFRTestUtil {
 
     /**
-     * Runs JFR using the low-level methods, {@link Bootstrap#postConstruct(CmdLineParser)} is skipped.
+     * Runs JFR using the low-level methods, {@link JenkinsLauncherCommand#postConstruct()} is skipped.
      */
     @CheckReturnValue
     public static int run(File jenkinsfile) throws Throwable {
-        Bootstrap jfr = new Bootstrap();
+        RunJenkinsfileCommand jfr = new RunJenkinsfileCommand();
         File vanillaTarget = new File("target");
-        jfr.warDir = new File(vanillaTarget, "war");
-        jfr.pluginsDir = new File(vanillaTarget, "plugins");
-        jfr.jenkinsfile = jenkinsfile;
+        jfr.launcherOptions = new JenkinsLauncherOptions();
+        jfr.pipelineRunOptions = new PipelineRunOptions();
+        jfr.launcherOptions.warDir = new File(vanillaTarget, "war");
+        jfr.launcherOptions.pluginsDir = new File(vanillaTarget, "plugins");
+        jfr.pipelineRunOptions.jenkinsfile = jenkinsfile;
 
         //TODO: PostConstruct is not invoked
-        return jfr.runJenkinsfile();
+        return jfr.runJenkinsfileRunnerApp();
     }
 
     /**
      * Runs JFR using the CLI routines
      */
     @CheckReturnValue
-    public static int runAsCLI(File jenkinsfile) throws Throwable, CmdLineException {
+    public static int runAsCLI(File jenkinsfile) throws Throwable {
         return runAsCLI(jenkinsfile, null);
     }
 
@@ -51,7 +55,7 @@ public class JFRTestUtil {
      * Runs JFR using the CLI routines
      */
     @CheckReturnValue
-    public static int runAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable, CmdLineException {
+    public static int runAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable {
         File vanillaTarget = new File("target");
         File warDir = new File(vanillaTarget, "war");
         File pluginsDir = new File(vanillaTarget, "plugins");

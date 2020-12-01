@@ -2,7 +2,8 @@ package io.jenkins.jenkinsfile.runner;
 
 import hudson.ClassicPluginStrategy;
 import hudson.util.PluginServletFilter;
-import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.security.AbstractLoginService;
@@ -24,24 +25,26 @@ import java.util.logging.Logger;
 /**
  * Shared behaviour for different modes of launching an embedded Jenkins in the context of jenkinsfile-runner.
  */
-public abstract class JenkinsLauncher extends JenkinsEmbedder {
-    protected final Bootstrap bootstrap;
+public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends JenkinsEmbedder {
+
+    protected final T command;
 
     private static final Logger LOGGER = Logger.getLogger(JenkinsLauncher.class.getName());
 
-    public JenkinsLauncher(Bootstrap bootstrap) {
-        this.bootstrap = bootstrap;
-        if (bootstrap.runHome != null) {
-            String[] list = bootstrap.runHome.list();
-            if (!bootstrap.runHome.isDirectory() || list == null) {
-                throw new IllegalArgumentException("--runHome is not a directory: " + bootstrap.runHome.getAbsolutePath());
+    public JenkinsLauncher(T command) {
+        this.command = command;
+        final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
+        if (launcherOptions.jenkinsHome != null) {
+            String[] list = launcherOptions.jenkinsHome.list();
+            if (!launcherOptions.jenkinsHome.isDirectory() || list == null) {
+                throw new IllegalArgumentException("--runHome is not a directory: " + launcherOptions.jenkinsHome.getAbsolutePath());
             }
             if (list.length > 0) {
-                throw new IllegalArgumentException("--runHome directory is not empty: " + bootstrap.runHome.getAbsolutePath());
+                throw new IllegalArgumentException("--runHome directory is not empty: " + launcherOptions.jenkinsHome.getAbsolutePath());
             }
 
             //Override homeLoader to use existing directory instead of creating temporary one
-            this.homeLoader = new JenkinsHomeLoader.UseExisting(bootstrap.runHome.getAbsoluteFile());
+            this.homeLoader = new JenkinsHomeLoader.UseExisting(launcherOptions.jenkinsHome.getAbsoluteFile());
         }
     }
 
@@ -50,16 +53,18 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
      */
     @Override
     protected ServletContext createWebServer() throws Exception {
+        final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
+
         QueuedThreadPool queuedThreadPool = new QueuedThreadPool(10);
         server = new Server(queuedThreadPool);
 
-        WebAppContext context = new WebAppContext(bootstrap.warDir.getPath(), contextPath);
+        WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
         context.getSecurityHandler().setLoginService(configureUserRealm());
-        context.setResourceBase(bootstrap.warDir.getPath());
+        context.setResourceBase(launcherOptions.warDir.getPath());
 
         // Jenkins core and some extension points supply extension points which try to access the filter
         // In Jenkins core it is define in web.xml
@@ -70,7 +75,7 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
 
         localPort = -1;
 
-        setPluginManager(new PluginManagerImpl(context.getServletContext(), bootstrap.pluginsDir));
+        setPluginManager(new PluginManagerImpl(context.getServletContext(), launcherOptions.pluginsDir));
 
         return context.getServletContext();
     }
@@ -146,15 +151,16 @@ public abstract class JenkinsLauncher extends JenkinsEmbedder {
 
     @Override
     protected void setupHome(File home) throws IOException {
-        if (bootstrap.withInitHooks != null) {
-            String[] list = bootstrap.withInitHooks.list();
-            if (!bootstrap.withInitHooks.isDirectory() || list == null) {
-                throw new IllegalArgumentException("--withInitHooks is not a directory: " + bootstrap.withInitHooks.getAbsolutePath());
+        final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
+        if (launcherOptions.withInitHooks != null) {
+            String[] list = launcherOptions.withInitHooks.list();
+            if (!launcherOptions.withInitHooks.isDirectory() || list == null) {
+                throw new IllegalArgumentException("--withInitHooks is not a directory: " + launcherOptions.withInitHooks.getAbsolutePath());
             }
             if (list.length == 0) {
-                throw new IllegalArgumentException("--withInitHooks directory does not contain any hook: " + bootstrap.withInitHooks.getAbsolutePath());
+                throw new IllegalArgumentException("--withInitHooks directory does not contain any hook: " + launcherOptions.withInitHooks.getAbsolutePath());
             }
-            FileUtils.copyDirectory(bootstrap.withInitHooks, home.getAbsoluteFile().toPath().resolve("init.groovy.d").toFile());
+            FileUtils.copyDirectory(launcherOptions.withInitHooks, home.getAbsoluteFile().toPath().resolve("init.groovy.d").toFile());
         }
     }
 
