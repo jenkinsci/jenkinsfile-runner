@@ -41,10 +41,10 @@ public class JenkinsLauncherOptions {
      * Jenkins Home for the Run.
      */
     @CheckForNull
-    @CommandLine.Option(names = "--runHome",
+    @CommandLine.Option(names = {"--jenkinsHome", "--runHome"},
             description = "Path to the empty Jenkins Home directory to use for this run. If not specified a temporary directory will be created. " +
-                    "Note that the folder specified via --runHome will not be disposed after the run")
-    public File runHome;
+                    "Note that the specified folder will not be disposed after the run")
+    public File jenkinsHome;
 
     @CheckForNull
     @CommandLine.Option(names = "--withInitHooks",

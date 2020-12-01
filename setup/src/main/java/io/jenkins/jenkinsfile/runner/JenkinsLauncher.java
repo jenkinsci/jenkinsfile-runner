@@ -34,17 +34,17 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
     public JenkinsLauncher(T command) {
         this.command = command;
         final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
-        if (launcherOptions.runHome != null) {
-            String[] list = launcherOptions.runHome.list();
-            if (!launcherOptions.runHome.isDirectory() || list == null) {
-                throw new IllegalArgumentException("--runHome is not a directory: " + launcherOptions.runHome.getAbsolutePath());
+        if (launcherOptions.jenkinsHome != null) {
+            String[] list = launcherOptions.jenkinsHome.list();
+            if (!launcherOptions.jenkinsHome.isDirectory() || list == null) {
+                throw new IllegalArgumentException("--runHome is not a directory: " + launcherOptions.jenkinsHome.getAbsolutePath());
             }
             if (list.length > 0) {
-                throw new IllegalArgumentException("--runHome directory is not empty: " + launcherOptions.runHome.getAbsolutePath());
+                throw new IllegalArgumentException("--runHome directory is not empty: " + launcherOptions.jenkinsHome.getAbsolutePath());
             }
 
             //Override homeLoader to use existing directory instead of creating temporary one
-            this.homeLoader = new JenkinsHomeLoader.UseExisting(launcherOptions.runHome.getAbsoluteFile());
+            this.homeLoader = new JenkinsHomeLoader.UseExisting(launcherOptions.jenkinsHome.getAbsoluteFile());
         }
     }
 
