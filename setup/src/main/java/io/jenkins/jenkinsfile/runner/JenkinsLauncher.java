@@ -137,15 +137,14 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         }
     }
 
-    /**
-     * Skips the clean up.
-     *
-     * This was initially motivated by SLF4J leaving gnarly messages.
-     * The whole JVM is going to die anyway, so we don't really care about cleaning up anything nicely.
-     */
     @Override
     public void after() throws Exception {
-        jenkins = null;
+        if (command.launcherOptions.skipShutdown) {
+            // Skips the clean up. This was initially motivated by SLF4J leaving gnarly messages.
+            // The whole JVM is going to die anyway, but without the cleanup the Jenkins termination logic won't be invoked
+            // It may lead to issues in plugins which rely on the shutdown logic (agent connectors, async event streaming, etc.)
+            jenkins = null;
+        }
         super.after();
     }
 
