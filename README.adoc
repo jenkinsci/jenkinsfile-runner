@@ -64,27 +64,19 @@ Say you have your Git repository checked out at `~/foo` that contains `Jenkinsfi
 You can now run Jenkinsfile Runner like this:
 
 ....
-jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile> [-a "param1=Hello" -a "param2=value2"]
+jenkinsfile-runner -w <path to war> -p <path to plugins> -f <path to Jenkinsfile>
 ....
 
 Sample Jenkinsfile:
 
 [source,groovy]
 ----
-$ cat ~/foo/Jenkinsfile
 pipeline {
     agent any
-    parameters {
-        string(name: 'param1', defaultValue: '', description: 'Greeting message')
-        string(name: 'param2', defaultValue: '', description: '2nd parameter')
-    }
     stages {
-        stage('Build') {
+        stage('Print hello') {
             steps {
                 echo 'Hello world!'
-                echo "message: ${params.param1}"
-                echo "param2: ${params.param2}"
-                sh 'ls -la'
             }
         }
     }
@@ -96,27 +88,14 @@ Output:
 ....
 $ ./app/target/appassembler/bin/jenkinsfile-runner -w /tmp/jenkins -p /tmp/jenkins_home/plugins -f ~/foo/ -a "param1=Hello&param2=value2"
 Started
-Running in Durability level: PERFORMANCE_OPTIMIZED
-Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins8090792616816810094test/workspace/job
+Resume disabled by user, switching to high-performance, low-durability mode.
 [Pipeline] node
 [Pipeline] {
 [Pipeline] // stage
 [Pipeline] stage
-[Pipeline] { (Build)
+[Pipeline] { (Print hello)
 [Pipeline] echo
 Hello world!
-[Pipeline] echo
-message: Hello
-[Pipeline] echo
-param2: value2
-[Pipeline] sh
-[job] Running shell script
-+ ls -la
-total 12
-drwxrwxr-x 2 kohsuke kohsuke 4096 Feb 24 15:36 .
-drwxrwxr-x 4 kohsuke kohsuke 4096 Feb 24 15:36 ..
--rw-rw-r-- 1 kohsuke kohsuke    0 Feb 24 15:36 abc
--rw-rw-r-- 1 kohsuke kohsuke  179 Feb 24 15:36 Jenkinsfile
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] }
@@ -126,8 +105,7 @@ Finished: SUCCESS
 ....
 
 The exit code reflects the result of the build.
-The `test` directory of this workspace includes a very simple example of Jenkinsfile that can be
-used to demo Jenkinsfile Runner.
+The `demo` directory includes a few simple examples of Jenkinsfiles you can try out.
 
 === Command Line Interface (CLI)
 
