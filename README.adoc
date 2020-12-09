@@ -178,6 +178,12 @@ Advanced arguments:
 ** NOTE: This option will be reworked in the future once the Plugin Installation Manager tool is integrated
 * `--withInitHooks FILE` - Path to the https://www.jenkins.io/doc/book/managing/groovy-hook-scripts/[Groovy init hooks] directory
     Hooks can be also passed via `WEB-INF/groovy.init.d/**` directory within the Jenkins WAR resource loader defined in `--jenkins-war`.
+* `--skipShutdown` - Skips the Jenkins shutdown logic to improve performance.
+  Jenkinsfile Runner will abort the instance instead of gracefully releasing the resources.
+  For example, agent connections will not be terminated.
+  Also, plugin https://javadoc.jenkins.io/hudson/init/Terminator.html[@Terminator] extensions will not be invoked.
+  It may lead to undefined behavior in the system, including potential data loss.
+  This option is considered safe for the Vanilla package with the default plugin set.
 
 ==== Running Jenkinsfiles (`run` command)
 
