@@ -22,10 +22,10 @@ An environment variable configured via JCasC: a value configured via JCasC
 
 ## Running the demo locally
 
-Once you build the repository, launch the following command:
+Once you build the repository, launch the following command in bash:
 
 ```bash
-CASC_JENKINS_CONFIG=config/jenkins.yaml java -jar ../../app/target/jenkinsfile-runner-standalone.jar \
+CASC_JENKINS_CONFIG=config/jenkins.yaml ../../app/target/appassembler/bin/jenkinsfile-runner \
   -w ../../vanilla-package/target/war -p ../../vanilla-package/target/plugins/ -f .
 ```
 
