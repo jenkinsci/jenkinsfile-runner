@@ -188,7 +188,7 @@
               <appendAssemblyId>false</appendAssemblyId>
               <archive>
                 <manifest>
-                  <mainClass>${jfr.mainClass}/mainClass>
+                  <mainClass>${jfr.mainClass}</mainClass>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                 </manifest>
               </archive>
