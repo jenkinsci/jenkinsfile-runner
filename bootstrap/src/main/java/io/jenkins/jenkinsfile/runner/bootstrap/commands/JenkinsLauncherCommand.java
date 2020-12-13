@@ -7,7 +7,6 @@ import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 import io.jenkins.jenkinsfile.runner.bootstrap.SideClassLoader;
 import io.jenkins.jenkinsfile.runner.bootstrap.Util;
-import io.jenkins.jenkinsfile.runner.bootstrap.util.OptionalClassLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
@@ -39,8 +38,6 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
     @CommandLine.Mixin
     public JenkinsLauncherOptions launcherOptions;
-
-    //private OptionalClassLoader pluginClassloader;
 
     public JenkinsLauncherOptions getLauncherOptions() {
         return launcherOptions;
@@ -166,6 +163,8 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     public ClassLoader createJenkinsWarClassLoader() throws PrivilegedActionException {
         return AccessController.doPrivileged((PrivilegedExceptionAction<ClassLoader>) () -> new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
                 .collectJars(new File(getLauncherOptions().warDir, "WEB-INF/lib"))
+                // In this mode we also take Jetty from the Jenkins core
+                .collectJars(new File(getLauncherOptions().warDir, "winstone.jar"))
                 // servlet API needs to be visible to jenkins.war
                 .collectJars(new File(getAppRepo(), "javax/servlet"))
                 .make());
@@ -174,6 +173,10 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     public ClassLoader createSetupClassLoader(ClassLoader jenkins) throws IOException {
         return new ClassLoaderBuilder(jenkins)
                 .collectJars(getAppRepo())
+                .collectJars(getSetupJarDir())
+                // Payload should be skipped, otherwise it will be loaded with a wrong classloader when no bundled plugin jars
+                // NOTE: Not relevant for slim JARs
+                .excludeJars(new File(getAppRepo(), "io/jenkins/jenkinsfile-runner/payload"))
                 .make();
     }
 
@@ -184,6 +187,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
             return  ((IApp) c.newInstance()).run(this);
         }
 
+        // Slim packaging (no bundled WAR or plugins)
         ClassLoader jenkins = createJenkinsWarClassLoader();
         ClassLoader setup = createSetupClassLoader(jenkins);
 
@@ -223,21 +227,45 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         try  {
             Class.forName(className);
             return true;
-        }  catch (ClassNotFoundException e) {
+        }  catch (ClassNotFoundException | NoClassDefFoundError e) {
             return false;
         }
     }
-/*
-    public void setPluginClassloader(ClassLoader classloader) throws IllegalStateException {
-        if (pluginClassloader == null) {
-            throw new IllegalStateException("Plugin classloader holder has not been initialized. " +
-                    "Bootstrap#run() has not been invoked yet.");
-        }
-        pluginClassloader.set(classloader);
-    }
-*/
-    // TODO: move elsewhere
+
+    /**
+     * Location of the app repo packaged by AppAssembler.
+     * Depending on the configuration, it might include full or slim packaging.
+     * @return Path to the app repo
+     */
     public File getAppRepo() {
         return new File(System.getProperty("app.repo"));
+    }
+
+    /**
+     * Location of the app repo packaged by AppAssembler.
+     * Depending on the configuration, it might include full or slim packaging.
+     * @return Path to the app repo
+     */
+    public File getLibDirectory() {
+        if (launcherOptions.libPath != null) {
+            return launcherOptions.libPath;
+        }
+        return new File(System.getProperty("app.repo"), "../lib");
+    }
+
+    public File getSetupJarDir() throws IOException {
+        File setupJar = new File(getLibDirectory(), "setup/");
+        if (!setupJar.exists()) {
+            throw new IOException("Setup JAR is missing: " + setupJar);
+        }
+        return setupJar;
+    }
+
+    public File getPayloadJarDir() throws IOException {
+        File payloadJar = new File(getLibDirectory(), "payload/");
+        if (!payloadJar.exists()) {
+            throw new IOException("Payload JAR is missing: " + payloadJar);
+        }
+        return payloadJar;
     }
 }

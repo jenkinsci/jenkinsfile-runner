@@ -51,12 +51,16 @@ public class JenkinsLauncherOptions {
             description = "Path to a directory containing Groovy Init Hooks to copy into init.groovy.d")
     public File withInitHooks;
 
-    @CheckForNull
     @CommandLine.Option(names = "--skipShutdown",
             description = "Forces Jenkinsfile Runner to skip the shutdown logic. " +
                     "It reduces the instance termination time but may lead to unexpected behavior in plugins " +
                     "which release external resources on clean up synchronous task queues on shutdown.")
     public boolean skipShutdown;
+
+    @CheckForNull
+    @CommandLine.Option(names = "--libPath",
+            description = "When a slim packaging is used, points to the library directory which contains payload.jar and setup.jar files")
+    public File libPath;
 
 
     public String getMirrorURL(String url) {

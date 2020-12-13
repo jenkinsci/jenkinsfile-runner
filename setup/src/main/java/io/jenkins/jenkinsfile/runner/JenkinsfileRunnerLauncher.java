@@ -2,7 +2,6 @@ package io.jenkins.jenkinsfile.runner;
 
 import hudson.security.ACL;
 import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
-import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 
@@ -16,6 +15,7 @@ import java.io.IOException;
  */
 public class JenkinsfileRunnerLauncher extends JenkinsLauncher<RunJenkinsfileCommand> {
     private static final String RUNNER_CLASS_NAME = "io.jenkins.jenkinsfile.runner.Runner";
+    private static final String PIPELINE_JOB_CLASS_NAME = "org.jenkinsci.plugins.workflow.job.WorkflowJob";
 
     public JenkinsfileRunnerLauncher(RunJenkinsfileCommand command) {
         super(command);
@@ -28,18 +28,19 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher<RunJenkinsfileCom
      */
     @Override
     protected int doLaunch() throws Exception {
-        final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
-        // so that test code has all the access to the system
+        // So that the payload code has all the access to the system
         ACL.impersonate(ACL.SYSTEM);
-        Class<?> c = command.hasClass(RUNNER_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
+        // We are either in the shared environment (uberjar, repo with plugins) where we can already classload the Runner class directly.
+        // Or not, and then we consult with the Jenkins core loader and plugin uber classloader
+        Class<?> c = command.hasClass(PIPELINE_JOB_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
         return (int)c.getMethod("run", PipelineRunOptions.class).invoke(c.newInstance(), command.pipelineRunOptions);
     }
 
     private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
         ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
-                .collectJars(new File(command.getAppRepo(), "io/jenkins/jenkinsfile-runner/payload"))
+                .collectJars(command.getPayloadJarDir())
                 .make();
-
+        Thread.currentThread().setContextClassLoader(cl);
         return cl.loadClass(RUNNER_CLASS_NAME);
     }
 
