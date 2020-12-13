@@ -19,6 +19,8 @@ vanilla-package/target/surefire-reports
 vanilla-package/target/classes
 vanilla-package/target/generated-sources
 vanilla-package/target/generated-test-sources
+packaging-parent-pom/target
+packaging-slim-parent-pom/target
 
 # Tests
 tests
