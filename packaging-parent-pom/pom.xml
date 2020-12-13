@@ -15,6 +15,8 @@
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
     <!-- FIXME: Support for this parameter is coming in the next JFR release -->
     <jfr.version>1.0-beta-20</jfr.version>
+    <!-- Just in case the entry point needs to be overridden -->
+    <jfr.mainClass>io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap</jfr.mainClass>
 
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
@@ -186,7 +188,7 @@
               <appendAssemblyId>false</appendAssemblyId>
               <archive>
                 <manifest>
-                  <mainClass>io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap</mainClass>
+                  <mainClass>${jfr.mainClass}</mainClass>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                 </manifest>
               </archive>
