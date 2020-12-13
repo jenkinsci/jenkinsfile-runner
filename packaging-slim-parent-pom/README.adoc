@@ -1,0 +1,26 @@
+= Jenkinsfile Runner Packaging POM - Slim Edition (Experimental)
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+This is an experimental parent POM for packaging custom Jenkinsfile Runner images.
+It targets slim packaging when Jenkinsfile Runner loads the WAR file and the plugins from external location.
+
+The parent POM prepares the following artifacts in `target`:
+
+* `jenkinsfile-runner.zip` Slim Jenkinsfile Runner bundle ZIP (~1.5MB).
+  This archive needs to be unzipped, there is an executable in `bin/jenkinsfile-runner`
+* `war/jenkins.war` - Jenkins WAR file, based on the `jenkins.version` property.
+  This file needs to be unzipped for consumption in the `-w` option.
+* `plugins` - List of plugins based on the declared dependencies.
+  Parent POM automatically includes the minimum dependencies declared in plugin POM.
+
+== Usage in Docker
+
+See link:../packaging/docker/unix/adoptopenjdk-8-hotspot/Dockerfile-dev-slim[Dockerfile-dev-slim] for example.
+This example also uses additional optimization tricks.
+
+== Status
+
+The packaging tool is under active development,
+and it may be changed in incompatible way.

@@ -53,8 +53,10 @@ THE SOFTWARE.
     <module>setup</module>
     <module>payload-dependencies</module>
     <module>payload</module>
+    <module>app</module>
     <module>packaging-parent-resources</module>
     <module>packaging-parent-pom</module>
+    <module>packaging-slim-parent-pom</module>
     <!-- more modules come from profiles -->
   </modules>
 
@@ -177,15 +179,6 @@ THE SOFTWARE.
   </scm>
 
   <profiles>
-    <profile>
-      <id>package-app</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>app</module>
-      </modules>
-    </profile>
     <profile>
       <id>package-vanilla</id>
       <activation>

@@ -46,6 +46,9 @@ public class Util {
             return JFR_PROPERTIES.getProperty(key);
         }
         try (InputStream pomProperties = Bootstrap.class.getResourceAsStream("/jfr.properties")) {
+            if (pomProperties == null) {
+                throw new IOException("Cannot find the Jenkinsfile Runner version properties file: /jfr.properties");
+            }
             Properties props = new Properties();
             props.load(pomProperties);
             JFR_PROPERTIES = props;

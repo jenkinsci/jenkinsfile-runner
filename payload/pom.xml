@@ -30,5 +30,9 @@
       <groupId>args4j</groupId>
       <artifactId>args4j</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>symbol-annotation</artifactId>
+    </dependency>
   </dependencies>
 </project>

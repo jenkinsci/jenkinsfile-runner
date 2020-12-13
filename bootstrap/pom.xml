@@ -44,7 +44,7 @@
         <configuration>
           <resources>
             <resource>
-              <directory>${project.build.directory}/../src/main/resources-filtered</directory>
+              <directory>src/main/resources-filtered</directory>
               <filtering>true</filtering>
             </resource>
           </resources>
