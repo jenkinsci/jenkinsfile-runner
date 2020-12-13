@@ -47,7 +47,7 @@ public class Runner {
           System.err.println(String.format("invalid job name: '%s': %s", runOptions.jobName, e.getMessage()));
           return -1;
         }
-        Jenkins j = Jenkins.getInstance();
+        final Jenkins j = Jenkins.get();
         WorkflowJob w = j.createProject(WorkflowJob.class, runOptions.jobName);
         w.updateNextBuildNumber(runOptions.buildNumber);
         w.setResumeBlocked(true);

@@ -7,6 +7,7 @@ import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 import io.jenkins.jenkinsfile.runner.bootstrap.SideClassLoader;
 import io.jenkins.jenkinsfile.runner.bootstrap.Util;
+import io.jenkins.jenkinsfile.runner.bootstrap.util.OptionalClassLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
@@ -38,6 +39,8 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
     @CommandLine.Mixin
     public JenkinsLauncherOptions launcherOptions;
+
+    //private OptionalClassLoader pluginClassloader;
 
     public JenkinsLauncherOptions getLauncherOptions() {
         return launcherOptions;
@@ -224,7 +227,15 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
             return false;
         }
     }
-
+/*
+    public void setPluginClassloader(ClassLoader classloader) throws IllegalStateException {
+        if (pluginClassloader == null) {
+            throw new IllegalStateException("Plugin classloader holder has not been initialized. " +
+                    "Bootstrap#run() has not been invoked yet.");
+        }
+        pluginClassloader.set(classloader);
+    }
+*/
     // TODO: move elsewhere
     public File getAppRepo() {
         return new File(System.getProperty("app.repo"));
