@@ -115,7 +115,7 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
     /**
      * Launches the payload.
      * @return Exit code
-     * @throws Throwable Any error
+     * @throws Exception Any error
      */
     protected abstract int doLaunch() throws Exception;
 
