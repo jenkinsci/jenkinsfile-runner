@@ -5,6 +5,7 @@ import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
+import jenkins.model.Jenkins;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -48,6 +49,14 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         }
     }
 
+    @Override
+    protected Jenkins newJenkins() throws Exception {
+        final Jenkins j = super.newJenkins();
+        // Notify the bootstrap about the plugin classloader to be used in its logic
+     //   command.setPluginClassloader(j.getPluginManager().uberClassLoader);
+        return j;
+    }
+
     /**
      * Sets up Jetty without any actual TCP port serving HTTP.
      */
@@ -80,6 +89,11 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         return context.getServletContext();
     }
 
+    //TODO: add support of timeout
+    /**
+     * Launches the Jenkins instance, without any time out or output message.
+     * @return the return code for the process
+     */
     public int launch() throws Throwable {
         Thread currentThread = Thread.currentThread();
         String originalThreadName = currentThread.getName();
@@ -99,8 +113,9 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
     protected abstract String getThreadName();
 
     /**
-     * Actually launches the Jenkins instance, without any time out or output message.
-     * @return the return code for the process
+     * Launches the payload.
+     * @return Exit code
+     * @throws Throwable Any error
      */
     protected abstract int doLaunch() throws Exception;
 

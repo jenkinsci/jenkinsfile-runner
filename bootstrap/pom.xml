@@ -23,6 +23,10 @@
       <groupId>org.jenkins-ci</groupId>
       <artifactId>version-number</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.jenkins.lib</groupId>
+      <artifactId>support-log-formatter</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -40,7 +44,7 @@
         <configuration>
           <resources>
             <resource>
-              <directory>${project.build.directory}/../src/main/resources-filtered</directory>
+              <directory>src/main/resources-filtered</directory>
               <filtering>true</filtering>
             </resource>
           </resources>
