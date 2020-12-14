@@ -31,7 +31,7 @@ ENV JDK_11 true
 
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
-ENV JENKINS_PM_VERSION 2.2.0
+ENV JENKINS_PM_VERSION 2.5.0
 ENV JENKINS_PM_URL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/${JENKINS_PM_VERSION}/jenkins-plugin-manager-${JENKINS_PM_VERSION}.jar
 
 USER root
