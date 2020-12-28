@@ -108,7 +108,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>io.jenkins.plugins</groupId>
         <artifactId>pipeline-as-yaml</artifactId>
-        <version>0.12-rc</version>
+        <version>0.15-rc</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
