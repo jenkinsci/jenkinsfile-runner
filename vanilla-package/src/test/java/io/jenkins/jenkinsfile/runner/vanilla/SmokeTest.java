@@ -4,6 +4,7 @@ import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.model.TaskListener;
 import hudson.plugins.git.GitException;
+import io.jenkins.plugins.casc.ConfigurationAsCode;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.jenkinsci.plugins.gitclient.Git;
@@ -19,6 +20,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -156,6 +158,23 @@ public class SmokeTest {
         int result = JFRTestUtil.runAsCLI(jenkinsfile);
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
+    }
+
+    @Test
+    public void shouldFailWithABrokenConfig() throws Throwable {
+        File jenkinsfile = tmp.newFile("Jenkinsfile");
+        FileUtils.writeStringToFile(jenkinsfile, "echo 'Hello, world!'", Charset.defaultCharset());
+        File jcasc = new File(tmp.getRoot(), "jenkins.yaml");
+        Files.copy(SmokeTest.class.getResourceAsStream("SmokeTest/wrongConfig/jenkins.yaml"),
+                jcasc.toPath());
+        try {
+            System.setProperty(ConfigurationAsCode.CASC_JENKINS_CONFIG_PROPERTY, jcasc.getAbsolutePath());
+            int result = JFRTestUtil.runAsCLI(jenkinsfile);
+            assertThat("Jenkinsfile Runner execution should have failed", result, not(equalTo(0)));
+            assertThat(systemErr.getLog(), containsString("No configurator for the following root elements globalNodeProperties"));
+        } finally {
+            System.clearProperty(ConfigurationAsCode.CASC_JENKINS_CONFIG_PROPERTY);
+        }
     }
 
     @Test
