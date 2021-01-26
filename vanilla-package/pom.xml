@@ -8,7 +8,7 @@
     <relativePath>../packaging-parent-pom</relativePath>
   </parent>
 
-  <artifactId>vanilla-package</artifactId>
+  <artifactId>smoke-tests</artifactId>
   <description>Defines plugins which should be included into the Vanilla bundle</description>
 
   <properties>
@@ -50,6 +50,11 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>git</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>pipeline-as-yaml</artifactId>
+      <version>0.12-rc</version>
     </dependency>
 
     <!-- Upper bounds -->

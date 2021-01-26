@@ -15,11 +15,9 @@ import hudson.model.StringParameterValue;
 import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import jenkins.model.Jenkins;
-import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
-import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScriptFlowDefinition;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +25,7 @@ import java.io.PrintStream;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +35,8 @@ import java.util.stream.Collectors;
  */
 public class Runner {
     private WorkflowRun b;
+
+    private static final Logger LOGGER = Logger.getLogger(Runner.class.getName());
 
     /**
      * Main entry point invoked by the setup module
@@ -51,13 +52,22 @@ public class Runner {
         WorkflowJob w = j.createProject(WorkflowJob.class, runOptions.jobName);
         w.updateNextBuildNumber(runOptions.buildNumber);
         w.setResumeBlocked(true);
-        List<Action> workflowActionsList = new ArrayList<>(3);
+        List<Action> pipelineActions = new ArrayList<>(3);
 
-        if (runOptions.jenkinsfile.getName().endsWith(".yml")) {
-          // We do not use SCM definition here due to https://github.com/jenkinsci/pipeline-as-yaml-plugin/issues/28
-          w.setDefinition(new PipelineAsYamlScriptFlowDefinition(
-            FileUtils.readFileToString(runOptions.jenkinsfile),!runOptions.noSandBox));
-        } else {
+        boolean foundProvider = false;
+        for (PipelineDefinitionProvider runner : PipelineDefinitionProvider.all()) {
+            try {
+                if (runner.matches(runOptions)) {
+                    runner.instrumentJob(w, runOptions);
+                    foundProvider = true;
+                    break;
+                }
+            } catch (Exception ex) {
+                throw new Exception("Runner Implementation failed: " + runner.getClass(), ex);
+            }
+        }
+
+        if (!foundProvider) { // Create default version
             if (runOptions.scm != null) {
                 SCMContainer scm = SCMContainer.loadFromYAML(runOptions.scm);
                 Credentials fromSCM = scm.getCredential();
@@ -74,19 +84,18 @@ public class Runner {
                 w.setDefinition(new CpsScmFlowDefinition(
                         new FileSystemSCM(runOptions.jenkinsfile.getParent()), runOptions.jenkinsfile.getName()));
             }
-            workflowActionsList.add(new SetJenkinsfileLocation(runOptions.jenkinsfile, !runOptions.noSandBox));
+            pipelineActions.add(new SetJenkinsfileLocation(runOptions.jenkinsfile, !runOptions.noSandBox));
         }
 
         if (runOptions.workflowParameters != null && runOptions.workflowParameters.size() > 0) {
-          workflowActionsList.add(createParametersAction(runOptions));
+          pipelineActions.add(createParametersAction(runOptions));
         }
 
         if (runOptions.cause != null) {
-          workflowActionsList.add(createCauseAction(runOptions.cause));
+          pipelineActions.add(createCauseAction(runOptions.cause));
         }
 
-        Action[] workflowActions = workflowActionsList.toArray(new Action[0]);
-        workflowActionsList = null;
+        Action[] workflowActions = pipelineActions.toArray(new Action[0]);
         QueueTaskFuture<WorkflowRun> f = w.scheduleBuild2(0, workflowActions);
 
         b = f.getStartCondition().get();
