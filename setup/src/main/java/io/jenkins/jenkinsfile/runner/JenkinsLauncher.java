@@ -1,12 +1,15 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.ClassicPluginStrategy;
+import hudson.PluginManager;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
 import jenkins.model.Jenkins;
+import jenkins.util.SystemProperties;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -84,7 +87,15 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
 
         localPort = -1;
 
-        setPluginManager(new PluginManagerImpl(context.getServletContext(), launcherOptions.pluginsDir));
+        String pluginManagerClass = SystemProperties.getString(PluginManager.CUSTOM_PLUGIN_MANAGER);
+        if (pluginManagerClass == null) {
+            // Standard plugin manager for JFR
+            setPluginManager(new PluginManagerImpl(context.getServletContext(), launcherOptions.pluginsDir));
+        } else {
+            LOGGER.log(Level.INFO, "Will use a custom plugin manager {0}. " +
+                    "Note that the --pluginsDir option is not used in this case. ", pluginManagerClass);
+            setPluginManager(null);
+        }
 
         return context.getServletContext();
     }
