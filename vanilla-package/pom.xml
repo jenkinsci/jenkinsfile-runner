@@ -8,7 +8,7 @@
     <relativePath>../packaging-parent-pom</relativePath>
   </parent>
 
-  <artifactId>smoke-tests</artifactId>
+  <artifactId>vanilla-package</artifactId>
   <description>Defines plugins which should be included into the Vanilla bundle</description>
 
   <properties>
