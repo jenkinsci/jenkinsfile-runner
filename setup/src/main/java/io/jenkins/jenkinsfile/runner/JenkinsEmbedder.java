@@ -350,12 +350,13 @@ public abstract class JenkinsEmbedder implements RootAction {
      * Sets the {@link PluginManager} to be used when creating a new {@link Jenkins} instance.
      *
      * @param pluginManager
-     *      null to let Jenkins create a new instance of default plugin manager, like it normally does when running as a webapp outside the test.
+     *      {@code null} to let Jenkins create a new instance of default plugin manager, like it normally does when running as a webapp outside the test.
      */
     public void setPluginManager(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
-        if (jenkins!=null)
+        if (jenkins!=null) {
             throw new IllegalStateException("Too late to override the plugin manager");
+        }
     }
 
     public JenkinsEmbedder with(PluginManager pluginManager) {
