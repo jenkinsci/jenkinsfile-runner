@@ -7,13 +7,16 @@ if [ -n "$JDK_11" ] ; then
   export JAVA_OPTS="--illegal-access=permit $JAVA_OPTS"
 fi
 
-if [ -f "/workspace/Jenkinsfile" ] ; then
-  JENKINSFILE_PATH="/workspace/Jenkinsfile"
-elif [ -f "/workspace/Jenkinsfile.yml" ] ; then
-  JENKINSFILE_PATH="/workspace/Jenkinsfile.yml"
-else
-  # Default fallback which delegates discovery to JFR
-  JENKINSFILE_PATH=/workspace
+# check if the user has provided a path to the file
+if [ -z "${JENKINSFILE_PATH}" ] ; then
+  if [ -f "/workspace/Jenkinsfile" ] ; then
+    JENKINSFILE_PATH="/workspace/Jenkinsfile"
+  elif [ -f "/workspace/Jenkinsfile.yml" ] ; then
+    JENKINSFILE_PATH="/workspace/Jenkinsfile.yml"
+  else
+    # Default fallback which delegates discovery to JFR
+    JENKINSFILE_PATH=/workspace
+  fi
 fi
 
 /app/bin/jenkinsfile-runner \
