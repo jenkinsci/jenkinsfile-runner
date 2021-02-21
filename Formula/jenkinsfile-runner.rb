@@ -1,5 +1,5 @@
 class JenkinsfileRunner < Formula
-    desc "A command line tool to run Jenkinsfile"
+    desc "A command line tool to run Jenkinsfiles"
     homepage "https://github.com/jenkinsci/jenkinsfile-runner"
     head "https://github.com/jenkinsci/jenkinsfile-runner.git"
 
