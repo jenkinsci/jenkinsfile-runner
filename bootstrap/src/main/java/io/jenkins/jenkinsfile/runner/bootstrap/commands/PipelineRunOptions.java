@@ -70,4 +70,12 @@ public class PipelineRunOptions {
     @CommandLine.Option(names = "--scm",
             description = "YAML definition of the SCM, with optional credentials, to use for the project")
     public File scm;
+
+    @CommandLine.Option(names = { "-jte", "--jenkins-templating-engine" },
+            description = "Use the Jenkins Templating Engine for the build")
+    public boolean isJTE = false;
+
+    @CommandLine.Option(names = { "-pc", "--pipeline-configuration" },
+            description = "The Pipeline Configuration File when using the Jenkins Templating Engine")
+    public File pipelineConfiguration;
 }

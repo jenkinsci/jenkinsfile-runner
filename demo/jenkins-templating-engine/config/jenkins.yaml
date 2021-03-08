@@ -1,0 +1,17 @@
+unclassified:
+  templateGlobalConfig:
+    tier:
+      configurationProvider: "null"
+      librarySources:
+        - libraryProvider:
+            scm:
+              baseDir: "demo/jenkins-templating-engine/libraries"
+              scm:
+                git:
+                  branches:
+                    - name: "*/master"
+                  buildChooser: "default"
+                  doGenerateSubmoduleConfigurations: false
+                  userRemoteConfigs:
+                    - credentialsId: "null"
+                      url: "file:///tmp/libraries"
