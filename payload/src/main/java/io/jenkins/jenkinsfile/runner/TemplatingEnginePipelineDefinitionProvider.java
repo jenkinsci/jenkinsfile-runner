@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Extension public class TemplatingEnginePipelineDefinitionProvider extends PipelineDefinitionProvider {
+@Extension(optional = true)
+public class TemplatingEnginePipelineDefinitionProvider extends PipelineDefinitionProvider {
 
     private static final Logger LOGGER = Logger.getLogger(TemplatingEnginePipelineDefinitionProvider.class.getName());
 
