@@ -1,7 +1,6 @@
 package io.jenkins.jenkinsfile.runner;
 
 import com.cloudbees.plugins.credentials.Credentials;
-import com.cloudbees.plugins.credentials.CredentialsUnavailableException;
 import hudson.Extension;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import org.apache.commons.io.FileUtils;
@@ -10,15 +9,15 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Extension(optional = true)
 public class TemplatingEnginePipelineDefinitionProvider extends PipelineDefinitionProvider {
 
-    private static final Logger LOGGER = Logger.getLogger(TemplatingEnginePipelineDefinitionProvider.class.getName());
+    static final String definitionName; 
 
-    static final String definition = "Jenkins Templating Engine";
+    static{
+      definitionName = TemplatingEnginePipelineDefinitionProvider.class.getName();
+    }
 
     public boolean matches(PipelineRunOptions options) {
         return options.isJTE;
