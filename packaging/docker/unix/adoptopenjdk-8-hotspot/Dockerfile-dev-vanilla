@@ -9,13 +9,10 @@ RUN mkdir -p /app /usr/share/jenkins/ref/plugins /usr/share/jenkins/ref/casc
 RUN echo "jenkins: {}" >/usr/share/jenkins/ref/casc/jenkins.yaml
 
 COPY vanilla-package/target/appassembler /app
-COPY /packaging/docker/unix/jenkinsfile-runner-launcher /app/bin
+COPY packaging/docker/unix/jenkinsfile-runner-launcher /app/bin
 
 VOLUME /usr/share/jenkins/ref/casc
 
 # TODO: Cleanup once JFR can operate without options
 RUN mkdir /app/jenkins && touch /app/plugins.txt
-ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher", \
-            "-w", "/app/jenkins",\
-            "-p", "/app/plugins.txt",\
-            "-f", "/workspace"]
+ENTRYPOINT ["/app/bin/jenkinsfile-runner-launcher"]

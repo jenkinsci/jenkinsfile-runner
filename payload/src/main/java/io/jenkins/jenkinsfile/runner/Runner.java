@@ -25,6 +25,7 @@ import java.io.PrintStream;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -73,9 +74,8 @@ public class Runner {
                 Credentials fromSCM = scm.getCredential();
                 if (fromSCM != null) {
                     try {
-                        addCredentials(fromSCM);
+                        scm.addCredentialToStore();
                     } catch (IOException | CredentialsUnavailableException e) {
-                        System.err.printf("could not create credentials: %s%n", e.getMessage());
                         return -1;
                     }
                 }
@@ -119,17 +119,6 @@ public class Runner {
       return new CauseAction(c);
     }
 
-    private CredentialsStore getStore() {
-        CredentialsStore store = null;
-        for (CredentialsStore s : CredentialsProvider.lookupStores(Jenkins.get())) {
-            if (s.getProvider() instanceof SystemCredentialsProvider.ProviderImpl) {
-                store = s;
-                break;
-            }
-        }
-        return store;
-    }
-
     private void writeLogTo(PrintStream out) throws IOException, InterruptedException {
         final int retryCnt = 10;
 
@@ -153,12 +142,4 @@ public class Runner {
         }
     }
 
-    private void addCredentials(Credentials creds) throws IOException, CredentialsUnavailableException {
-        CredentialsStore store = getStore();
-        if (store == null) {
-            throw new CredentialsUnavailableException("Credentials specified but could not find credentials store");
-        }
-        Domain globalDomain = Domain.global();
-        store.addCredentials(globalDomain, creds);
-    }
 }
