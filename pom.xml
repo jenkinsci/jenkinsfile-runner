@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.62</version>
+    <version>1.63</version>
     <relativePath />
   </parent>
 
@@ -65,7 +65,7 @@ THE SOFTWARE.
     <java.level>8</java.level>
     <jenkins.version>2.263.1</jenkins.version>
     <jetty.version>9.4.34.v20201102</jetty.version>
-    <jenkins-test-harness.version>2.71</jenkins-test-harness.version>
+    <jenkins-test-harness.version>1514.v9f0f59194dd4</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
   </properties>
@@ -75,7 +75,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom-2.263.x</artifactId>
-        <version>18</version>
+        <version>26</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -96,14 +96,14 @@ THE SOFTWARE.
       <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.11</version>
+        <version>3.12.0</version>
       </dependency>
 
       <!-- Plugins -->
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
-        <version>2.6.1</version>
+        <version>2.7.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

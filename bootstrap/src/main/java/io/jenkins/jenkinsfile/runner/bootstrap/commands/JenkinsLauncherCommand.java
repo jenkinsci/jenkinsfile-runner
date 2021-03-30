@@ -66,6 +66,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
     @PostConstruct
+    @SuppressFBWarnings("DM_EXIT")
     public void postConstruct() throws IOException {
         final JenkinsLauncherOptions settings = getLauncherOptions();
 
