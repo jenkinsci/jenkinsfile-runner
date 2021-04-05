@@ -43,14 +43,10 @@ public class Runner {
     /**
      * Main entry point invoked by the setup module
      */
-    public int run(PipelineRunOptions runOptions) throws Exception {
-        
-
-
+    public int run(PipelineRunOptions runOptions) throws Exception { 
         String[] jobPathNames = runOptions.jobName.split("/");
 
-        for(int i=0; i < jobPathNames.length; i++)
-        {
+        for (int i=0; i < jobPathNames.length; i++) {
             try {
                 Jenkins.checkGoodName(jobPathNames[i]);
             } catch (Failure e) {
@@ -59,26 +55,21 @@ public class Runner {
             } 
         }
 
-
         Folder folderInScope = null;
         WorkflowJob w = null;       
 
         //create Folder structure
-        for(int i=0; i < jobPathNames.length -1; i++)
-        {
+        for (int i=0; i < jobPathNames.length -1; i++) {
             folderInScope = createOrReturnFolder(folderInScope, jobPathNames[i]);
         }
 
         //add Pipeline to Folder
-        if(folderInScope!=null)
-        {
+        if (folderInScope!=null) {
             w = folderInScope.createProject(WorkflowJob.class, jobPathNames[jobPathNames.length -1]);
-        } else
-        {
+        } else {
             w = Jenkins.get().createProject(WorkflowJob.class, jobPathNames[jobPathNames.length -1]);
-        }
-        
-        
+        }     
+
         w.updateNextBuildNumber(runOptions.buildNumber);
         w.setResumeBlocked(true);
         List<Action> pipelineActions = new ArrayList<>(3);
@@ -135,24 +126,20 @@ public class Runner {
     }
 
     private Folder createOrReturnFolder(Folder addToFolder, String folderName) {        
-
-        try{
+        try {
             Jenkins j = Jenkins.get();
-            if(addToFolder==null)
-            {           
-                
+
+            if(addToFolder==null) {
                 Folder folder = j.getItem(folderName, j, Folder.class);
                 return  folder!=null ? folder : j.createProject(Folder.class, folderName);
             }
 
             Folder folder = j.getItem(folderName, addToFolder.getItemGroup(), Folder.class);
             return folder !=null ? folder : addToFolder.createProject(Folder.class, folderName);
-        } catch(java.io.IOException e) {
+        } catch (IOException ex) {
             return null;
-        }
-   
-    }
-    
+        }   
+    }   
     
     private Action createParametersAction(PipelineRunOptions runOptions) {
       return new ParametersAction(runOptions.workflowParameters
@@ -189,5 +176,4 @@ public class Runner {
             }
         }
     }
-
 }
