@@ -45,7 +45,7 @@ docker run --rm \
 ```bash
 docker run --rm \
 	-v $(pwd)/demo/job-folders/Jenkinsfile:/workspace/Jenkinsfile \
-	enkins4eval/jenkinsfile-runner:dev \
+	jenkins4eval/jenkinsfile-runner:dev \
 	--job-name myJob
 ```
 

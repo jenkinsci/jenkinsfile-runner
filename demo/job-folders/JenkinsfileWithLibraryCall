@@ -7,8 +7,3 @@ stage('Read Job Names') {
 stage('Run Shared Library Code') {
 	println "Return of Library Method infra.isTrusted() : " + infra.isTrusted().toString()
 }
-
-
-
-
-

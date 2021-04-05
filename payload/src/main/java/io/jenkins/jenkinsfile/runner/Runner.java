@@ -45,7 +45,7 @@ public class Runner {
      */
     public int run(PipelineRunOptions runOptions) throws Exception { 
         String[] jobPathNames = runOptions.jobName.split("/");
-
+        
         for (int i=0; i < jobPathNames.length; i++) {
             try {
                 Jenkins.checkGoodName(jobPathNames[i]);
@@ -125,7 +125,7 @@ public class Runner {
         return b.getResult().ordinal;
     }
 
-    private Folder createOrReturnFolder(Folder addToFolder, String folderName) {        
+    private Folder createOrReturnFolder(Folder addToFolder, String folderName) throws IOException {        
         try {
             Jenkins j = Jenkins.get();
 
@@ -137,7 +137,8 @@ public class Runner {
             Folder folder = j.getItem(folderName, addToFolder.getItemGroup(), Folder.class);
             return folder !=null ? folder : addToFolder.createProject(Folder.class, folderName);
         } catch (IOException ex) {
-            return null;
+            System.err.println(String.format("Error creating folder '%s':%s", folderName, ex.getMessage()));
+            throw ex;
         }   
     }   
     
