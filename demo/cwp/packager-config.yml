@@ -21,7 +21,7 @@ war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.263"
+    version: "2.172.2"
 plugins:
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "script-security"
