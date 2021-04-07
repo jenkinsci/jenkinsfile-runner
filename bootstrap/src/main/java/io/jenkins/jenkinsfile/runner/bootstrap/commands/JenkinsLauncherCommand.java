@@ -14,7 +14,9 @@ import picocli.CommandLine;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -88,7 +90,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         // Explode war if necessary
         String warPath = settings.warDir.getAbsolutePath();
         if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
-            System.out.println("Exploding," + warPath +  "this might take some time.");
+            System.out.println("Exploding " + warPath +  ", this might take some time.");
             settings.warDir = Util.explodeWar(warPath);
         }
 
@@ -119,6 +121,15 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         }
     }
 
+    private void copyURLToFile(URL url, File file) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(true);
+        try (InputStream stream = connection.getInputStream()) {
+            FileUtils.copyInputStreamToFile(stream, file);
+        }
+
+    }
+
     private File getJenkinsWar(final @CheckForNull String requiredVersion) throws IOException {
         final String versionToUse;
         if (requiredVersion == null) {
@@ -128,7 +139,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
             latestCore.getParentFile().mkdirs();
             // Check once a day
             if (!latestCore.exists() || latestCore.lastModified() < CACHE_EXPIRE) {
-                FileUtils.copyURLToFile(URI.create("http://updates.jenkins.io/stable/latestCore.txt").toURL(), latestCore);
+                copyURLToFile(URI.create("http://updates.jenkins.io/stable/latestCore.txt").toURL(), latestCore);
             }
             versionToUse = FileUtils.readFileToString(latestCore, StandardCharsets.US_ASCII);
         } else {
@@ -142,7 +153,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
             war.getParentFile().mkdirs();
             final URL url = new URL(getLauncherOptions().getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", versionToUse)));
             System.out.printf("Downloading jenkins %s...%n", versionToUse);
-            FileUtils.copyURLToFile(url, war);
+            copyURLToFile(url, war);
         }
 
         return war;
