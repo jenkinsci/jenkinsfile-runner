@@ -88,7 +88,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         // Explode war if necessary
         String warPath = settings.warDir.getAbsolutePath();
         if(FilenameUtils.getExtension(warPath).equals("war") && new File(warPath).isFile()) {
-            System.out.println("Exploding," + warPath +  "this might take some time.");
+            System.out.println("Exploding " + warPath +  ", this might take some time.");
             settings.warDir = Util.explodeWar(warPath);
         }
 
