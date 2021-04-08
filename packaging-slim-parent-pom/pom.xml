@@ -14,7 +14,7 @@
   <properties>
     <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
     <!-- FIXME: Support for this parameter is coming in the next JFR release -->
-    <jfr.version>1.0-beta-20</jfr.version>
+    <jfr.version>1.0-beta-26</jfr.version>
     <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
     <jfr.skip.packaging>false</jfr.skip.packaging>
     <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
@@ -118,8 +118,8 @@
         <dependencies>
           <dependency>
             <groupId>io.jenkins.tools.bom</groupId>
-            <artifactId>bom-2.263.x</artifactId>
-            <version>26</version>
+            <artifactId>${jenkins.bom.baseline}</artifactId>
+            <version>${jenkins.bom.version}</version>
             <scope>import</scope>
             <type>pom</type>
           </dependency>
