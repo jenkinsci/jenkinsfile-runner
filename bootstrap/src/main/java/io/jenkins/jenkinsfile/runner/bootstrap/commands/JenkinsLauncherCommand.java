@@ -137,9 +137,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
         // Connections won't automatically redirect across different protocols, i.e. going
         // from http to https. We have to handle that ourselves.
-        boolean redirecting = REDIRECT_STATUSES.contains(status);
-
-        if (redirecting) {
+        if (REDIRECT_STATUSES.contains(status)) {
             String newUrl = connection.getHeaderField("Location");
             System.out.println("Following redirect...");
             connection = (HttpURLConnection) new URL(newUrl).openConnection();
