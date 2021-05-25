@@ -11,7 +11,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +25,9 @@ import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.Callable;
+import javax.annotation.PostConstruct;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -37,6 +38,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
     public static final long CACHE_EXPIRE = System.currentTimeMillis() - 24 * 3600 * 1000;
+
+    private static final Collection<Integer> REDIRECT_STATUSES = Arrays.asList(
+        301, // Moved permanently
+        302, // Found (HTTP 1.1) / Moved temporarily (HTTP 1.0)
+        303, // See other
+        307, // Temporarily Redirect
+        308  // Permanent Redirect
+    );
 
     @CommandLine.Mixin
     public JenkinsLauncherOptions launcherOptions;
@@ -124,10 +133,21 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     private void copyURLToFile(URL url, File file) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setInstanceFollowRedirects(true);
+        int status = connection.getResponseCode();
+
+        // Connections won't automatically redirect across different protocols, i.e. going
+        // from http to https. We have to handle that ourselves.
+        boolean redirecting = REDIRECT_STATUSES.contains(status);
+
+        if (redirecting) {
+            String newUrl = connection.getHeaderField("Location");
+            System.out.println("Following redirect...");
+            connection = (HttpURLConnection) new URL(newUrl).openConnection();
+        }
+
         try (InputStream stream = connection.getInputStream()) {
             FileUtils.copyInputStreamToFile(stream, file);
         }
-
     }
 
     private File getJenkinsWar(final @CheckForNull String requiredVersion) throws IOException {
