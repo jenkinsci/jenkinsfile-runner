@@ -27,6 +27,11 @@
       <groupId>io.jenkins.lib</groupId>
       <artifactId>support-log-formatter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.2</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
