@@ -1,11 +1,8 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.security.ACL;
-import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
-
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -37,15 +34,6 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher<RunJenkinsfileCom
     }
 
     private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
-        ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
-                .collectJars(command.getPayloadJarDir())
-                .make();
-        Thread.currentThread().setContextClassLoader(cl);
-        return cl.loadClass(RUNNER_CLASS_NAME);
-    }
-
-    @Override
-    protected String getThreadName() {
-        return "Executing " + env.displayName();
+        return getClassFromJar(RUNNER_CLASS_NAME);
     }
 }

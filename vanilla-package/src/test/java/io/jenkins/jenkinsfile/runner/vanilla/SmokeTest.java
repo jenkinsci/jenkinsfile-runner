@@ -5,6 +5,15 @@ import hudson.FilePath;
 import hudson.model.TaskListener;
 import hudson.plugins.git.GitException;
 import io.jenkins.plugins.casc.ConfigurationAsCode;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.jenkinsci.plugins.gitclient.Git;
@@ -18,17 +27,9 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SmokeTest {
@@ -53,6 +54,45 @@ public class SmokeTest {
         int result = JFRTestUtil.runAsCLI(jenkinsfile);
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
+    }
+
+    @Test
+    public void lintSuccess() throws Throwable {
+        File jenkinsfile = tmp.newFile("Jenkinsfile");
+        FileUtils.writeStringToFile(jenkinsfile, "pipeline {\n"
+            + "    agent any\n"
+            + "    stages {\n"
+            + "        stage('Hello') {\n"
+            + "            steps {\n"
+            + "                echo 'World'\n"
+            + "            }\n"
+            + "        }\n"
+            + "    }\n"
+            + "}", Charset.defaultCharset());
+
+        int result = JFRTestUtil.lintAsCLI(jenkinsfile);
+        assertThat("JFR should not execute successfully", result, equalTo(0));
+        assertThat(systemOut.getLog(), containsString("Done"));
+    }
+
+    @Test
+    public void lintFailure() throws Throwable {
+        File jenkinsfile = tmp.newFile("Jenkinsfile");
+        FileUtils.writeStringToFile(jenkinsfile, "pipeline {\n"
+            // 'agent' is missing some bits
+            + "    agent\n"
+            + "    stages {\n"
+            + "        stage('Hello') {\n"
+            + "            steps {\n"
+            + "                echo 'World'\n"
+            + "            }\n"
+            + "        }\n"
+            + "    }\n"
+            + "}", Charset.defaultCharset());
+
+        int result = JFRTestUtil.lintAsCLI(jenkinsfile);
+        assertThat("JFR should not execute successfully", result, equalTo(1));
+        assertThat(systemOut.getLog(), containsString("Not a valid section definition: \"agent\""));
     }
 
     @Test
