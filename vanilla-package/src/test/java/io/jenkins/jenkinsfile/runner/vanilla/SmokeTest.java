@@ -1,8 +1,6 @@
 package io.jenkins.jenkinsfile.runner.vanilla;
 
-import hudson.EnvVars;
 import hudson.FilePath;
-import hudson.model.TaskListener;
 import hudson.plugins.git.GitException;
 import io.jenkins.plugins.casc.ConfigurationAsCode;
 import java.io.File;
@@ -15,9 +13,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.PersonIdent;
-import org.jenkinsci.plugins.gitclient.Git;
-import org.jenkinsci.plugins.gitclient.GitClient;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -237,8 +234,7 @@ public class SmokeTest {
     private String createTestRepoWithContentAndSCMConfigYAML(Map<String,String> filesAndContents, String branch) throws Exception {
         File gitDir = tmp.newFolder();
         FilePath gitDirPath = new FilePath(gitDir);
-        GitClient git = Git.with(TaskListener.NULL, new EnvVars()).in(gitDir).getClient();
-        git.init();
+        Git git = Git.init().setDirectory(gitDir).call();
         PersonIdent johnDoe = new PersonIdent("John Doe", "john@doe.com");
         for (String fileName : filesAndContents.keySet()) {
             FilePath file = gitDirPath.child(fileName);
@@ -247,11 +243,17 @@ public class SmokeTest {
             } catch (Exception e) {
                 throw new GitException("unable to write file", e);
             }
-            git.add(fileName);
+            // Stage this file.
+            git.add().addFilepattern(fileName).call();
         }
-        git.setAuthor(johnDoe);
-        git.setCommitter(johnDoe);
-        git.commit("Test commit");
+
+        // Commit the staged files.
+        git.commit()
+            .setAuthor(johnDoe)
+            .setCommitter(johnDoe)
+            .setMessage("Test commit")
+            .setSign(false) // Required if you're locally setup for signed commits.
+            .call();
 
         Map<String,Object> remoteConfig = Stream.of(new Object[][]{
                 { "url", gitDir.getAbsolutePath() },
