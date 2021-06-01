@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Set up of Jenkins environment for linting a single Jenkinsfile.
@@ -31,40 +33,45 @@ public class JenkinsfileLinterLauncher extends JenkinsLauncher<LintJenkinsfileCo
     @Override
     protected int doLaunch() throws Exception {
         // So that the payload code has all the access to the system
-        ACL.impersonate(ACL.SYSTEM);
+        final SecurityContext previous = ACL.impersonate2(ACL.SYSTEM2);
 
-        Class<?> cc = command.hasClass(CONVERTER_CLASS_NAME) ? Class.forName(CONVERTER_CLASS_NAME) : getConverterClassFromJar();
         try {
-            // Attempt to call the scriptToPipelineDef method of the Converter class. This is the same as what
-            // happens when a Jenkinsfile is POSTed to $JENKINS_URL/pipeline-model-converter/validate.
-            System.out.println("Linting...");
-            cc.getMethod("scriptToPipelineDef", String.class).invoke(cc.newInstance(), getJenkinsfileAsString());
-            System.out.println("Done");
-            return 0;
-        } catch (Exception e) {
-            // If the linting fails, we're expecting to catch an InvocationTargetException, which
-            // wraps a MultipleCompilationErrorsException, which contains the linting errors.
-            if (e instanceof InvocationTargetException) {
-                Throwable targetException = ((InvocationTargetException) e).getTargetException();
-                if (targetException instanceof MultipleCompilationErrorsException) {
-                    ErrorCollector errorCollector = ((MultipleCompilationErrorsException) targetException).getErrorCollector();
-                    if (errorCollector != null && errorCollector.hasErrors()) {
-                        // Deliberately not using a try-with-resource here because, on close, I don't want to close down
-                        // stdout.
-                        PrintWriter pw = new PrintWriter(System.out, true);
-                        for (Object error : errorCollector.getErrors()) {
-                            if (error instanceof SyntaxErrorMessage) {
-                                ((SyntaxErrorMessage) error).write(pw, null);
+            Class<?> cc = command.hasClass(CONVERTER_CLASS_NAME) ? Class.forName(CONVERTER_CLASS_NAME) : getConverterClassFromJar();
+            try {
+                // Attempt to call the scriptToPipelineDef method of the Converter class. This is the same as what
+                // happens when a Jenkinsfile is POSTed to $JENKINS_URL/pipeline-model-converter/validate.
+                System.out.println("Linting...");
+                cc.getMethod("scriptToPipelineDef", String.class).invoke(cc.newInstance(), getJenkinsfileAsString());
+                System.out.println("Done");
+                return 0;
+            } catch (Exception e) {
+                // If the linting fails, we're expecting to catch an InvocationTargetException, which
+                // wraps a MultipleCompilationErrorsException, which contains the linting errors.
+                if (e instanceof InvocationTargetException) {
+                    Throwable targetException = ((InvocationTargetException) e).getTargetException();
+                    if (targetException instanceof MultipleCompilationErrorsException) {
+                        ErrorCollector errorCollector = ((MultipleCompilationErrorsException) targetException).getErrorCollector();
+                        if (errorCollector != null && errorCollector.hasErrors()) {
+                            // Deliberately not using a try-with-resource here because, on close, I don't want to close down
+                            // stdout.
+                            PrintWriter pw = new PrintWriter(System.out, true);
+                            for (Object error : errorCollector.getErrors()) {
+                                if (error instanceof SyntaxErrorMessage) {
+                                    ((SyntaxErrorMessage) error).write(pw, null);
+                                }
                             }
                         }
                     }
+                    // Return a non-zero exit code.
+                    return 1;
+                } else {
+                    // Wasn't expecting this. Rethrow.
+                    throw e;
                 }
-                // Return a non-zero exit code.
-                return 1;
-            } else {
-                // Wasn't expecting this. Rethrow.
-                throw e;
             }
+        } finally {
+            // Whatever happens, restore the old security context before leaving.
+            SecurityContextHolder.setContext(previous);
         }
     }
 
