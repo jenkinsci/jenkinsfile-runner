@@ -1,6 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.security.ACL;
+import hudson.security.ACLContext;
 import io.jenkins.cli.shaded.org.apache.commons.io.FileUtils;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.LintJenkinsfileCommand;
 import java.io.IOException;
@@ -10,8 +11,6 @@ import java.nio.charset.StandardCharsets;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Set up of Jenkins environment for linting a single Jenkinsfile.
@@ -33,9 +32,7 @@ public class JenkinsfileLinterLauncher extends JenkinsLauncher<LintJenkinsfileCo
     @Override
     protected int doLaunch() throws Exception {
         // So that the payload code has all the access to the system
-        final SecurityContext previous = ACL.impersonate2(ACL.SYSTEM2);
-
-        try {
+        try (ACLContext ignored = ACL.as2(ACL.SYSTEM2)) {
             Class<?> cc = command.hasClass(CONVERTER_CLASS_NAME) ? Class.forName(CONVERTER_CLASS_NAME) : getConverterClassFromJar();
             try {
                 // Attempt to call the scriptToPipelineDef method of the Converter class. This is the same as what
@@ -69,9 +66,6 @@ public class JenkinsfileLinterLauncher extends JenkinsLauncher<LintJenkinsfileCo
                     throw e;
                 }
             }
-        } finally {
-            // Whatever happens, restore the old security context before leaving.
-            SecurityContextHolder.setContext(previous);
         }
     }
 

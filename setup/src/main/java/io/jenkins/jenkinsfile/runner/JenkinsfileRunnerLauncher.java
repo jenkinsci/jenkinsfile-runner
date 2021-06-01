@@ -1,6 +1,7 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.security.ACL;
+import hudson.security.ACLContext;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 import java.io.IOException;
@@ -26,11 +27,12 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher<RunJenkinsfileCom
     @Override
     protected int doLaunch() throws Exception {
         // So that the payload code has all the access to the system
-        ACL.impersonate(ACL.SYSTEM);
-        // We are either in the shared environment (uberjar, repo with plugins) where we can already classload the Runner class directly.
-        // Or not, and then we consult with the Jenkins core loader and plugin uber classloader
-        Class<?> c = command.hasClass(PIPELINE_JOB_CLASS_NAME)? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
-        return (int)c.getMethod("run", PipelineRunOptions.class).invoke(c.newInstance(), command.pipelineRunOptions);
+        try (ACLContext ignored = ACL.as2(ACL.SYSTEM2)) {
+            // We are either in the shared environment (uberjar, repo with plugins) where we can already classload the Runner class directly.
+            // Or not, and then we consult with the Jenkins core loader and plugin uber classloader
+            Class<?> c = command.hasClass(PIPELINE_JOB_CLASS_NAME) ? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
+            return (int) c.getMethod("run", PipelineRunOptions.class).invoke(c.newInstance(), command.pipelineRunOptions);
+        }
     }
 
     private Class<?> getRunnerClassFromJar() throws IOException, ClassNotFoundException {
