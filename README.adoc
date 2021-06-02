@@ -118,6 +118,8 @@ Supported commands:
 
 * `run` - Runs the Jenkinsfile.
    This command also runs by default if no subcommands specified.
+* `lint` - Lints the Jenkinsfile without actually running it.
+   Only applicable to Declarative Pipeline.
 * `cli` - Runs interactive https://www.jenkins.io/doc/book/managing/cli/[Jenkins CLI] from where you can access all standard
    Jenkins commands provided by the Jenkins core and installed plugins:
    `list-plugins`, `groovy`, `groovysh`, etc.

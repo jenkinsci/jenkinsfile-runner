@@ -1,18 +1,16 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
-import picocli.CommandLine;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import picocli.CommandLine;
 
 /**
  * @author Oleg Nenashev
  * @since TODO
  */
 @CommandLine.Command(name="run", description = "Runs Jenkinsfile", mixinStandardHelpOptions = true)
-public class RunJenkinsfileCommand extends JenkinsLauncherCommand {
+public class RunJenkinsfileCommand extends JenkinsfileCommand {
 
     @CommandLine.Mixin
     public PipelineRunOptions pipelineRunOptions;
@@ -30,16 +28,8 @@ public class RunJenkinsfileCommand extends JenkinsLauncherCommand {
 
     @Override
     public void postConstruct() throws IOException {
-        if (pipelineRunOptions.jenkinsfile == null) {
-            pipelineRunOptions.jenkinsfile = new File("Jenkinsfile");
-        }
-        if (!pipelineRunOptions.jenkinsfile.exists()) {
-            System.err.println("no Jenkinsfile in current directory.");
-            System.exit(-1);
-        }
-        if (pipelineRunOptions.jenkinsfile.isDirectory()) {
-            pipelineRunOptions.jenkinsfile = new File(pipelineRunOptions.jenkinsfile, "Jenkinsfile");
-        }
+
+        validateJenkinsfileInput(pipelineRunOptions);
 
         if (pipelineRunOptions.runWorkspace != null){
             if (System.getProperty(WORKSPACES_DIR_SYSTEM_PROPERTY) != null) {

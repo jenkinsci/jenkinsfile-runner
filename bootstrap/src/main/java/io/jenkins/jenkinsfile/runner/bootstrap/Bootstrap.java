@@ -2,15 +2,15 @@ package io.jenkins.jenkinsfile.runner.bootstrap;
 
 
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.LintJenkinsfileCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunCLICommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.VersionCommand;
+import java.util.concurrent.Callable;
 import picocli.AutoComplete;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-
-import java.util.concurrent.Callable;
 
 /**
  * Main entry point for the Jenkinsfile Runner execution.
@@ -19,7 +19,8 @@ import java.util.concurrent.Callable;
  * @author Oleg Nenashev
  */
 @Command(name = "jenkinsfile-runner", versionProvider = Util.VersionProviderImpl.class, sortOptions = false, mixinStandardHelpOptions = true,
-        subcommands = {RunJenkinsfileCommand.class, RunCLICommand.class, AutoComplete.GenerateCompletion.class, VersionCommand.class, CommandLine.HelpCommand.class})
+        subcommands = {RunJenkinsfileCommand.class, RunCLICommand.class, AutoComplete.GenerateCompletion.class, VersionCommand.class, CommandLine.HelpCommand.class,
+            LintJenkinsfileCommand.class})
 public class Bootstrap implements Callable<Integer> {
 
     @CommandLine.Mixin

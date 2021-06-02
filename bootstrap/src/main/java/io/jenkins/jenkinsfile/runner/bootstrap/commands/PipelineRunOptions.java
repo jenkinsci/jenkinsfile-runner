@@ -1,25 +1,17 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
-import picocli.CommandLine;
-
 import java.io.File;
 import java.util.Map;
+import picocli.CommandLine;
 
 // TODO: Split Pipeline and generic options?
 /**
  * Contains options required for a Jenkins build run.
  */
-public class PipelineRunOptions {
+public class PipelineRunOptions extends PipelineOptions {
 
     /**package**/ static final String DEFAULT_JOBNAME = "job";
-
-    /**
-     * Checked out copy of the working space.
-     */
-    @CommandLine.Option(names = { "-f", "--file" },
-            description = "Path to Jenkinsfile or directory containing a Jenkinsfile, defaults to ./Jenkinsfile")
-    public File jenkinsfile;
 
     /**
      * Workspace for the Run

@@ -3,13 +3,20 @@ package io.jenkins.jenkinsfile.runner;
 import hudson.ClassicPluginStrategy;
 import hudson.PluginManager;
 import hudson.util.PluginServletFilter;
+import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
+import java.io.File;
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
 import jenkins.model.Jenkins;
 import jenkins.util.SystemProperties;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -17,14 +24,6 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Shared behaviour for different modes of launching an embedded Jenkins in the context of jenkinsfile-runner.
@@ -119,11 +118,6 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
     }
 
     /**
-     * @return the thread name to use for executing the action
-     */
-    protected abstract String getThreadName();
-
-    /**
      * Launches the payload.
      * @return Exit code
      * @throws Exception Any error
@@ -204,5 +198,17 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         protected UserPrincipal loadUserInfo(String username) {
             return null;
         }
+    }
+
+    protected Class<?> getClassFromJar(String classname) throws IOException, ClassNotFoundException {
+        ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
+            .collectJars(command.getPayloadJarDir())
+            .make();
+        Thread.currentThread().setContextClassLoader(cl);
+        return cl.loadClass(classname);
+    }
+
+    protected String getThreadName() {
+        return "Executing " + env.displayName();
     }
 }

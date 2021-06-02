@@ -1,20 +1,18 @@
 package io.jenkins.jenkinsfile.runner.vanilla;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
-
-import edu.umd.cs.findbugs.annotations.CheckForNull;
-import edu.umd.cs.findbugs.annotations.CheckReturnValue;
-import picocli.CommandLine;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import picocli.CommandLine;
 
 import static org.junit.Assert.assertTrue;
 
@@ -50,12 +48,35 @@ public class JFRTestUtil {
         return runAsCLI(jenkinsfile, null);
     }
 
+    /**
+     * Executes JFR "lint" using the CLI routines
+     */
+    @CheckReturnValue
+    public static int lintAsCLI(File jenkinsfile) throws Throwable {
+        return executeAsCLI(jenkinsfile, "lint", null);
+    }
 
     /**
-     * Runs JFR using the CLI routines
+     * Executes JFR "lint" using the CLI routines
+     */
+    @CheckReturnValue
+    public static int lintAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable {
+        return executeAsCLI(jenkinsfile, "lint", additionalArgs);
+    }
+
+    /**
+     * Executes JFR "run" using the CLI routines
      */
     @CheckReturnValue
     public static int runAsCLI(File jenkinsfile, @CheckForNull Collection<String> additionalArgs) throws Throwable {
+        return executeAsCLI(jenkinsfile, "run", additionalArgs);
+    }
+
+    /**
+     * Executes JFR using the CLI routines
+     */
+    @CheckReturnValue
+    private static int executeAsCLI(File jenkinsfile, String command, @CheckForNull Collection<String> additionalArgs) throws Throwable {
         File vanillaTarget = new File("target");
         File warDir = new File(vanillaTarget, "war");
         File pluginsDir = new File(vanillaTarget, "plugins");
@@ -63,6 +84,7 @@ public class JFRTestUtil {
         assertTrue("Plugins directory must exist when running tests", pluginsDir.exists());
 
         List<String> basicArgs = Arrays.asList(
+                command,
                 "-w", warDir.getAbsolutePath(),
                 "-p", pluginsDir.getAbsolutePath(),
                 "-f", jenkinsfile.getAbsolutePath());

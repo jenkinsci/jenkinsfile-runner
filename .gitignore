@@ -27,3 +27,4 @@ demo/cwp-jdk11/source/
 **/.settings/
 tests/*.log
 
+app/jenkinsfile-runner*/
