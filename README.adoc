@@ -161,6 +161,11 @@ Advanced arguments:
   Also, plugin https://javadoc.jenkins.io/hudson/init/Terminator.html[@Terminator] extensions will not be invoked.
   It may lead to undefined behavior in the system, including potential data loss.
   This option is considered safe for the Vanilla package with the default plugin set.
+* `--httpPort` - Port for exposing the web server and Jenkins Web UI from Jenkinsfile Runner.
+  Disabled by default.
+* `--agentPort` - Port for connecting inbound Jenkins agents (over JNLP or WebSockets).
+  Disabled by default.
+
 
 ==== Running Jenkinsfiles (`run` command)
 
