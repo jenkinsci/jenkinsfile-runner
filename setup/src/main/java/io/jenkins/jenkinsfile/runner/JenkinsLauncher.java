@@ -56,6 +56,12 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         final Jenkins j = super.newJenkins();
         // Notify the bootstrap about the plugin classloader to be used in its logic
      //   command.setPluginClassloader(j.getPluginManager().uberClassLoader);
+
+        // Configure the agent endpoint
+        if (command.launcherOptions.agentPort != null) {
+            j.setSlaveAgentPort(command.launcherOptions.agentPort);
+        }
+
         return j;
     }
 
@@ -67,7 +73,9 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         final JenkinsLauncherOptions launcherOptions = command.getLauncherOptions();
 
         QueuedThreadPool queuedThreadPool = new QueuedThreadPool(10);
-        server = new Server(queuedThreadPool);
+        server = launcherOptions.httpPort != null
+                ? new Server(launcherOptions.httpPort)
+                : new Server(queuedThreadPool);
 
         WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
@@ -84,7 +92,7 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
 
         server.start();
 
-        localPort = -1;
+        localPort = launcherOptions.httpPort != null ? launcherOptions.httpPort : -1;
 
         String pluginManagerClass = SystemProperties.getString(PluginManager.CUSTOM_PLUGIN_MANAGER);
         if (pluginManagerClass == null) {

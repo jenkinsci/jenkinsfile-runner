@@ -1,6 +1,7 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -62,7 +63,16 @@ public class JenkinsLauncherOptions {
             description = "When a slim packaging is used, points to the library directory which contains payload.jar and setup.jar files")
     public File libPath;
 
+    @CheckForNull
+    @CommandLine.Option(names = "--httpPort",
+            description = "Port for exposing the web server and Jenkins Web UI from Jenkinsfile Runner. Disabled by default")
+    public Integer httpPort;
 
+    @CheckForNull
+    @CommandLine.Option(names = "--agentPort",
+            description = "Port for connecting inbound Jenkins agents (over JNLP or WebSockets). Disabled by default")
+    public Integer agentPort;
+    
     public String getMirrorURL(String url) {
         if (this.mirror == null || "".equals(this.mirror.trim())) {
             return url;
