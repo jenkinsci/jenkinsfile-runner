@@ -56,8 +56,12 @@ public class Util {
         }
     }
 
-    public static File explodeWar(String jarPath) throws IOException {
-        try (JarFile jarfile = new JarFile(new File(jarPath))) {
+    public static File explodeWar(String warPath) throws IOException {
+        return explodeWar(new File(warPath));
+    }
+
+    public static File explodeWar(File warFile) throws IOException {
+        try (JarFile jarfile = new JarFile(warFile)) {
             Enumeration<JarEntry> enu = jarfile.entries();
 
             // Get current working directory path

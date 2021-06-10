@@ -48,7 +48,18 @@ public class SmokeTest {
         File jenkinsfile = tmp.newFile("Jenkinsfile");
         FileUtils.writeStringToFile(jenkinsfile, "echo 'Hello, world!'", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile);
+        assertThat("JFR should be executed successfully", result, equalTo(0));
+        assertThat(systemOut.getLog(), containsString("Hello, world!"));
+    }
+
+    @Test(timeout = Integer.MAX_VALUE)
+    @Ignore
+    public void helloWorldWithUI() throws Throwable {
+        File jenkinsfile = tmp.newFile("Jenkinsfile");
+        FileUtils.writeStringToFile(jenkinsfile, "echo 'Hello, world!'; sleep 100500", Charset.defaultCharset());
+
+        int result = new JFRTestUtil().withEnableHttp(true).runAsCLI(jenkinsfile);
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
     }
@@ -67,7 +78,7 @@ public class SmokeTest {
             + "    }\n"
             + "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.lintAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().lintAsCLI(jenkinsfile);
         assertThat("JFR should not execute successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Done"));
     }
@@ -87,7 +98,7 @@ public class SmokeTest {
             + "    }\n"
             + "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.lintAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().lintAsCLI(jenkinsfile);
         assertThat("JFR should not execute successfully", result, equalTo(1));
         assertThat(systemOut.getLog(), containsString("Not a valid section definition: \"agent\""));
     }
@@ -96,7 +107,7 @@ public class SmokeTest {
     public void shouldFailWithWrongJenkinsfile() throws Throwable {
         File jenkinsfile = new File(tmp.getRoot(), "Jenkinsfile");
 
-        int result = JFRTestUtil.run(jenkinsfile);
+        int result = new JFRTestUtil().run(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
         assertThat(systemOut.getLog(), containsString("does not exist"));
     }
@@ -114,7 +125,7 @@ public class SmokeTest {
                 "    }\n" +
                 "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.run(jenkinsfile);
+        int result = new JFRTestUtil().run(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
     }
 
@@ -125,7 +136,7 @@ public class SmokeTest {
                 "    currentBuild.result = 'FAILED'\n" +
                 "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
         assertThat(systemOut.getLog(), containsString("Finished: FAILURE"));
     }
@@ -137,7 +148,7 @@ public class SmokeTest {
                 "    currentBuild.result = 'UNSTABLE'\n" +
                 "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
         assertThat(systemOut.getLog(), containsString("Finished: UNSTABLE"));
     }
@@ -161,7 +172,7 @@ public class SmokeTest {
                 "    }\n" +
                 "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
         assertThat(systemOut.getLog(), not(containsString("[Pipeline] End of Pipeline")));
         assertThat(systemOut.getLog(), containsString("Finished: FAILURE"));
@@ -175,7 +186,7 @@ public class SmokeTest {
                 "    checkout scm\n" +
                 "}\n", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile);
         assertThat("JFR should be executed successfully", result, equalTo(0));
     }
 
@@ -192,7 +203,7 @@ public class SmokeTest {
                         "        - echo \"Hello, world!\""
                 , Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile);
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile);
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
     }
@@ -206,7 +217,7 @@ public class SmokeTest {
                 jcasc.toPath());
         try {
             System.setProperty(ConfigurationAsCode.CASC_JENKINS_CONFIG_PROPERTY, jcasc.getAbsolutePath());
-            int result = JFRTestUtil.runAsCLI(jenkinsfile);
+            int result = new JFRTestUtil().runAsCLI(jenkinsfile);
             assertThat("Jenkinsfile Runner execution should have failed", result, not(equalTo(0)));
             assertThat(systemErr.getLog(), containsString("No configurator for the following root elements globalNodeProperties"));
         } finally {
@@ -225,7 +236,7 @@ public class SmokeTest {
 
         String scmConfigPath = createTestRepoWithContentAndSCMConfigYAML(filesAndContents, "master");
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath));
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath));
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("README.md exists with content 'Test repository'"));
         assertThat(systemOut.getLog(), containsString("using credential user1"));
