@@ -34,7 +34,7 @@ THE SOFTWARE.
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>1.0-beta-30-SNAPSHOT</version>
+  <version>${revision}${changelist}</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
@@ -61,6 +61,9 @@ THE SOFTWARE.
   </modules>
 
   <properties>
+    <revision>1.0-beta-30</revision>
+    <changelist>-SNAPSHOT</changelist>
+    <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
     <jenkins.version>2.289.1</jenkins.version>
@@ -169,10 +172,10 @@ THE SOFTWARE.
   </pluginRepositories>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/jenkinsfile-runner.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/jenkinsfile-runner.git</developerConnection>
-    <url>https://github.com/jenkinsci/jenkinsfile-runner</url>
-    <tag>HEAD</tag>
+    <connection>scm:git:git://github.com/${gitHubRepo}.git</connection>
+    <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
+    <url>https://github.com/${gitHubRepo}</url>
+    <tag>${scmTag}</tag>
   </scm>
 
   <profiles>
