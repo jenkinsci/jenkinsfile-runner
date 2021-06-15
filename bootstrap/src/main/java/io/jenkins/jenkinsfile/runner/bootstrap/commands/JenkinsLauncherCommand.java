@@ -27,7 +27,6 @@ import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.Callable;
-import javax.annotation.PostConstruct;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -76,7 +75,6 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
      */
     private File cache = new File(System.getProperty("user.home") + "/.jenkinsfile-runner/");
 
-    @PostConstruct
     @SuppressFBWarnings("DM_EXIT")
     public void postConstruct() throws IOException {
         final JenkinsLauncherOptions settings = getLauncherOptions();
