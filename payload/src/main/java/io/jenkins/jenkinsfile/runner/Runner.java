@@ -1,11 +1,8 @@
 package io.jenkins.jenkinsfile.runner;
 
+import com.cloudbees.hudson.plugins.folder.Folder;
 import com.cloudbees.plugins.credentials.Credentials;
-import com.cloudbees.plugins.credentials.CredentialsProvider;
-import com.cloudbees.plugins.credentials.CredentialsStore;
 import com.cloudbees.plugins.credentials.CredentialsUnavailableException;
-import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
-import com.cloudbees.plugins.credentials.domains.Domain;
 import hudson.model.Action;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
@@ -16,9 +13,10 @@ import hudson.model.queue.QueueTaskFuture;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
 import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition;
+import org.jenkinsci.plugins.workflow.flow.FlowDurabilityHint;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
-import com.cloudbees.hudson.plugins.folder.Folder;
+import org.jenkinsci.plugins.workflow.job.properties.DurabilityHintJobProperty;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,7 +24,6 @@ import java.io.PrintStream;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -72,6 +69,8 @@ public class Runner {
 
         w.updateNextBuildNumber(runOptions.buildNumber);
         w.setResumeBlocked(true);
+        w.addProperty(new DurabilityHintJobProperty(FlowDurabilityHint.PERFORMANCE_OPTIMIZED));
+
         List<Action> pipelineActions = new ArrayList<>(3);
 
         boolean foundProvider = false;
