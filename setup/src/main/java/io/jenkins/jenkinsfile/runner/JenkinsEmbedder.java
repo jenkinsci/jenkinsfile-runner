@@ -120,13 +120,6 @@ public abstract class JenkinsEmbedder implements RootAction {
     protected Server server;
 
     /**
-     * Where in the {@link Server} is Jenkins deployed?
-     * <p>
-     * Just like {@link javax.servlet.ServletContext#getContextPath()}, starts with '/' but doesn't end with '/'.
-     */
-    public String contextPath = "/jenkins";
-
-    /**
      * {@link Runnable}s to be invoked at {@link #after()} .
      */
     protected List<LenientRunnable> tearDowns = new ArrayList<LenientRunnable>();
@@ -390,7 +383,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * URL ends with '/'.
      */
     public URL getURL() throws IOException {
-        return new URL("http://localhost:"+localPort+contextPath+"/");
+        return new URL("http://localhost:" + localPort + "/");
     }
 
     /**
