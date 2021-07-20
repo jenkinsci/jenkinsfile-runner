@@ -17,6 +17,7 @@ import javax.servlet.ServletContext;
 import jenkins.model.Jenkins;
 import jenkins.util.SystemProperties;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -77,7 +78,7 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
                 ? new Server(launcherOptions.httpPort)
                 : new Server(queuedThreadPool);
 
-        contextPath = launcherOptions.httpPath;
+        contextPath = validateHttpPath(launcherOptions.httpPath);
         WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
@@ -106,6 +107,15 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         }
 
         return context.getServletContext();
+    }
+
+    private String validateHttpPath(String httpPath) throws IllegalArgumentException {
+        if (StringUtils.endsWith(httpPath, "/")) {
+            throw new IllegalArgumentException("httpPath must not end with a trailing /");
+        } else if ("".equals(httpPath)) {
+            throw new IllegalArgumentException("httpPath must not be empty. Omit this parameter to use the root path");
+        }
+        return httpPath;
     }
 
     //TODO: add support of timeout
