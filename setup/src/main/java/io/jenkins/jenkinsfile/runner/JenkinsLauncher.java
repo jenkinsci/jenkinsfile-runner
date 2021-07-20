@@ -77,7 +77,7 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
                 ? new Server(launcherOptions.httpPort)
                 : new Server(queuedThreadPool);
 
-        WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), contextPath);
+        WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), null);
         context.setClassLoader(getClass().getClassLoader());
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
