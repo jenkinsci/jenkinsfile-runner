@@ -86,6 +86,7 @@ import io.jenkins.lib.support_log_formatter.SupportLogFormatter;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -118,6 +119,14 @@ public abstract class JenkinsEmbedder implements RootAction {
      */
     protected int localPort;
     protected Server server;
+
+    /**
+     * Where in the {@link Server} is Jenkins deployed?
+     * <p>
+     * Just like {@link javax.servlet.ServletContext#getContextPath()}, starts with '/' but doesn't end with '/'.
+     */
+    @CheckForNull
+    protected String contextPath;
 
     /**
      * {@link Runnable}s to be invoked at {@link #after()} .
@@ -383,7 +392,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * URL ends with '/'.
      */
     public URL getURL() throws IOException {
-        return new URL("http://localhost:" + localPort + "/");
+        return new URL("http://localhost:" + localPort + StringUtils.defaultString(contextPath) + "/");
     }
 
     /**

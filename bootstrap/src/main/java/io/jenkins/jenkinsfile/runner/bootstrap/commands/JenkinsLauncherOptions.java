@@ -69,6 +69,11 @@ public class JenkinsLauncherOptions {
     public Integer httpPort;
 
     @CheckForNull
+    @CommandLine.Option(names = "--httpPath",
+                        description = "Path (including leading /) for exposing the web server and Jenkins Web UI from Jenkinsfile Runner. Root path (/) by default")
+    public String httpPath;
+
+    @CheckForNull
     @CommandLine.Option(names = "--agentPort",
             description = "Port for connecting inbound Jenkins agents (over JNLP or WebSockets). Disabled by default")
     public Integer agentPort;
