@@ -70,7 +70,7 @@ public class JenkinsLauncherOptions {
 
     @CheckForNull
     @CommandLine.Option(names = "--httpPath",
-                        description = "Path (including leading /) for exposing the web server and Jenkins Web UI from Jenkinsfile Runner. Root path (/) by default")
+                        description = "Path (including leading / but no trailing /) for exposing the web server and Jenkins Web UI from Jenkinsfile Runner. Root path (/) by default")
     public String httpPath;
 
     @CheckForNull
