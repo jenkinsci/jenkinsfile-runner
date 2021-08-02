@@ -163,6 +163,7 @@ Advanced arguments:
   This option is considered safe for the Vanilla package with the default plugin set.
 * `--httpPort` - Port for exposing the web server and Jenkins Web UI from Jenkinsfile Runner.
   Disabled by default.
+* `--httpPath` - The root path/prefix for expositng the web server and Jenkins Web UI from Jenkinsfile Runner.
 * `--agentPort` - Port for connecting inbound Jenkins agents (over JNLP or WebSockets).
   Disabled by default.
 
