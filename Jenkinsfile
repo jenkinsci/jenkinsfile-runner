@@ -25,7 +25,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     stage('Build') {
                         timeout(60) {
-                            infra.runMaven(['clean', 'verify', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco'])
+                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco'])
                         }
                     }
 
@@ -34,8 +34,7 @@ for (int i = 0; i < platforms.size(); ++i) {
                         junit '**/target/surefire-reports/TEST-*.xml'
 
                         if (label == 'linux') {
-                            // Artifacts are heavy, we do not archive them
-                            // archiveArtifacts artifacts: '**/target/**/*.jar'
+                            infra.prepareToPublishIncrementals()
                             
                             recordIssues(
                               enabledForFailure: true, aggregatingResults: true, 
@@ -54,7 +53,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
-stage('Verify demos')
+stage('Verify Custom WAR Packager demo')
 Map demos = [:]
 demos['cwp'] = {
     node('docker') {
@@ -63,20 +62,6 @@ demos['cwp'] = {
                 checkout scm
                 stage('CWP') {
                     dir('demo/cwp') {
-                        sh "make clean buildInDocker run"
-                    }
-                }
-            }
-        }
-    }
-}
-demos['databound'] = {
-    node('docker') {
-        timestamps {
-            ws("databound_${branchName}_${buildNumber}") {
-                checkout scm
-                stage('Databound') {
-                    dir('demo/databound') {
                         sh "make clean buildInDocker run"
                     }
                 }
@@ -118,3 +103,5 @@ node('docker') {
 }
 
 // TODO: Run integration tests
+
+infra.maybePublishIncrementals()

@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0-beta-19-SNAPSHOT</version>
+    <version>${revision}${changelist}</version>
   </parent>
 
   <artifactId>jenkinsfile-runner</artifactId>
@@ -15,7 +15,7 @@
       <plugin>
          <groupId>org.codehaus.mojo</groupId>
          <artifactId>appassembler-maven-plugin</artifactId>
-         <version>1.10</version>
+         <version>2.1.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -33,6 +33,37 @@
           </execution>
         </executions>
        </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-lib</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>setup</artifactId>
+                  <version>${project.version}</version>
+                  <outputDirectory>${project.build.directory}/appassembler/lib/setup</outputDirectory>
+                  <destFileName>setup.jar</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>payload</artifactId>
+                  <version>${project.version}</version>
+                  <outputDirectory>${project.build.directory}/appassembler/lib/payload</outputDirectory>
+                  <destFileName>payload.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <!-- TODO(oleg_nenashev): Standalone JAR generation works by luck: https://github.com/jenkinsci/jenkinsfile-runner/issues/350
            META-INF definitions are not merged correctly, and extension annotations from the core might be overridden by plugins.
            Custom container description handlers are required to handle META-INF/annotations/hudson.Extension though it might be replaced by META-INF/annotations/hudson.Extension.txt.
@@ -41,7 +72,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -72,7 +102,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.2.0</version>
         <configuration>
           <resources>
             <resource>
@@ -92,22 +121,8 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-      <artifactId>setup</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-      <artifactId>payload</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci</groupId>
-      <artifactId>symbol-annotation</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci</groupId>

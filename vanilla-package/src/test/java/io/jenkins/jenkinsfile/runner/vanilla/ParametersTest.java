@@ -51,7 +51,7 @@ public class ParametersTest {
                 "    echo \"Value for param2: ${params.param2}\"\n" +
                 "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("-a", "param1=Hello", "-a", "param2=value2"));
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile, Arrays.asList("-a", "param1=Hello", "-a", "param2=value2"));
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
         assertThat(systemOut.getLog(), containsString("Value for param1: Hello"));
@@ -78,7 +78,7 @@ public class ParametersTest {
                 "    }\n" +
                 "}", Charset.defaultCharset());
 
-        int result = JFRTestUtil.runAsCLI(jenkinsfile, Arrays.asList("-a", "param1=Hello", "-a", "param2=value2"));
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile, Arrays.asList("-a", "param1=Hello", "-a", "param2=value2"));
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("Hello, world!"));
         assertThat(systemOut.getLog(), containsString("Value for param1: Hello"));

@@ -10,8 +10,8 @@ payload/target
 payload-dependencies/target
 setup/target
 target/
-vanilla-package/target/war
-vanilla-package/target/plugins
+#vanilla-package/target/war
+#vanilla-package/target/plugins
 vanilla-package/target/maven-archiver
 vanilla-package/target/maven-status
 vanilla-package/target/jenkinsfile-runner*
@@ -19,6 +19,8 @@ vanilla-package/target/surefire-reports
 vanilla-package/target/classes
 vanilla-package/target/generated-sources
 vanilla-package/target/generated-test-sources
+packaging-parent-pom/target
+packaging-slim-parent-pom/target
 
 # Tests
 tests

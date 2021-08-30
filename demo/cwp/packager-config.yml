@@ -21,8 +21,12 @@ war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.246"
+    version: "2.289.1"
 plugins:
+  - groupId: "org.jenkins-ci.plugins"
+    artifactId: "script-security"
+    source:
+      version: "1.73"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-job"
     source:
@@ -39,6 +43,10 @@ plugins:
     artifactId: "workflow-step-api"
     source:
       version: "2.22"
+  - groupId: "org.jenkins-ci.plugins.workflow"
+    artifactId: "workflow-scm-step"
+    source:
+      version: "2.11"
   - groupId: "org.jenkins-ci.plugins.workflow"
     artifactId: "workflow-support"
     source:
@@ -83,6 +91,14 @@ plugins:
     artifactId: "durable-task"
     source:
       version: "1.34"
+  - groupId: "io.jenkins.plugins"
+    artifactId: "pipeline-as-yaml"
+    source:
+      version: "0.12-rc"
+  - groupId: "io.jenkins.plugins"
+    artifactId: "snakeyaml-api"
+    source:
+      version: "1.26.4"
 systemProperties: {
     jenkins.model.Jenkins.slaveAgentPort: "50000",
     jenkins.model.Jenkins.slaveAgentPortEnforce: "true"}

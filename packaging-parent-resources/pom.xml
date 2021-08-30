@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.jenkins.jenkinsfile-runner</groupId>
+    <artifactId>parent</artifactId>
+    <version>${revision}${changelist}</version>
+  </parent>
+
+  <artifactId>packaging-parent-pom-resources</artifactId>
+  <packaging>pom</packaging>
+  <description>Jenkinsfile Runner: Resources for Parent Packaging POM</description>
+
+  <build>
+    <plugins>
+      <!-- Packaging Parent steps only -->
+      <plugin>
+        <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
+        <artifactId>maven-antrun-extended-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <attachArtifact file="${project.build.directory}/../src/main/resources/assembly/zip.xml" type="xml" classifier="assembly-zip-config" />
+                <attachArtifact file="${project.build.directory}/../src/main/resources-filtered/jenkins.properties" type="xml" classifier="jenkins-properties" />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

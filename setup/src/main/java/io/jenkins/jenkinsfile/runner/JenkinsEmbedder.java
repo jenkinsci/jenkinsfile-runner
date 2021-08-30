@@ -24,7 +24,6 @@
  */
 package io.jenkins.jenkinsfile.runner;
 
-import hudson.ClassicPluginStrategy;
 import hudson.CloseProofOutputStream;
 import hudson.DNSMultiCast;
 import hudson.DescriptorExtensionList;
@@ -62,7 +61,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -84,6 +85,7 @@ import io.jenkins.lib.support_log_formatter.SupportLogFormatter;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.server.Server;
@@ -122,7 +124,8 @@ public abstract class JenkinsEmbedder implements RootAction {
      * <p>
      * Just like {@link javax.servlet.ServletContext#getContextPath()}, starts with '/' but doesn't end with '/'.
      */
-    public String contextPath = "/jenkins";
+    @CheckForNull
+    protected String contextPath;
 
     /**
      * {@link Runnable}s to be invoked at {@link #after()} .
@@ -134,8 +137,6 @@ public abstract class JenkinsEmbedder implements RootAction {
     private PluginManager pluginManager = null;
 
     private boolean origDefaultUseCache = true;
-
-    private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public Jenkins getInstance() {
         return jenkins;
@@ -238,7 +239,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         //TODO: Mock UC?
         // sites.add(new UpdateSite("default", updateCenterUrl));
     }
-    
+
     private static void dumpThreads() {
         ThreadInfo[] threadInfos = Functions.getThreadInfos();
         Functions.ThreadGroupMap m = Functions.sortThreadsAndGetGroupMap(threadInfos);
@@ -350,12 +351,13 @@ public abstract class JenkinsEmbedder implements RootAction {
      * Sets the {@link PluginManager} to be used when creating a new {@link Jenkins} instance.
      *
      * @param pluginManager
-     *      null to let Jenkins create a new instance of default plugin manager, like it normally does when running as a webapp outside the test.
+     *      {@code null} to let Jenkins create a new instance of default plugin manager, like it normally does when running as a webapp outside the test.
      */
     public void setPluginManager(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
-        if (jenkins!=null)
+        if (jenkins!=null) {
             throw new IllegalStateException("Too late to override the plugin manager");
+        }
     }
 
     public JenkinsEmbedder with(PluginManager pluginManager) {
@@ -389,7 +391,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * URL ends with '/'.
      */
     public URL getURL() throws IOException {
-        return new URL("http://localhost:"+localPort+contextPath+"/");
+        return new URL("http://localhost:" + localPort + StringUtils.defaultString(contextPath) + "/");
     }
 
     /**
@@ -398,7 +400,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      */
     public void interactiveBreak() throws Exception {
         System.out.println("Jenkins is running at " + getURL());
-        new BufferedReader(new InputStreamReader(System.in)).readLine();
+        new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).readLine();
     }
 
     /**
@@ -408,7 +410,7 @@ public abstract class JenkinsEmbedder implements RootAction {
      * from an browser, while developing a test case.
      */
     public void pause() throws IOException {
-        new BufferedReader(new InputStreamReader(System.in)).readLine();
+        new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)).readLine();
     }
 
     /**
@@ -598,7 +600,7 @@ public abstract class JenkinsEmbedder implements RootAction {
 
                 return null;
             }
-            
+
     }
 
     public JenkinsEmbedder withNewHome() {
@@ -645,16 +647,20 @@ public abstract class JenkinsEmbedder implements RootAction {
 
         {// enable debug assistance, since tests are often run from IDE
             Dispatcher.TRACE = true;
-            MetaClass.NO_CACHE=true;
+            MetaClass.NO_CACHE = true;
             // load resources from the source dir.
             File dir = new File("src/main/resources");
-            if(dir.exists() && MetaClassLoader.debugLoader==null)
-                try {
-                    MetaClassLoader.debugLoader = new MetaClassLoader(
-                        new URLClassLoader(new URL[]{dir.toURI().toURL()}));
-                } catch (MalformedURLException e) {
-                    throw new AssertionError(e);
-                }
+            if (dir.exists() && MetaClassLoader.debugLoader == null) {
+                AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                    try {
+                        MetaClassLoader.debugLoader = new MetaClassLoader(
+                                new URLClassLoader(new URL[]{dir.toURI().toURL()}));
+                    } catch (MalformedURLException e) {
+                        throw new AssertionError(e);
+                    }
+                    return null;
+                });
+            }
         }
 
         // suppress some logging which we do not much care about here
@@ -682,10 +688,6 @@ public abstract class JenkinsEmbedder implements RootAction {
         }
         MIME_TYPES.addMimeMapping("js","application/javascript");
         Functions.DEBUG_YUI = true;
-
-        // during the unit test, predictably releasing classloader is important to avoid
-        // file descriptor leak.
-        ClassicPluginStrategy.useAntClassLoader = true;
 
         // DNS multicast support takes up a lot of time during tests, so just disable it altogether
         // this also prevents tests from falsely advertising Jenkins

@@ -3,17 +3,19 @@ package io.jenkins.jenkinsfile.runner.bootstrap;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.HashSet;
 
 /**
  * @author Kohsuke Kawaguchi
  */
 public class ClassLoaderBuilder {
     private final ClassLoader parent;
-    private final List<URL> jars = new ArrayList<>();
+    private final HashSet<URL> jars = new HashSet<>(48);
 
     public ClassLoaderBuilder(ClassLoader parent) {
         this.parent = parent;
@@ -22,15 +24,20 @@ public class ClassLoaderBuilder {
     /**
      * Recursively scan a directory to find jars
      */
-    public ClassLoaderBuilder collectJars(File dir, FileFilter filter) throws IOException {
-        File[] children = dir.listFiles();
+    public ClassLoaderBuilder processJars(File dirOrFile, FileFilter filter, JarHandler handler) throws IOException {
+        if (dirOrFile.isFile() && dirOrFile.getName().endsWith(".jar") && filter.accept(dirOrFile) ) {
+            handler.accept(dirOrFile);
+            return this;
+        }
+
+        File[] children = dirOrFile.listFiles();
         if (children!=null) {
             for (File child : children) {
                 if (child.isDirectory()) {
-                    collectJars(child, filter);
+                    processJars(child, filter, handler);
                 } else {
                     if (child.getName().endsWith(".jar") && filter.accept(child)) {
-                        jars.add(child.toURI().toURL());
+                        handler.accept(child);
                     }
                 }
             }
@@ -39,10 +46,19 @@ public class ClassLoaderBuilder {
     }
 
     public ClassLoaderBuilder collectJars(File dir) throws IOException {
-        return collectJars(dir,(File)->true);
+        return processJars(dir, (File)->true, (jar) -> jars.add(jar.toURI().toURL()));
+    }
+
+    public ClassLoaderBuilder excludeJars(File dir) throws IOException {
+        return processJars(dir, (File)->true, (jar) -> jars.remove(jar.toURI().toURL()));
     }
 
     public ClassLoader make() {
-        return new URLClassLoader(jars.toArray(new URL[jars.size()]),parent);
+        return AccessController.doPrivileged((PrivilegedAction<URLClassLoader>) () -> new URLClassLoader(jars.toArray(
+                new URL[jars.size()]), parent));
+    }
+
+    public interface JarHandler {
+        public void accept(File jar) throws MalformedURLException;
     }
 }

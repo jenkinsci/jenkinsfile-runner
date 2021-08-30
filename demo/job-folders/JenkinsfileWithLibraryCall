@@ -1,0 +1,9 @@
+
+stage('Read Job Names') {
+	println "JOB_NAME: " + env.JOB_NAME
+	println "JOB_BASE_NAME: " + env.JOB_BASE_NAME
+}
+
+stage('Run Shared Library Code') {
+	println "Return of Library Method infra.isTrusted() : " + infra.isTrusted().toString()
+}

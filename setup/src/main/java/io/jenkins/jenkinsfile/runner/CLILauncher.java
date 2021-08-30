@@ -2,10 +2,11 @@ package io.jenkins.jenkinsfile.runner;
 
 import hudson.cli.CLICommand;
 import hudson.security.ACL;
-import io.jenkins.jenkinsfile.runner.bootstrap.Bootstrap;
+import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunCLICommand;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -14,16 +15,16 @@ import java.util.Locale;
 /**
  * Sets up a Jenkins environment that provides an interactive CLI.
  */
-public class CLILauncher extends JenkinsLauncher {
-    public CLILauncher(Bootstrap bootstrap) {
-        super(bootstrap);
+public class CLILauncher extends JenkinsLauncher<RunCLICommand> {
+    public CLILauncher(RunCLICommand command) {
+        super(command);
     }
 
     @Override
     protected int doLaunch() throws Exception {
         // so that the CLI has all the access to the system
         ACL.impersonate(ACL.SYSTEM);
-        BufferedReader commandIn = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader commandIn = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         String line;
         System.out.printf("Connected to Jenkins!%nType 'help' for a list of available commands, or 'exit' to quit.%n");
         System.out.print(" > ");

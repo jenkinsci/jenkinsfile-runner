@@ -1,0 +1,131 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.jenkins.jenkinsfile-runner</groupId>
+    <artifactId>parent</artifactId>
+    <version>${revision}${changelist}</version>
+  </parent>
+
+  <artifactId>packaging-parent-pom-slim</artifactId>
+  <packaging>pom</packaging>
+  <description>Jenkinsfile Runner: Slim Packaging Parent POM</description>
+
+  <properties>
+    <jfr.name>jenkinsfile-runner-custom-build</jfr.name>
+    <!-- FIXME: Support for this parameter is coming in the next JFR release -->
+    <jfr.version>1.0-beta-26</jfr.version>
+    <!-- Do not package the app using App Assembler (most likely YAGNI, this is for parent POM) -->
+    <jfr.skip.packaging>false</jfr.skip.packaging>
+    <!-- Do not package the ZIP (Uber Jar is disabled due to https://github.com/jenkinsci/jenkinsfile-runner/issues/350) -->
+    <jfr.packaging.skip.assembly>${jfr.skip.packaging}</jfr.packaging.skip.assembly>
+    <!-- Do not generate Jenkins WAR and Plugin folders as dependencies -->
+    <jfr.packaging.skip.dependencies>${jfr.skip.packaging}</jfr.packaging.skip.dependencies>
+    <!--
+      TODO(oleg-nenashev): Add support for Uber-JAR. It will require re-generation or merging of annotation metadata in META-INF.
+      Otherwise the files get randomly replaced in the assembly, and the Jenkins core's extension list might be overriden leading to fatal startup issues.
+      FTR: https://maven.apache.org/plugins/maven-assembly-plugin/examples/single/using-container-descriptor-handlers.html
+     -->
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.jenkins.jenkinsfile-runner</groupId>
+      <artifactId>payload-dependencies</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>symbol-annotation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>annotation-indexer</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${jfr.name}</finalName>
+
+    <plugins>
+      <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-plugins-dir</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>assemble-dependencies</goal>
+            </goals>
+            <configuration>
+              <!--TODO: Add option to skip this step -->
+              <minimumJavaVersion>8</minimumJavaVersion>
+              <jenkinsCoreVersionOverride>${jenkins.version}</jenkinsCoreVersionOverride>
+              <outputDirectory>${project.build.directory}/plugins</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-war</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <skip>${jfr.packaging.skip.dependencies}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.jenkins-ci.main</groupId>
+                  <artifactId>jenkins-war</artifactId>
+                  <version>${jenkins.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.directory}/war</outputDirectory>
+                  <destFileName>jenkins.war</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>io.jenkins.jenkinsfile-runner</groupId>
+                  <artifactId>jenkinsfile-runner</artifactId>
+                  <version>${project.version}</version>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/</outputDirectory>
+                  <destFileName>jenkinsfile-runner.zip</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>use-jenkins-bom</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencyManagement>
+        <dependencies>
+          <dependency>
+            <groupId>io.jenkins.tools.bom</groupId>
+            <artifactId>${jenkins.bom.baseline}</artifactId>
+            <version>${jenkins.bom.version}</version>
+            <scope>import</scope>
+            <type>pom</type>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
+    </profile>
+  </profiles>
+
+</project>

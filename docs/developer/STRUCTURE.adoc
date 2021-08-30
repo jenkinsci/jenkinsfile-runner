@@ -31,8 +31,10 @@ Contains special classloader configuration so that Jenkinsfile Runner is able to
 own project classes. It also contains the `Bootstrap` class:
 
 * The `main()` for the Jenkinsfile Runner application.
+* Contains Jenkinsfile Runner Command options and implementations.
 * Configures the execution based on the values of the provided parameters.
-* Launches the execution.
+* Launches the execution and prepares the environment.
+  In particular, the module prepares the Jenkins WAR and plugins when it is needed.
 
 == `payload` module
 

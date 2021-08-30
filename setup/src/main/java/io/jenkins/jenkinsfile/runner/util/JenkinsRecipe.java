@@ -43,7 +43,7 @@ public @interface JenkinsRecipe {
         public void setup(JenkinsEmbedder embedder, T recipe) throws Exception {}
 
         /**
-         * Called right before {@link jenkins.model.Jenkins#Jenkins(java.io.File, javax.servlet.ServletContext)} is invoked
+         * Called right before {@code jenkins.model.Jenkins#Jennkins(java.io.File, javax.servlet.ServletContext)} is invoked
          * to decorate the hudson home directory.
          */
         public void decorateHome(JenkinsEmbedder embedder, File home) throws Exception {}
