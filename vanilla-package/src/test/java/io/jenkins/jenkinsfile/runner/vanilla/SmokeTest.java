@@ -109,7 +109,7 @@ public class SmokeTest {
 
         int result = new JFRTestUtil().run(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
-        assertThat(systemOut.getLog(), containsString("No such file or directory"));
+        assertThat(systemOut.getLog(), containsString("FileNotFoundException"));
     }
 
     // TODO: uncomment once JFR can do something about timeouts internally
