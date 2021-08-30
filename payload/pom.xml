@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.jenkins.jenkinsfile-runner</groupId>
     <artifactId>parent</artifactId>
-    <version>${revision}${changelist}</version>
+    <version>1.0-beta-30</version>
   </parent>
 
   <artifactId>payload</artifactId>
