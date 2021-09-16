@@ -25,7 +25,6 @@
 package io.jenkins.jenkinsfile.runner;
 
 import hudson.CloseProofOutputStream;
-import hudson.DNSMultiCast;
 import hudson.DescriptorExtensionList;
 
 import hudson.ExtensionList;
@@ -688,10 +687,6 @@ public abstract class JenkinsEmbedder implements RootAction {
         }
         MIME_TYPES.addMimeMapping("js","application/javascript");
         Functions.DEBUG_YUI = true;
-
-        // DNS multicast support takes up a lot of time during tests, so just disable it altogether
-        // this also prevents tests from falsely advertising Jenkins
-        DNSMultiCast.disabled = true;
 
         try {
             GNUCLibrary.LIBC.unsetenv("MAVEN_OPTS");
