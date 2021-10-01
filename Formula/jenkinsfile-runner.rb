@@ -4,7 +4,7 @@ class JenkinsfileRunner < Formula
     head "https://github.com/jenkinsci/jenkinsfile-runner.git"
 
     bottle :unneeded
-    depends_on :java => "1.8"
+    depends_on "openjdk@8"
     depends_on "maven"
 
     def install
