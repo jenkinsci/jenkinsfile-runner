@@ -7,8 +7,11 @@ import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
+
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -160,6 +163,7 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
     public void before() throws Throwable {
         setLogLevels();
         super.before();
+        openJenkinsUI();
     }
 
     /**
@@ -173,6 +177,13 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         } else {
             // Rely on the user-supplied logging configuration
             LOGGER.log(Level.INFO, "Will not override system loggers, because the 'java.util.logging.config.file' system property is set");
+        }
+    }
+
+    private void openJenkinsUI() throws IOException, URISyntaxException {
+        if (command.launcherOptions.openWebUI && command.launcherOptions.httpPort != null) {
+            Desktop desktop = Desktop.getDesktop();
+            desktop.browse(getURL().toURI());
         }
     }
 
