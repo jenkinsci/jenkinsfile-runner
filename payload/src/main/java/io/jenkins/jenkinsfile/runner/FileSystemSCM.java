@@ -13,7 +13,6 @@ import hudson.scm.SCM;
 import hudson.scm.SCMDescriptor;
 import hudson.scm.SCMRevisionState;
 import hudson.util.DirScanner;
-import jenkins.model.Jenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;

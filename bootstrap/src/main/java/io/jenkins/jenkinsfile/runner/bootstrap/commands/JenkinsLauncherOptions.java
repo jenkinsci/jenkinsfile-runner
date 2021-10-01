@@ -1,7 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
-import edu.umd.cs.findbugs.annotations.NonNull;
 import picocli.CommandLine;
 
 import java.io.File;

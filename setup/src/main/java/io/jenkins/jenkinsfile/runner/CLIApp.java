@@ -3,7 +3,6 @@ package io.jenkins.jenkinsfile.runner;
 import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunCLICommand;
-import io.jenkins.jenkinsfile.runner.bootstrap.commands.RunJenkinsfileCommand;
 
 /**
  * App handler for {@link RunCLICommand}.
