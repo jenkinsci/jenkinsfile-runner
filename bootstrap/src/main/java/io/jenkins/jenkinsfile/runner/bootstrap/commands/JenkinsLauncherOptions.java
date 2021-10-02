@@ -73,6 +73,10 @@ public class JenkinsLauncherOptions {
                         description = "Path (including leading / but no trailing /) for exposing the web server and Jenkins Web UI from Jenkinsfile Runner. Root path (/) by default")
     public String httpPath;
 
+    @CommandLine.Option(names = "--openWebUI",
+            description = "Open Jenkins Web UI in the default browser, '--httpPort' is expected to be defined together with this option")
+    public boolean openWebUI;
+
     @CheckForNull
     @CommandLine.Option(names = "--agentPort",
             description = "Port for connecting inbound Jenkins agents (over JNLP or WebSockets). Disabled by default")
