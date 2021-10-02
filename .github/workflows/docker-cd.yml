@@ -43,13 +43,12 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v2.6.1
       with:
-        context: function
         push: false
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         
   deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     name: "Deploy FaaScinator: ${{ github.ref }}"
     needs:
