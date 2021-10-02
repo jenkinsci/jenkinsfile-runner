@@ -44,6 +44,7 @@ jobs:
       uses: docker/build-push-action@v2.6.1
       with:
         push: false
+        file: packaging/docker/unix/adoptopenjdk-11-hotspot/Dockerfile
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         
@@ -82,7 +83,6 @@ jobs:
       uses: docker/build-push-action@v2.6.1
       with:
         file: packaging/docker/unix/adoptopenjdk-11-hotspot/Dockerfile
-        # Make true once ready
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
