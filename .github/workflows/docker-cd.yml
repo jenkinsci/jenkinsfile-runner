@@ -20,8 +20,8 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Maven
-      working-directory: ./function
-      run: mvn -B package --file pom.xml
+      working-directory: .
+      run: mvn -B package 
   
   build-docker:
     runs-on: ubuntu-latest
