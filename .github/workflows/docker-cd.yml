@@ -82,7 +82,6 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v2.6.1
       with:
-        context: function
         file: packaging/docker/unix/adoptopenjdk-11-hotspot/Dockerfile
         # Make true once ready
         push: true
