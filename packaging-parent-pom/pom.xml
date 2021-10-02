@@ -122,13 +122,6 @@
       <groupId>org.jenkins-ci</groupId>
       <artifactId>annotation-indexer</artifactId>
     </dependency>
-
-    <!-- Pulls in the plugin and all transitive deps -->
-    <dependency>
-      <groupId>io.jenkins.jenkinsfile-runner</groupId>
-      <artifactId>payload-dependencies</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
   </dependencies>
 
   <profiles>

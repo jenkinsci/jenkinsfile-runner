@@ -81,7 +81,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
         // Process the Jenkins version
         if (settings.version != null && settings.warDir != null) {
-            System.err.printf("Error: --jenkins-war and --jenkins-version are mutually exclusive options");
+            System.err.print("Error: --jenkins-war and --jenkins-version are mutually exclusive options");
             System.exit(-1);
         }
         if (settings.version != null && !Util.isJenkinsVersionSupported(settings.version)) {

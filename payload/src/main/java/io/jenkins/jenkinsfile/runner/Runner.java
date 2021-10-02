@@ -42,14 +42,14 @@ public class Runner {
      */
     public int run(PipelineRunOptions runOptions) throws Exception { 
         String[] jobPathNames = runOptions.jobName.split("/");
-        
-        for (int i=0; i < jobPathNames.length; i++) {
+
+        for (String jobPathName : jobPathNames) {
             try {
-                Jenkins.checkGoodName(jobPathNames[i]);
+                Jenkins.checkGoodName(jobPathName);
             } catch (Failure e) {
-                System.err.println(String.format("invalid job name: '%s': %s", jobPathNames[i], e.getMessage()));
+                System.err.printf("invalid job name: '%s': %s%n", jobPathName, e.getMessage());
                 return -1;
-            } 
+            }
         }
 
         Folder folderInScope = null;
@@ -136,7 +136,7 @@ public class Runner {
             Folder folder = j.getItem(folderName, addToFolder.getItemGroup(), Folder.class);
             return folder !=null ? folder : addToFolder.createProject(Folder.class, folderName);
         } catch (IOException ex) {
-            System.err.println(String.format("Error creating folder '%s':%s", folderName, ex.getMessage()));
+            System.err.printf("Error creating folder '%s':%s%n", folderName, ex.getMessage());
             throw ex;
         }   
     }   
