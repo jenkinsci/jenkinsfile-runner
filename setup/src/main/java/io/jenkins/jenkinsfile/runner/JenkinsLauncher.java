@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.EnumSet;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.DispatcherType;
@@ -189,6 +190,15 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
 
     @Override
     public void after() throws Exception {
+        if (command.launcherOptions.waitOnExit) {
+            try {
+                while (true) {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                }
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+        }
         if (command.launcherOptions.skipShutdown) {
             // Skips the clean up. This was initially motivated by SLF4J leaving gnarly messages.
             // The whole JVM is going to die anyway, but without the cleanup the Jenkins termination logic won't be invoked

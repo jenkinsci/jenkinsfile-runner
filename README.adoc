@@ -164,6 +164,8 @@ Advanced arguments:
 * `--httpPort` - Port for exposing the web server and Jenkins Web UI from Jenkinsfile Runner.
   Disabled by default.
 * `--httpPath` - The root path/prefix for expositng the web server and Jenkins Web UI from Jenkinsfile Runner.
+* `--openWebUI` - Open Jenkins Web UI in the default browser, `--httpPort` is expected to be defined together with this option.
+* `--waitOnExit` - Keep Jenkinsfile Runner running upon job completion without various sleep() hacks in the Pipeline.
 * `--agentPort` - Port for connecting inbound Jenkins agents (over JNLP or WebSockets).
   Disabled by default.
 

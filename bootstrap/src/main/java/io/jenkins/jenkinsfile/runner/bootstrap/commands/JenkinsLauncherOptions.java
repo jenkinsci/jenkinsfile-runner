@@ -76,6 +76,10 @@ public class JenkinsLauncherOptions {
             description = "Open Jenkins Web UI in the default browser, '--httpPort' is expected to be defined together with this option")
     public boolean openWebUI;
 
+    @CommandLine.Option(names = "--waitOnExit",
+            description = "Keep Jenkinsfile Runner running upon job completion without various sleep() hacks in the Pipeline")
+    public boolean waitOnExit;
+
     @CheckForNull
     @CommandLine.Option(names = "--agentPort",
             description = "Port for connecting inbound Jenkins agents (over JNLP or WebSockets). Disabled by default")
