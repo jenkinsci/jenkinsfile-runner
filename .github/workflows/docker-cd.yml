@@ -51,7 +51,7 @@ jobs:
   deploy:
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
-    name: "Deploy FaaScinator: ${{ github.ref }}"
+    name: "Deploy Docker Image: ${{ github.ref }}"
     needs:
       - build-maven
       - build-docker
