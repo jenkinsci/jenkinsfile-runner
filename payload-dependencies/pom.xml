@@ -78,6 +78,12 @@
     <dependency>
       <groupId>org.jenkinsci.plugins</groupId>
       <artifactId>pipeline-model-definition</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jenkins-ci.plugins</groupId>
+          <artifactId>git-server</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jenkinsci.plugins</groupId>
@@ -92,6 +98,17 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>jackson2-api</artifactId>
+    </dependency>
+    <!-- TODO(oleg_nenashev): Should be removed entirely from Pipeline: Global CPS Library plugin -->
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>git-server</artifactId>
+    </dependency>
+    <!-- TODO(oleg_nenashev): Should be removed entirely from Pipeline: Global CPS Library plugin -->
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>sshd</artifactId>
+      <version>3.1.0</version>
     </dependency>
 
     <!-- For injected tests, when we decide to enable them -->
