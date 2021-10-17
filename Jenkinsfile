@@ -16,7 +16,7 @@ Map branches = [:]
 for (int i = 0; i < platforms.size(); ++i) {
     String label = platforms[i]
     branches[label] = {
-        node(label) {
+        node(label + " && docker") {
             timestamps {
                 ws("platform_${label}_${branchName}_${buildNumber}") {
                     stage('Checkout') {
