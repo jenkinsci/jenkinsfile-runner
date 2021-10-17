@@ -188,13 +188,15 @@ THE SOFTWARE.
         <module>vanilla-package</module>
       </modules>
     </profile>
+    <!-- Integration tests powered by https://github.com/jenkinsci/jenkinsfile-runner-test-framework -->
+    <!--FIXME(oleg_nenashev): Not functional anymore, see https://github.com/jenkinsci/jenkinsfile-runner/issues/562
     <profile>
-      <!-- Integration tests -->
       <id>run-its</id>
       <modules>
         <module>tests</module>
       </modules>
     </profile>
+    -->
     <profile>
       <id>jacoco</id>
       <build>
