@@ -1,5 +1,7 @@
-package io.jenkins.jenkinsfile.runner.vanilla;
+package io.jenkins.jenkinsfile.runner.vanilla.its;
 
+import io.jenkins.jenkinsfile.runner.vanilla.JFRIntegrationTest;
+import io.jenkins.jenkinsfile.runner.vanilla.JFRTestUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -13,6 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemErrRule;
 import org.junit.contrib.java.lang.system.SystemOutRule;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
@@ -25,7 +28,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class IntegrationTest {
+public class HttpRequestPluginTest {
 
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
@@ -50,7 +53,8 @@ public class IntegrationTest {
     final String ELASTICSEARCH_PASSWORD = "admin";
 
     @Test
-    public void testHttpRequestPlugin() throws Throwable {
+    @Category(JFRIntegrationTest.class)
+    public void testGetJSON() throws Throwable {
         
         try (ElasticsearchContainer container = new ElasticsearchContainer(ELASTICSEARCH_IMAGE)) {
             // Start the container. This step might take some time...

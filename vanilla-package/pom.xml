@@ -89,7 +89,7 @@
               <includes>
                 <include>**/*.java</include>
               </includes>
-              <groups>io.jenkins.jenkinsfile.runner.vanilla.its</groups>
+              <groups>io.jenkins.jenkinsfile.runner.vanilla.JFRIntegrationTest</groups>
               <skipTests>${skip.integration.tests}</skipTests>
             </configuration>
           </execution>
