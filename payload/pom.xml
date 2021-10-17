@@ -44,6 +44,10 @@
           <groupId>com.fasterxml.jackson.datatype</groupId>
           <artifactId>jackson-datatype-json-org</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.jenkins-ci.plugins</groupId>
+          <artifactId>git-server</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>

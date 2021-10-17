@@ -110,6 +110,12 @@ THE SOFTWARE.
         <artifactId>pipeline-utility-steps</artifactId>
         <version>2.10.0</version>
       </dependency>
+      <!-- TODO(oleg_nenashev): Remove explicit version once https://github.com/jenkinsci/bom/issues/681 is fixed -->
+      <dependency>
+        <groupId>org.jenkins-ci.plugins</groupId>
+        <artifactId>git-server</artifactId>
+        <version>1.10</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
