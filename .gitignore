@@ -8,6 +8,7 @@ tests/target/
 packaging-parent-pom/target
 tests/.jenkinsfile-runner-test-framework/
 vanilla-package/target
+vanilla-package/plugins
 cwp-cli-1.3.jar
 demo/cwp/tmp/output
 demo/cwp/tmp/prebuild

@@ -16,7 +16,7 @@ Map branches = [:]
 for (int i = 0; i < platforms.size(); ++i) {
     String label = platforms[i]
     branches[label] = {
-        node(label) {
+        node(label + " && docker") {
             timestamps {
                 ws("platform_${label}_${branchName}_${buildNumber}") {
                     stage('Checkout') {
@@ -25,7 +25,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     stage('Build') {
                         timeout(60) {
-                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco'])
+                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco,run-its'])
                         }
                     }
 
