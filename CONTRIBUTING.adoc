@@ -3,6 +3,7 @@
 :toc-placement: preamble
 :toclevels: 3
 
+https://community.jenkins.io/c/contributing/jenkinsfile-runner/22[image:https://img.shields.io/badge/discourse-forum-brightgreen.svg?style=flat-square[Discourse]]
 https://gitter.im/jenkinsci/jenkinsfile-runner[image:https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg[Gitter]]
 
 This page provides information about contributing code to the Jenkinsfile Runner codebase.
@@ -11,7 +12,7 @@ This page provides information about contributing code to the Jenkinsfile Runner
 
 1. Fork the repository on GitHub
 2. Clone the forked repository to your machine
-3. Install the development tools. In order to develop Jenkinsfile Runner, you need the following tools:
+3. Install the development tools. To develop Jenkinsfile Runner, you need the following tools:
 ** Java Development Kit (JDK) 8.
      - We usually use [OpenJDK](http://openjdk.java.net/) but you can use other JDKs as well.
 ** Maven 3.5.4 or above.
@@ -28,6 +29,7 @@ In case you are more interested in details and in the architecture, see the link
 
 If you have any questions or need help, please use the following channels:
 
+* https://community.jenkins.io/c/contributing/jenkinsfile-runner/22[Forum on Discourse] - for JFR usage and developer discussions
 * https://gitter.im/jenkinsci/jenkinsfile-runner[Gitter Chat] - for JFR usage and development questions
 * https://www.jenkins.io/sigs/cloud-native/[Jenkins Cloud Native SIG] channels: mailing lists, chats, meetings
 * https://groups.google.com/d/forum/jenkinsci-dev[Jenkins Developer Mailing list] - for JFR development questions
