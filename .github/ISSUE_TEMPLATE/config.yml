@@ -1,5 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Discourse Forum
-    url: https://community.jenkins.io/c/contributing/jenkinsfile-runner/22
-    about: Please ask and answer questions here, for both Jenkinsfile Runner usage and development.
