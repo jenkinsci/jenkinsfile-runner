@@ -1,0 +1,52 @@
+= Jenkinsfile Runner Roadmap
+:toc:
+:toc-placement: preamble
+:toclevels: 3
+
+There are multiple major initiatives around Jenkinsfile Runner at the moment.
+There is a https://github.com/jenkinsci/jenkinsfile-runner/projects/1[Public roadmap]
+that lists these initiatives and provides their status/horizon.
+
+https://github.com/jenkinsci/jenkinsfile-runner/projects/1[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
+https://community.jenkins.io/t/jenkinsfile-runner-roadmap-discussion/583[image:https://img.shields.io/badge/discourse-forum-brightgreen.svg?style=flat-square[Discourse]]
+
+== How does the roadmap work?
+
+The roadmap is aligned with 
+https://github.com/jenkinsci/jep/tree/master/jep/14[JEP-14: Public roadmap for major initiatives in the Jenkins project].
+Key properties:
+
+* The roadmap aggregates key initiatives in all areas: features, infrastructure, documentation, community, etc. 
+* We do not provide **any** target dates for the initiatives.
+Instead of that we provide 3 horizons: In Progress, “Near Term” and “Future”
+* We do NOT commit on initiative delivery.
+Jenkins is a community-driven project,
+and the change will happen in areas where we have contributions. Initiatives in the roadmap may stop
+
+== Contributing
+
+All interested contributors are welcome to participate in any of the initiatives listed on the roadmap.
+Linked issues usually provide links to the specifics of the initiative and the discussion channels.
+For general guidelines,
+see link:./CONTRIBUTING.adoc[Contributing Guidelines].
+
+Roadmap does not limit the scope of possible contributions.
+They will be considered even if they are not on the roadmap.
+It is also possible to suggest the new roadmap items for major initiatives you have in mind.
+Please start by creating an issue or a topic on the Jenkins community Discourse forum.
+
+== Roadmap feedback
+
+There is an ongoing https://community.jenkins.io/t/jenkinsfile-runner-roadmap-discussion/583[Jenkinsfile Runner Roadmap Discussion] on the Jenkins community Discourse.
+Any contributions are welcome!
+
+== Jenkinsfile Runner 1.0?
+
+There is no confirmed date for a 1.0 release at the moment.
+Although the project is operational and ready to use,
+it is considered experimental at the moment.
+The `1.0` version will be released once the project gets enough adoption
+and validation by end users.
+
+* https://github.com/jenkinsci/jenkinsfile-runner/milestone/1[Jenkinsfile Runner 1.0 milestone] -
+Issues that need to be fixed before the 1.0 release
