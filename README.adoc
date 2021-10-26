@@ -6,6 +6,7 @@
 https://github.com/jenkinsci/jenkinsfile-runner/releases/latest[image:https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog[GitHub release (latest by date including pre-releases)]]
 https://hub.docker.com/r/jenkins/jenkinsfile-runner[image:https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29[Docker Pulls]]
 https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors[image:https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner[GitHub contributors]]
+link:./ROADMAP.adoc[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
 https://community.jenkins.io/c/contributing/jenkinsfile-runner/22[image:https://img.shields.io/badge/discourse-forum-brightgreen.svg?style=flat-square[Discourse]]
 https://gitter.im/jenkinsci/jenkinsfile-runner[image:https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg[Gitter]]
 
@@ -313,6 +314,10 @@ https://jenkins.io/security/#reporting-vulnerabilities[vulnerability reporting g
 
 * https://github.com/jenkinsci/jenkinsfile-runner/issues[Open issues in GitHub]
 * https://issues.jenkins-ci.org/issues/?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened)%20AND%20component%20%3D%20jenkinsfile-runner[Open issues in Jenkins JIRA] (deprecated)
+
+== Project roadmap
+
+See the roadmap link:./ROADMAP.adoc[here].
 
 == Further reading
 
