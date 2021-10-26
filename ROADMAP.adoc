@@ -33,11 +33,11 @@ see link:./CONTRIBUTING.adoc[Contributing Guidelines].
 Roadmap does not limit the scope of possible contributions.
 They will be considered even if they are not on the roadmap.
 It is also possible to suggest the new roadmap items for major initiatives you have in mind.
-Please start from creating an issue or a topic on the Jenkins community Discourse forum.
+Please start by creating an issue or a topic on the Jenkins community Discourse forum.
 
 == Roadmap feedback
 
-There is ongoing https://community.jenkins.io/t/jenkinsfile-runner-roadmap-discussion/583[Jenkinsfile Runner Roadmap Discussion] on the Jenkins community Discourse.
+There is an ongoing https://community.jenkins.io/t/jenkinsfile-runner-roadmap-discussion/583[Jenkinsfile Runner Roadmap Discussion] on the Jenkins community Discourse.
 Any contributions are welcome!
 
 == Jenkinsfile Runner 1.0?
