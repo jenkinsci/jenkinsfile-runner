@@ -302,9 +302,9 @@ and then to configure Jenkins so that Pipelines can properly operate in the user
 There are 2 ways to extend Jenkinsfile Runner:
 
 * Using low-level management tools, including the `--plugins` command included in CLI.
-* For Docker images only: using Custom WAR/Docker Packager which automates some build steps and allows managing Jenkinsfile Runner configuration via a single YAML file.
-
-For Docker images see link:./docs/using/EXTENDING_DOCKER.adoc[Extending Jenkinsfile Runner images] for more information and examples.
+* Docker
+** A simple example that converts a Jenkins image into a JFR can be found link:./demo/docker-simple/[here].
+** A more advanced example using the Custom WAR/Docker Packager which automates some build steps and allows managing Jenkinsfile Runner configuration via a single YAML file can be found link:./docs/using/EXTENDING_DOCKER.adoc[here].
 
 == Reporting issues
 
