@@ -88,15 +88,6 @@
     </dependency>
 
     <!-- Tests -->
-    <!-- TODO(oleg_nenashev):
-      It is actually bundled into the Jenkins core due to https://issues.jenkins-ci.org/browse/JENKINS-63269 .
-      Declaring a test dependency here implicitly excludes it, should be safe
-      -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>com.github.stefanbirkner</groupId>
       <artifactId>system-rules</artifactId>
