@@ -33,6 +33,7 @@
     <dependency>
       <groupId>org.jenkins-ci</groupId>
       <artifactId>symbol-annotation</artifactId>
+      <version>${symbol.annotation.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jenkins.plugins</groupId>
