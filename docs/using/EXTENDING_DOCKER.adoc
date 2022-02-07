@@ -47,8 +47,39 @@ See the https://github.com/jenkinsci/plugin-installation-manager-tool[Plugin Ins
 
 == Adding tools
 
-NOTE: This documentation section has not been implemented yet.
-Please feel free to submit a pull request!
+To add a tool let's say `git`, you can use https://github.com/jenkinsci/configuration-as-code-plugin[Jenkins Configuration-as-Code].
+First create a Dockerfile to install required plugins for that tool as shown in link:#_installing_plugins[Installing Plugins] section. 
+
+Most of the tool plugins in jenkins has support to automatically download tool from internet and install it which can be specified in Jenkins CasC. But If you want to manually install the tool, you can write the installation steps of the tool in the same Dockerfile, like here for `git`.
+
+Dockerfile::
+
+[source]
+----
+FROM jenkins/jenkinsfile-runner
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+----
+
+*Note:* `git` plugin is already installed in the `jenkins/jenkinsfile-runner`, so no need to install it again with https://github.com/jenkinsci/plugin-installation-manager-tool[Plugin Installation Manager Tool].
+
+Next, Creating Jenkins CasC YAML file for configuring `git` tool in jenkins. Refer to link:/demo/casc/README.md[JCasC demo] for more examples.
+
+jenkins.yaml::
+
+[source]
+----
+tool:
+  git:
+    installations:
+      - name: git
+        home: /usr/bin/git
+----
+You can then run `jenkinsfile-runner` like this
+[source]
+----
+docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile -v $(pwd)/jenkins.yaml:/usr/share/jenkins/ref/casc/jenkins.yaml jenkinsfile-runner:my-image
+----
+Here `jenkinsfile-runner:my-image` is custom docker image created from above Dockerfile.
 
 == Configuring Jenkins
 
