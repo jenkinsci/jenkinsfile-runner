@@ -49,11 +49,11 @@ See the https://github.com/jenkinsci/plugin-installation-manager-tool[Plugin Ins
 
 To add a tool let's say `git`, you can use https://github.com/jenkinsci/configuration-as-code-plugin[Jenkins Configuration-as-Code]. To know more about tools in jenkins, see https://www.jenkins.io/doc/book/managing/tools/[Managing Tools].
 
-To configure a tool in jenkins, you first need to install required plugins for that tool, so you can install plugins in `jenkinsfile-runner` as shown in link:#_installing_plugins[Installing Plugins] section. As `git` plugin is already installed in the `jenkins/jenkinsfile-runner`, so no need to install it again.
+To configure a tool in jenkins, you first need to install required plugins for that tool, so you can install plugins in `jenkinsfile-runner` as shown in link:#_installing_plugins[Installing Plugins] section. As `git` plugin is already present in the `jenkins/jenkinsfile-runner` docker image, so no need to install it again.
 
 *Note:* Here `git` tool is different than `git` plugin, here `git` tool is the `git` command that jenkins internally uses to clone repositories.
 
-Most of the tool plugins in jenkins has support to automatically download tool from internet and install it which can be specified in Jenkins CasC, like shown in this https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/nodejs[example]. But If you want to manually install the tool, you can write the installation steps of the tool in the same Dockerfile (that used to install plugins), like here for `git`, the preferred method is to install `git` command is with OS Package Manager.
+Most of the tool plugins in jenkins has support to automatically download tool from internet and install it which can be specified in Jenkins CasC, like shown in this https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/nodejs[example]. But If you want to manually install the tool, you can write the installation steps of the tool in the same Dockerfile (that used to install plugins), like here for `git`, the preferred method to install `git` command is with OS Package Manager.
 
 Dockerfile::
 
