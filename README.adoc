@@ -109,7 +109,7 @@ The `demo` directory includes a few simple examples of Jenkinsfiles you can try 
 === Command Line Interface (CLI)
 
 The Jenkinsfile Runner CLI provides multiple advanced options and commands.
-The The CLI is powered by https://picocli.info/[picocli] and https://github.com/kohsuke/args4j[args4j].
+The CLI is powered by https://picocli.info/[picocli] and https://github.com/kohsuke/args4j[args4j].
 To execute a command:
 
 ....
@@ -152,7 +152,7 @@ Advanced arguments:
 * `--jenkinsHome FILE` -
     Path to the empty Jenkins Home directory to use for this run.
     If not specified a temporary directory will be created.
-    Note that the specified folder ill not be disposed after the run.
+    Note that the specified folder will not be disposed after the run.
 * `--mirror` - Mirror site to be used to download plugins if `plugins.txt` is specified.
 ** NOTE: This option will be reworked in the future once the Plugin Installation Manager tool is integrated
 * `--withInitHooks FILE` - Path to the https://www.jenkins.io/doc/book/managing/groovy-hook-scripts/[Groovy init hooks] directory
