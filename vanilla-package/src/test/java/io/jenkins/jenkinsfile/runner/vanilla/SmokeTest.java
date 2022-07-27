@@ -31,6 +31,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SmokeTest {
 
+    static {
+        System.setProperty("hudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT", "true");
+    }
+
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
