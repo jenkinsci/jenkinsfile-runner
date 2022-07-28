@@ -31,10 +31,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SmokeTest {
 
-    static {
-        System.setProperty("hudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT", "true");
-    }
-
     @Rule
     public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -239,8 +235,9 @@ public class SmokeTest {
         filesAndContents.put("Jenkinsfile", jfContent);
 
         String scmConfigPath = createTestRepoWithContentAndSCMConfigYAML(filesAndContents, "master");
+        File groovy = new File(getClass().getResource("SmokeTest/groovyDir/init.groovy").getFile());
 
-        int result = new JFRTestUtil().runAsCLI(jenkinsfile, Arrays.asList("--scm", scmConfigPath));
+        int result = new JFRTestUtil().runAsCLI(jenkinsfile, Arrays.asList("--withInitHooks", groovy.getParentFile().getAbsolutePath(), "--scm", scmConfigPath));
         assertThat("JFR should be executed successfully", result, equalTo(0));
         assertThat(systemOut.getLog(), containsString("README.md exists with content 'Test repository'"));
         assertThat(systemOut.getLog(), containsString("using credential user1"));
