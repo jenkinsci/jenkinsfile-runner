@@ -66,9 +66,9 @@ THE SOFTWARE.
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
-    <jenkins.version>2.303.1</jenkins.version>
-    <jenkins.bom.baseline>bom-2.303.x</jenkins.bom.baseline>
-    <jenkins.bom.version>961.vf0c9f6f59827</jenkins.bom.version>
+    <jenkins.version>2.346.1</jenkins.version>
+    <jenkins.bom.baseline>bom-2.346.x</jenkins.bom.baseline>
+    <jenkins.bom.version>1500.ve4d05cd32975</jenkins.bom.version>
     <jetty.version>9.4.43.v20210629</jetty.version>
     <jenkins-test-harness.version>1589.vc23fca066d5c</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
@@ -123,6 +123,12 @@ THE SOFTWARE.
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
+      <version>4.6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
     </dependency>
   </dependencies>
 
