@@ -69,7 +69,7 @@ THE SOFTWARE.
     <jenkins.version>2.346.1</jenkins.version>
     <jenkins.bom.baseline>bom-2.346.x</jenkins.bom.baseline>
     <jenkins.bom.version>1500.ve4d05cd32975</jenkins.bom.version>
-    <jetty.version>9.4.43.v20210629</jetty.version>
+    <jetty.version>11.0.11</jetty.version>
     <jenkins-test-harness.version>1589.vc23fca066d5c</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <findbugs.failOnError>false</findbugs.failOnError>
