@@ -25,7 +25,7 @@ scm:
     userRemoteConfigs:
     - url: https://github.com/jenkinsci/jenkinsfile-runner.git
     branches:
-    - name: master
+    - name: main
 ----
 
 == Specifying and using credentials with `checkout scm`
@@ -48,5 +48,5 @@ scm:
     - url: https://github.com/jenkinsci/jenkinsfile-runner.git
       credentialsId: user1
     branches:
-    - name: master
+    - name: main
 ----
