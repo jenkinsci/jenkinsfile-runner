@@ -1,9 +1,9 @@
 name: Continuous Delivery
 on:
   push:
-    branches: [ master, github-action-cicd ]
+    branches: [ main, github-action-cicd, java-11-update ]
   pull_request:
-    branches: [ master, github-action-cicd ]
+    branches: [ main, github-action-cicd, java-11-update ]
 
 env:
   IMAGE_NAME: ${{ github.repository }}
