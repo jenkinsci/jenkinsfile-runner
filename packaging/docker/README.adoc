@@ -6,8 +6,8 @@ This directory includes the Docker images for Jenkinsfile Runner (JFR) which are
 main Jenkinsfile Runner repository.
 
 Starting from JFR 1.0-beta-15,
-all images in this repository are based on https://adoptopenjdk.net/AdoptOpenJDK
-and published as https://hub.docker.com/r/jenkins/jenkinsfile-runner[jenkins/jenkinsfile-runner] on DockerHub.
+all images in this repository are based on [Eclipse Timurin](https://projects.eclipse.org/projects/adoptium.temurin)
+and published as [ghcr.io/jenkinsci/jenkinsfile-runner](https://github.com/orgs/jenkinsci/packages?repo_name=jenkinsfile-runner) on GitHub Packages.
 At the moment, official packages include only Linux-based distributions (Ubuntu, Debian and Alpine).
 There are also prototype Windows images that can be built manually.
 Images for other platforms and JDKs may be added upon a pull request,
@@ -23,9 +23,9 @@ The following format is used:
 ${JVM_VENDOR}-${JAVA_VERSION}[-${JVM_CLASSIFIER1}][-${JVM_CLASSIFIER2}]...[-${OS}]
 ----
 
-Examples: `adoptopenjdk-8-hotspot`, `adoptopnejdk-11-jre-alpine`
+Examples: `eclipse-timurin-11-hotspot`, `eclipse-timurin-11-jre-alpine`
 
-* `JVM_VENDOR` - source of the JVM in lowercase, e.g. AdoptOpenJDK or JVM.
+* `JVM_VENDOR` - source of the JVM in lowercase, e.g. Eclipse Timurin.
 * `JAVA_VERSION` - version of the JVM.
   Right now `8` or `11` are used, fine-grain versions might be added in the future.
 * `JVM_CLASSIFIER` - Additional information about the JVM used in the image.

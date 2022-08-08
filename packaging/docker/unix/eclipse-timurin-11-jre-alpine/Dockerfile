@@ -25,7 +25,6 @@ RUN echo "Optimizing plugins..." && \
   rm -rf *.hpi && \
   for f in * ; do echo "Exploding $f..." && mv "$f" "$f.hpi" ; done;
   
-# Unofficial experimental image, AdoptOpenJDK does not offer official Alpine for JDK8
 FROM eclipse-temurin:11.0.16_8-jre-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
