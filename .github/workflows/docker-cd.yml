@@ -44,7 +44,7 @@ jobs:
       uses: docker/build-push-action@v2.6.1
       with:
         push: false
-        file: packaging/docker/unix/eclipse-temurin-11/Dockerfile
+        file: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         
@@ -82,7 +82,7 @@ jobs:
     - name: Build Docker image
       uses: docker/build-push-action@v2.6.1
       with:
-        file: packaging/docker/unix/eclipse-temurin-11/Dockerfile
+        file: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
