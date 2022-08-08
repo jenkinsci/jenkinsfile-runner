@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 11
-          distribution: 'timurin'
+          distribution: 'temurin'
       - name: Set version
         id: set-version
         run: |
