@@ -25,7 +25,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     stage('Build') {
                         timeout(60) {
-                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco,run-its'])
+                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco,run-its'], '11')
                         }
                     }
 
@@ -71,36 +71,6 @@ demos['cwp'] = {
 }
 
 parallel(demos)
-
-node('docker') {
-    ws("container_${branchName}_${buildNumber}") {
-        infra.withDockerCredentials {
-            def image
-            def imageName = "${env.DOCKERHUB_ORGANISATION}/jenkinsfile-runner"
-            def imageTag
-
-            stage('Build container') {
-                timestamps {
-                    def scmVars = checkout scm
-
-                    def shortCommit = scmVars.GIT_COMMIT
-                    imageTag = branchName.equals("master") ? "latest" : branchName
-                    echo "Creating the container ${imageName}:${imageTag}"
-                    sh "docker build -t ${imageName}:${imageTag} --no-cache --rm -f packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile ."
-                }
-            }
-
-  // TODO(oleg-nenashev): Reenable once CI is stable
-  //          if (branchName.startsWith('master')) {
-  //              stage('Publish container') {
-  //                  timestamps {
-  //                      image.push();
-  //                  }
-  //              }
-  //          }
-        }
-    }
-}
 
 // TODO: Run integration tests
 
