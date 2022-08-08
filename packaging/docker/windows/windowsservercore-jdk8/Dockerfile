@@ -2,6 +2,7 @@
 
 ARG WINDOWS_DOCKER_TAG=1809
 
+# TODO: Update for Java 11
 # Define maven version for other stages
 FROM jenkins4eval/maven-windows-jdk-8 as maven
 

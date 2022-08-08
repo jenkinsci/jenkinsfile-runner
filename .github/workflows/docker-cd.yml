@@ -49,7 +49,7 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         
   deploy:
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     name: "Deploy Docker Image: ${{ github.ref }}"
     needs:

@@ -1,6 +1,6 @@
 FROM jenkins/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
-FROM maven:3.6.3-adoptopenjdk-8 as jenkinsfilerunner-build
+FROM maven:3.8.6-eclipse-temurin-11 as jenkinsfilerunner-build
 RUN apt-get update && apt-get install -y unzip
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
@@ -26,7 +26,7 @@ RUN echo "Optimizing plugins..." && \
   for f in * ; do echo "Exploding $f..." && mv "$f" "$f.hpi" ; done;
   
 # Unofficial experimental image, AdoptOpenJDK does not offer official Alpine for JDK8
-FROM adoptopenjdk/openjdk11:jre-11.0.7_10-alpine
+FROM eclipse-temurin:11.0.16_8-jre-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
 ENV JENKINS_PM_VERSION 2.5.0

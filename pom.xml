@@ -65,7 +65,7 @@ THE SOFTWARE.
     <changelist>-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>8</java.level>
+    <java.level>11</java.level>
     <jenkins.version>2.346.1</jenkins.version>
     <jenkins.bom.baseline>bom-2.346.x</jenkins.bom.baseline>
     <jenkins.bom.version>1500.ve4d05cd32975</jenkins.bom.version>

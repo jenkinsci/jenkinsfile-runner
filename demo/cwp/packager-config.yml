@@ -14,14 +14,14 @@ buildSettings:
       source:
         dir: ./source
     docker:
-      base: "openjdk:8-jdk"
+      base: "openjdk:11-jdk"
       tag: "jenkins-experimental/jenkinsfile-runner-demo"
       build: false
 war:
   groupId: "org.jenkins-ci.main"
   artifactId: "jenkins-war"
   source:
-    version: "2.289.1"
+    version: "2.346.1"
 plugins:
   - groupId: "org.jenkins-ci.plugins"
     artifactId: "script-security"
