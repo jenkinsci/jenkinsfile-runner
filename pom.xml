@@ -72,7 +72,7 @@ THE SOFTWARE.
     <jetty.version>9.4.43.v20210629</jetty.version>
     <jenkins-test-harness.version>1589.vc23fca066d5c</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
-    <findbugs.failOnError>false</findbugs.failOnError>
+    <spotbugs.failOnError>false</spotbugs.failOnError>
   </properties>
 
   <dependencyManagement>
