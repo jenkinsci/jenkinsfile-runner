@@ -17,7 +17,7 @@ The parent POM prepares the following artifacts in `target`:
 
 == Usage in Docker
 
-See link:../packaging/docker/unix/eclipse-temurin-11-hotspot/Dockerfile-dev-slim[Dockerfile-dev-slim] for example.
+See link:../packaging/docker/unix/eclipse-temurin-11/Dockerfile-dev-slim[Dockerfile-dev-slim] for example.
 This example also uses additional optimization tricks.
 
 == Status

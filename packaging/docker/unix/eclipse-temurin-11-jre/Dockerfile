@@ -24,7 +24,7 @@ RUN echo "Optimizing plugins..." && \
   rm -rf *.hpi && \
   for f in * ; do echo "Exploding $f..." && mv "$f" "$f.hpi" ; done;
 
-FROM eclipse-temurin:11.0.16_8-jre-hotspot
+FROM eclipse-temurin:11.0.16_8-jre
 RUN apt-get update && apt-get install wget && rm -rf /var/lib/apt/lists/*
 
 ENV JDK_11 true

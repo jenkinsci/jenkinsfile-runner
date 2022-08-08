@@ -47,11 +47,11 @@ This will generate an assembly artifact through the `appassembler-maven-plugin` 
 
 This repository includes the base image which can be built simply as...
 
-    docker build -t jenkins4eval/jenkinsfile-runner -f packaging/docker/unix/eclipse-temurin-11-hotspot/Dockerfile .
+    docker build -t jenkins4eval/jenkinsfile-runner -f packaging/docker/unix/eclipse-temurin-11/Dockerfile .
 
 During development you can reuse the local machine build instead of doing a full build from scratch
 
-    docker build -t jenkins4eval/jenkinsfile-runner:dev -f packaging/docker/unix/eclipse-temurin-11-hotspot/Dockerfile-dev-vanilla .
+    docker build -t jenkins4eval/jenkinsfile-runner:dev -f packaging/docker/unix/eclipse-temurin-11/Dockerfile-dev-vanilla .
 
 == Debugging
 
