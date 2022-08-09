@@ -70,9 +70,9 @@ demos['cwp'] = {
             }
         }
     }
-}*/
+}
 
-parallel(demos)
+parallel(demos)*/
 
 // TODO: Run integration tests
 
