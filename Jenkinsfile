@@ -53,6 +53,8 @@ for (int i = 0; i < platforms.size(); ++i) {
 /* Execute our platforms in parallel */
 parallel(branches)
 
+// TODO: Rework Custom WAR Packager
+/*
 stage('Verify Custom WAR Packager demo')
 Map demos = [:]
 demos['cwp'] = {
@@ -68,7 +70,7 @@ demos['cwp'] = {
             }
         }
     }
-}
+}*/
 
 parallel(demos)
 
