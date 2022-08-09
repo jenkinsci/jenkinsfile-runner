@@ -36,13 +36,13 @@ import java.net.URL;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 
 /**
- * Controls how <tt>JENKINS_HOME</tt> is initialized.
+ * Controls how JENKINS_HOME is initialized.
  *
  * @author Kohsuke Kawaguchi
  */
 public interface JenkinsHomeLoader {
     /** 
-     * Returns a directory to be used as <tt>JENKINS_HOME</tt>
+     * Returns a directory to be used as JENKINS_HOME.
      *
      * @throws Exception
      *      to cause a test to fail.

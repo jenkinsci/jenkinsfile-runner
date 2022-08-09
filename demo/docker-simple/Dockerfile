@@ -1,4 +1,3 @@
-# I had trouble using jdk8
 ARG baseImage=jenkins/jenkins:latest-jdk11
 
 # Load the JFR docker image

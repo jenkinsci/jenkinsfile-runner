@@ -91,6 +91,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.jenkins-ci.main</groupId>
+      <artifactId>jenkins-core</artifactId>
+      <version>${jenkins.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>io.jenkins.jenkinsfile-runner</groupId>
       <artifactId>bootstrap</artifactId>
       <version>${project.parent.version}</version>

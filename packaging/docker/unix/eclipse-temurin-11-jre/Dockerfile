@@ -1,6 +1,6 @@
 FROM jenkins/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
-FROM maven:3.6.3-adoptopenjdk-8 as jenkinsfilerunner-build
+FROM maven:3.8.6-eclipse-temurin-11 as jenkinsfilerunner-build
 RUN apt-get update && apt-get install -y unzip
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
@@ -24,19 +24,20 @@ RUN echo "Optimizing plugins..." && \
   rm -rf *.hpi && \
   for f in * ; do echo "Exploding $f..." && mv "$f" "$f.hpi" ; done;
 
-# Unofficial experimental image, AdoptOpenJDK does not offer official Alpine for JDK8
-FROM adoptopenjdk/openjdk8:jdk8u252-b09-alpine
+FROM eclipse-temurin:11.0.16_8-jre
+RUN apt-get update && apt-get install wget && rm -rf /var/lib/apt/lists/*
+
+ENV JDK_11 true
+
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
 ENV JENKINS_PM_VERSION 2.5.0
 ENV JENKINS_PM_URL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/${JENKINS_PM_VERSION}/jenkins-plugin-manager-${JENKINS_PM_VERSION}.jar
 
 USER root
-RUN apk add --update --no-cache wget git \
-    && mkdir -p /app /usr/share/jenkins/ref/plugins /usr/share/jenkins/ref/casc /app/bin \
+RUN mkdir -p /app /usr/share/jenkins/ref/plugins /usr/share/jenkins/ref/casc /app/bin \
     && echo "jenkins: {}" >/usr/share/jenkins/ref/casc/jenkins.yaml \
-    && wget $JENKINS_PM_URL -O /app/bin/jenkins-plugin-manager.jar \
-    && apk del wget
+    && wget $JENKINS_PM_URL -O /app/bin/jenkins-plugin-manager.jar
 
 COPY --from=jenkinsfilerunner-build /app/jenkins /app/jenkins
 COPY --from=jenkinsfilerunner-build /jenkinsfile-runner/app/target/appassembler /app

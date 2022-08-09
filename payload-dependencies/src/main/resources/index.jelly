@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+    Declares a minimum set of plugins required for Jenkinsfile Runner execution
+</div>
