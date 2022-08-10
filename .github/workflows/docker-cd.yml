@@ -112,6 +112,7 @@ jobs:
     - name: Build and Deploy Docker image
       uses: docker/build-push-action@v2.6.1
       with:
+        context: .
         file: ${{ matrix.dockerfile }}
         push: true
         tags: ${{ steps.meta.outputs.tags }} ${{ matrix.extra-tags }}
