@@ -4,7 +4,6 @@
 :toclevels: 3
 
 https://github.com/jenkinsci/jenkinsfile-runner/releases/latest[image:https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog[GitHub release (latest by date including pre-releases)]]
-https://hub.docker.com/r/jenkins/jenkinsfile-runner[image:https://img.shields.io/docker/pulls/jenkins/jenkinsfile-runner?label=docker%20pulls%20%28vanilla%29[Docker Pulls]]
 https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors[image:https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner[GitHub contributors]]
 link:./ROADMAP.adoc[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
 https://community.jenkins.io/c/contributing/jenkinsfile-runner/22[image:https://img.shields.io/badge/discourse-forum-brightgreen.svg?style=flat-square[Discourse]]
