@@ -1,9 +1,9 @@
 name: Continuous Delivery
 on:
   push:
-    branches: [ main, github-action-cicd, java-11-update ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, github-action-cicd, java-11-update ]
+    branches: [ main ]
 
 env:
   IMAGE_NAME: ${{ github.repository }}
@@ -22,12 +22,24 @@ jobs:
     - name: Build with Maven
       working-directory: .
       run: mvn -B package 
-  
+
   build-docker:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ${{ github.repository }}
       REGISTRY: ghcr.io
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - alias: jre-11
+            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
+            tags: test
+          - alias: jre-11-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre-alpine/Dockerfile
+            tags: test-alpine
+    name: "Build Docker image: ${{ matrix.alias }}"
+
     steps:
     - uses: actions/checkout@v2
     
@@ -44,20 +56,34 @@ jobs:
       uses: docker/build-push-action@v2.6.1
       with:
         push: false
-        file: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
-        tags: ${{ steps.meta.outputs.tags }}
+        file: ${{ matrix.dockerfile }}
+        tags: ${{ matrix.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    name: "Deploy Docker Image: ${{ github.ref }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - alias: jre-11
+            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
+            tag-prefix: eclipse-temurin-11-jre
+            tag-latest: true
+            extra-tags: ""
+          - alias: jre-11-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre-alpine/Dockerfile
+            tag-prefix: eclipse-temurin-11-jre-alpine
+            tag-latest: false
+            extra-tags: ", alpine"
     needs:
       - build-maven
       - build-docker
     permissions:
       contents: read
       packages: write
+    name: "Deploy Docker Image: ${{ matrix.alias }}"
     
     #TODO: There is slight double build overhead, but we prevent permissions from being exposed too widely
     steps:
@@ -78,11 +104,15 @@ jobs:
       uses: docker/metadata-action@v3.3.0
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-    
-    - name: Build Docker image
+        flavor: |
+          latest= $${{ matrix.tag-latest }}
+          prefix= $${{ matrix.tag-prefix }}
+          suffix=
+
+    - name: Build and Deploy Docker image
       uses: docker/build-push-action@v2.6.1
       with:
-        file: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
+        file: ${{ matrix.dockerfile }}
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }} ${{ matrix.extra-tags }}
         labels: ${{ steps.meta.outputs.labels }}
