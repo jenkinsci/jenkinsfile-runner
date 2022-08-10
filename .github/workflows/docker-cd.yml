@@ -71,12 +71,12 @@ jobs:
             dockerfile: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
             tag-prefix: eclipse-temurin-11-jre-
             tag-latest: true
-            extra-tags: ", ghcr.io/${{ github.repository }}/jre-11"
+            extra-tags: ", ghcr.io/${{ github.repository }}:jre-11"
           - alias: jre-11-alpine
             dockerfile: packaging/docker/unix/eclipse-temurin-11-jre-alpine/Dockerfile
             tag-prefix: eclipse-temurin-11-jre-alpine-
             tag-latest: false
-            extra-tags: ", ghcr.io/${{ github.repository }}/alpine, ghcr.io/${{ github.repository }}/jre-11-alpine"
+            extra-tags: ", ghcr.io/${{ github.repository }}:alpine, ghcr.io/${{ github.repository }}:jre-11-alpine"
     needs:
       - build-maven
       - build-docker
