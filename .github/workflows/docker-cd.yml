@@ -105,8 +105,8 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         flavor: |
-          latest= ${{ matrix.tag-latest }}
-          prefix= ${{ matrix.tag-prefix }}
+          latest=${{ matrix.tag-latest }}
+          prefix=${{ matrix.tag-prefix }}
           suffix=
 
     - name: Build and Deploy Docker image
