@@ -34,7 +34,7 @@ THE SOFTWARE.
 
   <groupId>io.jenkins.jenkinsfile-runner</groupId>
   <artifactId>parent</artifactId>
-  <version>${revision}${changelist}</version>
+  <version>1.0-beta-31</version>
   <packaging>pom</packaging>
 
   <name>Jenkinsfile Runner</name>
@@ -187,7 +187,7 @@ THE SOFTWARE.
     <connection>scm:git:git://github.com/${gitHubRepo}.git</connection>
     <developerConnection>scm:git:git@github.com:${gitHubRepo}.git</developerConnection>
     <url>https://github.com/${gitHubRepo}</url>
-    <tag>${scmTag}</tag>
+    <tag>1.0-beta-31</tag>
   </scm>
 
   <profiles>
