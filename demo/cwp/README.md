@@ -9,7 +9,7 @@ To build the Docker image, run `make clean build`
 You can experiment with other `Jenkinsfile`s if needed.
 Once the Docker image is built, the demo Jenkinsfile Runner can be started simply as...
 
-    docker run --rm -v $PWD/Jenkinsfile:/workspace/Jenkinsfile jenkins-experimental/jenkinsfile-runner-demo
+    docker run --rm -v $PWD/Jenkinsfile:/workspace/Jenkinsfile jenkins/jenkinsfile-runner
 
 See a more complex demo [here](https://github.com/jenkinsci/custom-war-packager/blob/master/demo/jenkinsfile-runner/)
 
