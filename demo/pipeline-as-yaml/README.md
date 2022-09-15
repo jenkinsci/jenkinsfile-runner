@@ -10,7 +10,7 @@ In this demo we will execute a simple "Hello, world!" Pipeline defined as YAML.
 ```bash
 docker run --rm \
     -v $(pwd)/Jenkinsfile.yml:/workspace/Jenkinsfile.yml \
-    jenkins4eval/jenkinsfile-runner:1.0-beta-14
+    jenkins/jenkinsfile-runner
 ```
 
 ## Running (without Docker)
