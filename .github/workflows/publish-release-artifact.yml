@@ -19,7 +19,7 @@ jobs:
         id: set-version
         run: |
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "::set-output name=project-version::$version"
+          echo "project-version=$version" >> $GITHUB_OUTPUT
           echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
       - run: echo $PROJECT_VERSION
       - name: Fetch artifact
@@ -29,7 +29,7 @@ jobs:
           ARTIFACT_ID=jenkinsfile-runner
           FILE_NAME=jenkinsfile-runner
           PROJECT_VERSION=${{ steps.set-version.outputs.project-version }}
-          echo "::set-output name=file-name::$FILE_NAME"
+          echo "file-name=$FILE_NAME" >> $GITHUB_OUTPUT
           wget -q https://repo.jenkins-ci.org/releases/$GROUP_ID/$ARTIFACT_ID/$PROJECT_VERSION/$ARTIFACT_ID-$PROJECT_VERSION.zip \
             -O $FILE_NAME-$PROJECT_VERSION.zip
       - name: Upload artifact minimum package
