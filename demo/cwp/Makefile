@@ -4,7 +4,7 @@
 ARTIFACT_ID = jenkinsfile-runner-demo
 VERSION = 256.0-test
 CWP_VERSION = 1.3
-JENKINSFILE_RUNNER_TAG=jenkins-experimental/jenkinsfile-runner-cwp-demo
+JENKINSFILE_RUNNER_TAG=jenkins/jenkinsfile-runner
 
 all: clean build
 
