@@ -16,7 +16,7 @@
     <jfr.packaging.skip.assembly>true</jfr.packaging.skip.assembly>
     <skip.integration.tests>true</skip.integration.tests>
     <testcontainers.version>1.17.3</testcontainers.version>
-    <elasticsearch.version>7.17.3</elasticsearch.version>
+    <elasticsearch.version>7.17.6</elasticsearch.version>
   </properties>
 
   <build>
