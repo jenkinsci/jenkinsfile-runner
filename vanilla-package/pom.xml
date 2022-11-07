@@ -15,7 +15,7 @@
     <jfr.name>jenkinsfile-runner-vanilla</jfr.name>
     <jfr.packaging.skip.assembly>true</jfr.packaging.skip.assembly>
     <skip.integration.tests>true</skip.integration.tests>
-    <testcontainers.version>1.17.3</testcontainers.version>
+    <testcontainers.version>1.17.5</testcontainers.version>
     <elasticsearch.version>7.17.6</elasticsearch.version>
   </properties>
 
