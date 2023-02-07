@@ -1,12 +1,17 @@
-name: Publish artifact
+name: Publish Release Artifacts
 
 on:
   release:
     types: [published]
 
+env:
+  IMAGE_NAME: ${{ github.repository }}
+  REGISTRY: ghcr.io
+
 jobs:
-  build:
+  gh-release_artifacts:
     runs-on: ubuntu-latest
+    name: Publish Artifacts to GitHub Releases
 
     steps:
       - uses: actions/checkout@v2
@@ -42,3 +47,59 @@ jobs:
           asset_path: ./${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.zip
           asset_name: ${{ steps.fetch-artifact.outputs.file-name }}-${{ steps.set-version.outputs.project-version }}.zip
           asset_content_type: application/zip
+  
+  gh-registry-images:
+    name: "Deploy Docker Image: ${{ matrix.alias }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - alias: jre-11
+            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
+            tag-prefix: eclipse-temurin-11-jre-
+            tag-latest: true
+            extra-tags: ", ghcr.io/${{ github.repository }}:jre-11"
+          - alias: jre-11-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre-alpine/Dockerfile
+            tag-prefix: eclipse-temurin-11-jre-alpine-
+            tag-latest: false
+            extra-tags: ", ghcr.io/${{ github.repository }}:alpine, ghcr.io/${{ github.repository }}:jre-11-alpine"
+    permissions:
+      contents: read
+      packages: write
+    
+    
+    #TODO: There is slight double build overhead, but we prevent permissions from being exposed too widely
+    steps:
+    - uses: actions/checkout@v2
+    - name: determine version
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - name: Log in to the Container registry
+      uses: docker/login-action@v1.10.0
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1.5.0
+    
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v3.3.0
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        flavor: |
+          latest=${{ matrix.tag-latest }}
+          prefix=${{ matrix.tag-prefix }}
+          suffix=${{ env.RELEASE_VERSION }}
+
+    - name: Build and Deploy Docker image
+      uses: docker/build-push-action@v2.6.1
+      with:
+        context: .
+        file: ${{ matrix.dockerfile }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }} ${{ matrix.extra-tags }}
+        labels: ${{ steps.meta.outputs.labels }}
