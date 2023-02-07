@@ -85,7 +85,7 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>http_request</artifactId>
-      <version>1.11</version>
+      <version>1.16</version>
     </dependency>
 
     <!-- Upper bounds -->
