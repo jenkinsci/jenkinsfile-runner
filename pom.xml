@@ -96,7 +96,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>io.jenkins.lib</groupId>
         <artifactId>support-log-formatter</artifactId>
-        <version>1.0</version>
+        <version>1.2</version>
       </dependency>
       <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
         <groupId>org.apache.commons</groupId>
