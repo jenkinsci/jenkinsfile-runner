@@ -1,5 +1,7 @@
 # Jenkins Templating Engine demo
 
+> **WARNING:** This demo is outdated and needs to be renewed to the new version
+
 This demo shows how to use the [Jenkins Templating Engine](https://plugins.jenkins.io/ptemplating-engine/) (JTE) with Jenkinsfile Runner.
 
 Support for Pipeline as YAML plugin is available starting from 
@@ -13,10 +15,11 @@ This demo uses JCasC to configure the `libraries` directory as a library source 
 
 ```bash
 docker run --rm \
+  -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile \
   -v $(pwd)/demo/jenkins-templating-engine:/workspace \
-  -v $(pwd):/tmp/libraries \
-  -v $(pwd)/demo/jenkins-templating-engine/config:/usr/share/jenkins/ref/casc \
-   jenkins4eval/jenkinsfile-runner:dev \
+  -v $(pwd)/libraries:/tmp/libraries \
+  -v $(pwd)/config:/usr/share/jenkins/ref/casc \
+   ghcr.io/jenkinsci/jenkinsfile-runner:latest \
    -jte -pc /workspace/pipeline_config.groovy
 ```
 

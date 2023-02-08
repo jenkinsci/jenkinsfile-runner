@@ -1,5 +1,7 @@
 # Create a JFR from the jenkins/jenkins Docker image
 
+> **WARNING:** This demo is outdated and needs to be renewed to the new version
+
 This tutorial will show you how to use the community maintained [Jenkins container](https://github.com/jenkinsci/docker) and convert it into a working Jenkinsfile-Runner aka JFR.
 
 The main benefit to doing it this way is that you could use the exact same Jenkins container you run in production locally on your development machine. The community image also has plenty of documentation on how to further customise the Jenkins container.

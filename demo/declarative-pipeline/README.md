@@ -7,7 +7,7 @@ powered by the Jenkinsfile Runner vanilla package.
 ## Running in Docker
 
 ```bash
-docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile jenkins4eval/jenkinsfile-runner:1.0-beta-11
+docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile ghcr.io/jenkinsci/jenkinsfile-runner:latest
 ```
 
 ## Running (without Docker)
