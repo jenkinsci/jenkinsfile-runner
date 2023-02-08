@@ -1,6 +1,8 @@
 Pipeline Library demo
 =====================
 
+> **WARNING:** This demo is outdated and needs to be renewed to the new version
+
 This demo shows how to declare a Pipeline library with JCasC and to use it in the Pipeline.
 Later this demo will be reworked to the native bundling.
 

@@ -1,6 +1,8 @@
 Job Folders demo
 =================
 
+> **WARNING:** This demo is outdated and needs to be renewed to the new version
+
 This demo shows, how to define the Job inside of a folder-structure, defined by parameter ```--job-name```  
 To create folders with additional behavior (e.g. loading of shared libraries), Job DSLs as JCasC can be used.
 
@@ -16,7 +18,7 @@ docker run --rm \
 	-v $(pwd)/demo/job-folders/Jenkinsfile:/workspace/Jenkinsfile \
 	-v $(pwd)/demo/job-folders/folderTemplate.yaml:/usr/share/jenkins/ref/casc/folderTemplate.yaml \
 	-v $(pwd)/vanilla-package/target/plugins:/usr/share/jenkins/ref/plugins \
-	jenkins4eval/jenkinsfile-runner:dev \
+	ghcr.io/jenkinsci/jenkinsfile-runner:latest \
 	--job-name folderWithoutLib/exampleJob
 ```	
 
@@ -27,7 +29,7 @@ docker run --rm \
 	-v $(pwd)/demo/job-folders/JenkinsfileWithLibraryCall:/workspace/Jenkinsfile \
 	-v $(pwd)/demo/job-folders/folderTemplate.yaml:/usr/share/jenkins/ref/casc/folderTemplate.yaml \
 	-v $(pwd)/vanilla-package/target/plugins:/usr/share/jenkins/ref/plugins \
-	jenkins4eval/jenkinsfile-runner:dev \
+	ghcr.io/jenkinsci/jenkinsfile-runner:latest \
 	--job-name myFolder/myJob
 ```
 	
@@ -36,7 +38,7 @@ docker run --rm \
 ```bash
 docker run --rm \
 	-v $(pwd)/demo/job-folders/Jenkinsfile:/workspace/Jenkinsfile \
-	jenkins4eval/jenkinsfile-runner:dev \
+	ghcr.io/jenkinsci/jenkinsfile-runner:latest  \
 	--job-name folder1/folder2/myJob
 ```	
 
@@ -45,7 +47,7 @@ docker run --rm \
 ```bash
 docker run --rm \
 	-v $(pwd)/demo/job-folders/Jenkinsfile:/workspace/Jenkinsfile \
-	jenkins4eval/jenkinsfile-runner:dev \
+	ghcr.io/jenkinsci/jenkinsfile-runner:latest  \
 	--job-name myJob
 ```
 
@@ -53,5 +55,5 @@ docker run --rm \
 ```bash
 docker run --rm \
 	-v $(pwd)/demo/job-folders/Jenkinsfile:/workspace/Jenkinsfile \
-	jenkins4eval/jenkinsfile-runner:dev
+	ghcr.io/jenkinsci/jenkinsfile-runner:latest 
 ```

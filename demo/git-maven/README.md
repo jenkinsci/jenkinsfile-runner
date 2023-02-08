@@ -1,6 +1,8 @@
 # Demo: Git and Maven
 
-Demonstrates a simple Pipeline which checks out from the Git repository and then runs a Maven build.
+> **WARNING:** This demo is outdated and needs to be renewed to the new version
+
+Demonstrates a simple Pipeline which checks out from the Git repository and then runs an Apache Maven build.
 
 ## Run with Docker
 

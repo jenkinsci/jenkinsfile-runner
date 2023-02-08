@@ -31,16 +31,6 @@ CASC_JENKINS_CONFIG=config/jenkins.yaml ../../app/target/appassembler/bin/jenkin
 
 ## Running the demo in Docker
 
-If you have not built the Docker image yet:
-(Refer to the [Packaging to Docker image](../../packaging/docker/README.adoc) page for details on the
-Docker packaging process)
-
 ```bash
-docker build -t jenkinsfile-runner:my-production-jenkins ../..
-```
-
-Now that the image is built, run it, mounting the `config` directory:
-
-```bash
-docker run --rm -v $PWD:/workspace -v $PWD/config:/usr/share/jenkins/ref/casc jenkinsfile-runner:my-production-jenkins
+docker run --rm -v $PWD:/workspace -v $PWD/config:/usr/share/jenkins/ref/casc ghcr.io/jenkinsci/jenkinsfile-runner:latest
 ```
