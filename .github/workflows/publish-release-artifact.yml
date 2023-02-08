@@ -58,13 +58,11 @@ jobs:
           - alias: jre-11
             dockerfile: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
             tag-prefix: eclipse-temurin-11-jre-
-            tag-latest: true
-            extra-tags: ", ghcr.io/${{ github.repository }}:jre-11"
+            extra-tags--pattern: ", ghcr.io/${{ github.repository }}:jre-11-$RELEASE_VERSION"
           - alias: jre-11-alpine
             dockerfile: packaging/docker/unix/eclipse-temurin-11-jre-alpine/Dockerfile
             tag-prefix: eclipse-temurin-11-jre-alpine-
-            tag-latest: false
-            extra-tags: ", ghcr.io/${{ github.repository }}:alpine, ghcr.io/${{ github.repository }}:jre-11-alpine"
+            extra-tags-pattern: ", ghcr.io/${{ github.repository }}:alpine-$RELEASE_VERSION, ghcr.io/${{ github.repository }}:jre-11-alpine-$RELEASE_VERSION"
     permissions:
       contents: read
       packages: write
@@ -73,8 +71,10 @@ jobs:
     #TODO: There is slight double build overhead, but we prevent permissions from being exposed too widely
     steps:
     - uses: actions/checkout@v2
-    - name: determine version
+    - name: Determine version
       run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+    - name: Set extra tags
+      run: echo "RELEASE_EXTRA_TAGS=${{ matrix.extra-tags }}" >> $GITHUB_ENV 
     - name: Log in to the Container registry
       uses: docker/login-action@v1.10.0
       with:
@@ -91,9 +91,9 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         flavor: |
-          latest=${{ matrix.tag-latest }}
+          latest=false
           prefix=${{ matrix.tag-prefix }}
-          suffix=${{ env.RELEASE_VERSION }}
+          suffix=
 
     - name: Build and Deploy Docker image
       uses: docker/build-push-action@v2.6.1
@@ -101,5 +101,5 @@ jobs:
         context: .
         file: ${{ matrix.dockerfile }}
         push: true
-        tags: ${{ steps.meta.outputs.tags }} ${{ matrix.extra-tags }}
+        tags: ${{ steps.meta.outputs.tags }} ${{ env.RELEASE_EXTRA_TAGS }}
         labels: ${{ steps.meta.outputs.labels }}
