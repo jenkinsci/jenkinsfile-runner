@@ -25,7 +25,7 @@ RUN echo "Optimizing plugins..." && \
   rm -rf *.hpi && \
   for f in * ; do echo "Exploding $f..." && mv "$f" "$f.hpi" ; done;
   
-FROM eclipse-temurin:11.0.16_8-jre-alpine
+FROM eclipse-temurin:11.0.18_10-jre-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
 ENV JENKINS_PM_VERSION 2.5.0
