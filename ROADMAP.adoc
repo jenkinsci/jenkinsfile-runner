@@ -4,10 +4,10 @@
 :toclevels: 3
 
 There are multiple major initiatives around Jenkinsfile Runner at the moment.
-There is a https://github.com/jenkinsci/jenkinsfile-runner/projects/1[Public roadmap]
+There is a https://github.com/orgs/jenkinsci/projects/22[Public roadmap]
 that lists these initiatives and provides their status/horizon.
 
-https://github.com/jenkinsci/jenkinsfile-runner/projects/1[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
+https://github.com/orgs/jenkinsci/projects/22[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
 https://community.jenkins.io/t/jenkinsfile-runner-roadmap-discussion/583[image:https://img.shields.io/badge/discourse-forum-brightgreen.svg?style=flat-square[Discourse]]
 
 == How does the roadmap work?
