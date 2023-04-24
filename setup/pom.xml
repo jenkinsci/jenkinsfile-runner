@@ -39,36 +39,6 @@
       <version>${jenkins.version}</version>
     </dependency>
 
-    <!-- Jenkins Modules -->
-    <!-- NOTE(oleg_nenashev): Not all modules are actually needed, e.g. Agent Installer modules unlikely have any use-case in JFR.
-         At the same time, there are plugins which **may** depend on them.
-         Total size of modules is less than 400KB, so optimization is not required here for now.
-    -->
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>instance-identity</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>slave-installer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>windows-slave-installer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>launchd-slave-installer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>upstart-slave-installer</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci.modules</groupId>
-      <artifactId>systemd-slave-installer</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
