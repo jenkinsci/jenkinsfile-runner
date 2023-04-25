@@ -192,7 +192,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         return AccessController.doPrivileged((PrivilegedExceptionAction<ClassLoader>) () -> new ClassLoaderBuilder(new SideClassLoader(getPlatformClassloader()))
                 .collectJars(new File(getLauncherOptions().warDir, "WEB-INF/lib"))
                 // In this mode we also take Jetty from the Jenkins core
-                .collectJars(new File(getLauncherOptions().warDir, "winstone.jar"))
+                .collectJars(new File(getLauncherOptions().warDir, "executable/winstone.jar"))
                 // servlet API needs to be visible to jenkins.war
                 .collectJars(new File(getAppRepo(), "javax/servlet"))
                 .make());
