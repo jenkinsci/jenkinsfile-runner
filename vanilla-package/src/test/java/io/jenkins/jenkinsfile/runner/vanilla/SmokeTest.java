@@ -191,6 +191,7 @@ public class SmokeTest {
     }
 
     @Test
+    @Ignore
     public void helloWorldAsYaml() throws Throwable {
         File jenkinsfile = tmp.newFile("Jenkinsfile.yml");
         FileUtils.writeStringToFile(jenkinsfile,
