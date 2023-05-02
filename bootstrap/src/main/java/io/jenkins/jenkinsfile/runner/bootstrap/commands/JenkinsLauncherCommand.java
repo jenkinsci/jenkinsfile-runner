@@ -212,7 +212,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         String appClassName = getAppClassName();
         if (hasClass(appClassName)) {
             Class<?> c = Class.forName(appClassName);
-            return  ((IApp) c.newInstance()).run(this);
+            return  ((IApp) c.getDeclaredConstructor().newInstance()).run(this);
         }
 
         // Slim packaging (no bundled WAR or plugins)
@@ -223,7 +223,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
         try {
             Class<?> c = setup.loadClass(appClassName);
-            return ((IApp) c.newInstance()).run(this);
+            return ((IApp) c.getDeclaredConstructor().newInstance()).run(this);
         } catch (ClassNotFoundException e) {
             if (setup instanceof URLClassLoader) {
                 throw new ClassNotFoundException(e.getMessage() + " not found in " + getAppRepo() + ","
