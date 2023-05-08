@@ -155,7 +155,7 @@ public class Runner {
     }
 
     private void writeLogTo(PrintStream out) throws IOException, InterruptedException {
-        final int retryCnt = 10;
+        final int retryCnt = 200;
 
         // read output in a retry loop, by default try only once
         // writeWholeLogTo may fail with FileNotFound
