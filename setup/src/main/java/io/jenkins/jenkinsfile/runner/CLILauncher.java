@@ -23,7 +23,8 @@ public class CLILauncher extends JenkinsLauncher<RunCLICommand> {
     @Override
     protected int doLaunch() throws Exception {
         // so that the CLI has all the access to the system
-        ACL.impersonate(ACL.SYSTEM);
+        ACL.as2(ACL.SYSTEM2);
+
         BufferedReader commandIn = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         String line;
         System.out.printf("Connected to Jenkins!%nType 'help' for a list of available commands, or 'exit' to quit.%n");
