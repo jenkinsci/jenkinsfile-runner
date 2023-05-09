@@ -7,6 +7,7 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScriptFlowDefinition;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 @Extension(ordinal = -1000, optional = true)
 public class PipelineAsYAMLDefinitionProvider extends PipelineDefinitionProvider {
@@ -27,6 +28,6 @@ public class PipelineAsYAMLDefinitionProvider extends PipelineDefinitionProvider
 
         // We do not support SCM definition here due to https://github.com/jenkinsci/pipeline-as-yaml-plugin/issues/28
         job.setDefinition(new PipelineAsYamlScriptFlowDefinition(
-                FileUtils.readFileToString(runOptions.jenkinsfile), !runOptions.noSandBox));
+                FileUtils.readFileToString(runOptions.jenkinsfile, Charset.defaultCharset()), !runOptions.noSandBox));
     }
 }
