@@ -70,4 +70,9 @@ public class PipelineRunOptions extends PipelineOptions {
     @CommandLine.Option(names = { "-pc", "--pipeline-configuration" },
             description = "The Pipeline Configuration File when using the Jenkins Templating Engine")
     public File pipelineConfiguration;
+
+    @CommandLine.Option(names = { "-nbl", "--no-build-logs" },
+            description = "Disable writing build logs to stdout. " +
+                    "Plugins that handle build logs will process them as usual")
+    public boolean noBuildLogs = false;
 }

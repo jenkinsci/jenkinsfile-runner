@@ -118,7 +118,9 @@ public class Runner {
 
         b = f.getStartCondition().get();
 
-        writeLogTo(System.out);
+        if (!runOptions.noBuildLogs) {
+          writeLogTo(System.out);
+        }
 
         f.get();    // wait for the completion
         return b.getResult().ordinal;
