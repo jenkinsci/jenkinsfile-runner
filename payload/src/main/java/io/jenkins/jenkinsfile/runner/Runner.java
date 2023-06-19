@@ -119,7 +119,7 @@ public class Runner {
         b = f.getStartCondition().get();
 
         if (!runOptions.noBuildLogs) {
-          writeLogTo(System.out);
+          writeLogTo(System.out, runOptions.writeLogRetryCount);
         }
 
         f.get();    // wait for the completion
@@ -156,9 +156,7 @@ public class Runner {
       return new CauseAction(c);
     }
 
-    private void writeLogTo(PrintStream out) throws IOException, InterruptedException {
-        final int retryCnt = 10;
-
+    private void writeLogTo(PrintStream out, int retryCnt) throws IOException, InterruptedException {
         // read output in a retry loop, by default try only once
         // writeWholeLogTo may fail with FileNotFound
         // exception on a slow/busy machine, if it takes

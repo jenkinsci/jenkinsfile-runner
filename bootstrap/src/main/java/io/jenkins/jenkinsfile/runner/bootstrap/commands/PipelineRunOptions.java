@@ -75,4 +75,8 @@ public class PipelineRunOptions extends PipelineOptions {
             description = "Disable writing build logs to stdout. " +
                     "Plugins that handle build logs will process them as usual")
     public boolean noBuildLogs = false;
+
+    @CommandLine.Option(names = { "-wlrc", "--write-log-retry-count" },
+            description = "Retry count for writing logs to output stream.")
+    public int writeLogRetryCount = 10;
 }
