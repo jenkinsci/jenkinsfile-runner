@@ -76,7 +76,7 @@ public class PipelineRunOptions extends PipelineOptions {
                     "Plugins that handle build logs will process them as usual")
     public boolean noBuildLogs = false;
 
-    @CommandLine.Option(names = { "-wlrc", "--write-log-retry-count" },
-            description = "Retry count for writing logs to output stream.")
-    public int writeLogRetryCount = 10;
+    @CommandLine.Option(names = { "-wlrd", "--write-log-retry-duration" },
+            description = "Duration in seconds to retry writing logs to output stream.")
+    public int writeLogRetryDuration = 60;
 }
