@@ -114,7 +114,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>git-server</artifactId>
-        <version>1.10</version>
+        <version>99.va_0826a_b_cdfa_d</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
