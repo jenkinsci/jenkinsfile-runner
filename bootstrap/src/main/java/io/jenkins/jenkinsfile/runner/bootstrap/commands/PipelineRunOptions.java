@@ -76,8 +76,9 @@ public class PipelineRunOptions extends PipelineOptions {
                     "Plugins that handle build logs will process them as usual")
     public boolean noBuildLogs = false;
 
-    @CommandLine.Option(names = { "-wlrd", "--write-log-retry-duration" },
+    @CommandLine.Option(names = { "-wlit", "--write-log-init-timeout" },
             description = "Initializing build log forwarding to stdout may fail if the build log has not been created yet. " +
-                    "This option sets an overall duration in seconds for retries. A delay between retries is 100ms")
-    public int writeLogRetryDuration = 1;
+                    " This option defines the maximum time (in seconds) to wait for build log creation." +
+                    " Defaults to 1 second.")
+    public int writeLogInitTimeoutSeconds = 1;
 }
