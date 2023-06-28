@@ -119,7 +119,7 @@ public class Runner {
         b = f.getStartCondition().get();
 
         if (!runOptions.noBuildLogs) {
-          writeLogTo(System.out, runOptions.writeLogRetryDuration);
+          writeLogTo(System.out, runOptions.writeLogInitTimeoutSeconds);
         }
 
         f.get();    // wait for the completion
@@ -156,13 +156,13 @@ public class Runner {
       return new CauseAction(c);
     }
 
-    private void writeLogTo(PrintStream out, int retryDuration) throws IOException, InterruptedException {
+    private void writeLogTo(PrintStream out, int timeoutSeconds) throws IOException, InterruptedException {
         // read output in a retry loop,
         // writeWholeLogTo may fail with FileNotFound
         // exception on a slow/busy machine, if it takes
         // longish to create the log file
         int retryInterval = 100;
-        long durationMillis = retryDuration * 1000;
+        long timeoutMillis = timeoutSeconds * 1000;
         long startTime = System.currentTimeMillis(); 
         while (true) {
             try {
@@ -170,7 +170,7 @@ public class Runner {
                 break;
             }
             catch (FileNotFoundException | NoSuchFileException e) {
-                if ( System.currentTimeMillis() - startTime > durationMillis ) {
+                if ( System.currentTimeMillis() - startTime > timeoutMillis ) {
                     throw e;
                 }
                 Thread.sleep(retryInterval);
