@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.85</version>
+    <version>1.90</version>
     <relativePath />
   </parent>
 
@@ -66,11 +66,11 @@ THE SOFTWARE.
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>11</java.level>
-    <jenkins.version>2.346.1</jenkins.version>
-    <jenkins.bom.baseline>bom-2.346.x</jenkins.bom.baseline>
-    <jenkins.bom.version>1500.ve4d05cd32975</jenkins.bom.version>
-    <jetty.version>9.4.43.v20210629</jetty.version>
-    <jenkins-test-harness.version>1589.vc23fca066d5c</jenkins-test-harness.version>
+    <jenkins.version>2.375.4</jenkins.version>
+    <jenkins.bom.baseline>bom-2.375.x</jenkins.bom.baseline>
+    <jenkins.bom.version>2025.v816d28f1e04f</jenkins.bom.version>
+    <jetty.version>10.0.12</jetty.version>
+    <jenkins-test-harness.version>1952.v3a_b_0cd3f5a_03</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <spotbugs.failOnError>false</spotbugs.failOnError>
   </properties>
@@ -108,13 +108,7 @@ THE SOFTWARE.
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
-        <version>2.13.2</version>
-      </dependency>
-      <!-- TODO(oleg_nenashev): Remove explicit version once https://github.com/jenkinsci/bom/issues/681 is fixed -->
-      <dependency>
-        <groupId>org.jenkins-ci.plugins</groupId>
-        <artifactId>git-server</artifactId>
-        <version>1.10</version>
+        <version>2.15.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -123,12 +117,10 @@ THE SOFTWARE.
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
-      <version>4.7.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>3.0.2</version>
     </dependency>
   </dependencies>
 
@@ -143,8 +135,7 @@ THE SOFTWARE.
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <release>11</release>
         </configuration>
       </plugin>
       <plugin>

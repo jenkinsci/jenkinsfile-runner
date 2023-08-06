@@ -10,6 +10,7 @@ import org.jenkinsci.plugins.workflow.flow.FlowExecutionOwner;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -28,6 +29,6 @@ public class SetJenkinsfileLocation extends InvisibleAction implements CpsFlowFa
 
     @Override
     public CpsFlowExecution create(FlowDefinition def, FlowExecutionOwner owner, List<? extends Action> actions) throws IOException {
-        return new CpsFlowExecution(FileUtils.readFileToString(jenkinsfile), this.sandboxedExecution, owner);
+        return new CpsFlowExecution(FileUtils.readFileToString(jenkinsfile, Charset.defaultCharset()), this.sandboxedExecution, owner);
     }
 }

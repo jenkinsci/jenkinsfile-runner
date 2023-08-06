@@ -55,10 +55,13 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>git</artifactId>
     </dependency>
+    <!-- Exclude this outdated plugin since it will fail with higher managed dependencies
+         coming from the Jenkins core parent bom -->
+    <!--
     <dependency>
       <groupId>io.jenkins.plugins</groupId>
       <artifactId>pipeline-as-yaml</artifactId>
-      <version>0.12-rc</version>
+      <version>0.16-rc</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.code.gson</groupId>
@@ -66,6 +69,7 @@
         </exclusion>
       </exclusions>
     </dependency>
+    -->
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>job-dsl</artifactId>
@@ -85,7 +89,6 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>http_request</artifactId>
-      <version>1.16</version>
     </dependency>
 
     <!-- Upper bounds -->

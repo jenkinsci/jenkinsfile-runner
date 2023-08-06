@@ -31,7 +31,7 @@ public class JenkinsfileRunnerLauncher extends JenkinsLauncher<RunJenkinsfileCom
             // We are either in the shared environment (uberjar, repo with plugins) where we can already classload the Runner class directly.
             // Or not, and then we consult with the Jenkins core loader and plugin uber classloader
             Class<?> c = command.hasClass(PIPELINE_JOB_CLASS_NAME) ? Class.forName(RUNNER_CLASS_NAME) : getRunnerClassFromJar();
-            return (int) c.getMethod("run", PipelineRunOptions.class).invoke(c.newInstance(), command.pipelineRunOptions);
+            return (int) c.getMethod("run", PipelineRunOptions.class).invoke(c.getConstructor().newInstance(), command.pipelineRunOptions);
         }
     }
 

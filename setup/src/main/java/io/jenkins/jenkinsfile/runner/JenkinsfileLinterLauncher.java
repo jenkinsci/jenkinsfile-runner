@@ -38,7 +38,7 @@ public class JenkinsfileLinterLauncher extends JenkinsLauncher<LintJenkinsfileCo
                 // Attempt to call the scriptToPipelineDef method of the Converter class. This is the same as what
                 // happens when a Jenkinsfile is POSTed to $JENKINS_URL/pipeline-model-converter/validate.
                 System.out.println("Linting...");
-                cc.getMethod("scriptToPipelineDef", String.class).invoke(cc.newInstance(), getJenkinsfileAsString());
+                cc.getMethod("scriptToPipelineDef", String.class).invoke(cc.getConstructor().newInstance(), getJenkinsfileAsString());
                 System.out.println("Done");
                 return 0;
             } catch (Exception e) {

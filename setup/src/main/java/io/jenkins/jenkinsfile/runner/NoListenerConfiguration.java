@@ -3,6 +3,8 @@ package io.jenkins.jenkinsfile.runner;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import java.util.Collections;
+
 import javax.servlet.ServletContextListener;
 
 /**
@@ -23,6 +25,6 @@ final class NoListenerConfiguration extends AbstractLifeCycle {
 
     @Override
     protected void doStart() {
-        context.setEventListeners(null);
+        context.setEventListeners(Collections.emptyList());
     }
 }
