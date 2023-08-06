@@ -75,4 +75,10 @@ public class PipelineRunOptions extends PipelineOptions {
             description = "Disable writing build logs to stdout. " +
                     "Plugins that handle build logs will process them as usual")
     public boolean noBuildLogs = false;
+
+    @CommandLine.Option(names = { "-wlit", "--write-log-init-timeout" },
+            description = "Initializing build log forwarding to stdout may fail if the build log has not been created yet. " +
+                    " This option defines the maximum time (in seconds) to wait for build log creation." +
+                    " Defaults to 1 second.")
+    public int writeLogInitTimeoutSeconds = 1;
 }
