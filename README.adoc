@@ -5,7 +5,7 @@
 
 https://github.com/jenkinsci/jenkinsfile-runner/releases/latest[image:https://img.shields.io/github/v/release/jenkinsci/jenkinsfile-runner?include_prereleases&label=changelog[GitHub release (latest by date including pre-releases)]]
 https://github.com/jenkinsci/jenkinsfile-runner/graphs/contributors[image:https://img.shields.io/github/contributors/jenkinsci/jenkinsfile-runner[GitHub contributors]]
-link:./ROADMAP.adoc[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
+link:https://github.com/orgs/jenkinsci/projects/22[image:https://img.shields.io/badge/JFR-roadmap-blue[Roadmap]]
 https://community.jenkins.io/c/contributing/jenkinsfile-runner/22[image:https://img.shields.io/badge/discourse-forum-brightgreen.svg?style=flat-square[Discourse]]
 https://gitter.im/jenkinsci/jenkinsfile-runner[image:https://badges.gitter.im/jenkinsci/jenkinsfile-runner.svg[Gitter]]
 
@@ -316,7 +316,7 @@ https://jenkins.io/security/#reporting-vulnerabilities[vulnerability reporting g
 
 == Project roadmap
 
-See the roadmap link:./ROADMAP.adoc[here].
+See the roadmap link:https://github.com/orgs/jenkinsci/projects/22[here].
 
 == Further reading
 
