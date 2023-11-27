@@ -70,7 +70,7 @@ THE SOFTWARE.
     <jenkins.bom.baseline>bom-2.375.x</jenkins.bom.baseline>
     <jenkins.bom.version>2025.v816d28f1e04f</jenkins.bom.version>
     <jetty.version>10.0.12</jetty.version>
-    <jenkins-test-harness.version>1952.v3a_b_0cd3f5a_03</jenkins-test-harness.version>
+    <jenkins-test-harness.version>2112.ve584e0edc63b_</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <spotbugs.failOnError>false</spotbugs.failOnError>
   </properties>
