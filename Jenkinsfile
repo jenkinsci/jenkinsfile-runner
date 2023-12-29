@@ -41,7 +41,7 @@ for (int i = 0; i < platforms.size(); ++i) {
                               tools: [java(), spotBugs(pattern: '**/target/spotbugsXml.xml')]
                             )
 
-                            publishCoverage adapters: [jacocoAdapter(mergeToOneReport: true, path: 'vanilla-package/target/site/jacoco-aggregate/*.xml')]
+                            recordCoverage(tools: [[parser: 'JACOCO', pattern: 'vanilla-package/target/site/jacoco-aggregate/*.xml']], sourceCodeRetention: 'MODIFIED')
                         }
                     }
                 }
