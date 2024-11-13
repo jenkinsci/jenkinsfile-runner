@@ -64,7 +64,7 @@
             </goals>
             <configuration>
               <!--TODO: Add option to skip this step -->
-              <minimumJavaVersion>8</minimumJavaVersion>
+              <minimumJavaVersion>11</minimumJavaVersion>
               <jenkinsCoreVersionOverride>${jenkins.version}</jenkinsCoreVersionOverride>
               <outputDirectory>${project.build.directory}/plugins</outputDirectory>
             </configuration>

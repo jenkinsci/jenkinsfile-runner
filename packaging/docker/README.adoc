@@ -27,7 +27,7 @@ Examples: `eclipse-temurin-11-jre`, `eclipse-temurin-11-jre-alpine`
 
 * `JVM_VENDOR` - source of the JVM in lowercase, e.g. Eclipse Temurin.
 * `JAVA_VERSION` - version of the JVM.
-  Right now `11` are used, fine-grain versions might be added in the future.
+  Right now `17` are used, fine-grain versions might be added in the future.
 * `JVM_CLASSIFIER` - Additional information about the JVM used in the image.
   It might refer to `jdk`/`jre` or a JVM type (e.g. `jre-alpine`, `openj9`).
   Multiple classifiers might be used.
