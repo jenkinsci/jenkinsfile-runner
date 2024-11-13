@@ -16,7 +16,7 @@ Map branches = [:]
 for (int i = 0; i < platforms.size(); ++i) {
     String label = platforms[i]
     branches[label] = {
-        node("docker && linux-amd64") {
+        node("maven-17") {
             timestamps {
                 ws("platform_${label}_${branchName}_${buildNumber}") {
                     stage('Checkout') {

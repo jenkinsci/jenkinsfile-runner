@@ -14,7 +14,6 @@ ADD packaging-parent-resources /jenkinsfile-runner/packaging-parent-resources
 ADD packaging-parent-pom /jenkinsfile-runner/packaging-parent-pom
 ADD packaging-slim-parent-pom /jenkinsfile-runner/packaging-slim-parent-pom
 ADD pom.xml /jenkinsfile-runner/pom.xml
-ADD .git /jenkinsfile-runner/.git
 RUN cd /jenkinsfile-runner && mvn clean package --batch-mode -ntp --show-version --errors \
   -DargLine="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
 
