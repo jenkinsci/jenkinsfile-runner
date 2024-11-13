@@ -14,13 +14,12 @@ ADD packaging-parent-resources /jenkinsfile-runner/packaging-parent-resources
 ADD packaging-parent-pom /jenkinsfile-runner/packaging-parent-pom
 ADD packaging-slim-parent-pom /jenkinsfile-runner/packaging-slim-parent-pom
 ADD pom.xml /jenkinsfile-runner/pom.xml
-RUN cd /jenkinsfile-runner && mvn clean package --batch-mode -ntp --show-version --errors \
-  -DargLine="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
+ADD .git /jenkinsfile-runner/.git
+RUN cd /jenkinsfile-runner && mvn clean package --batch-mode -ntp --show-version --errors -DargLine="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
 
 # Prepare the Jenkins core
 RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
-  rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help \
-    /app/jenkins/WEB-INF/detached-plugins /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
+  rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
   
 FROM eclipse-temurin:17-jre-alpine
 ENV JENKINS_UC https://updates.jenkins.io
