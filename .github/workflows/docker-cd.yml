@@ -12,8 +12,6 @@ env:
 jobs:
   build-maven:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:22.04
     steps:
     - name: Install dependencies
       run: |
@@ -34,8 +32,6 @@ jobs:
 
   build-docker:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:22.04
     env:
       IMAGE_NAME: ${{ github.repository }}
       REGISTRY: ghcr.io
@@ -81,8 +77,6 @@ jobs:
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:22.04
     strategy:
       fail-fast: false
       matrix:
