@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.107</version>
+    <version>1.126</version>
     <relativePath />
   </parent>
 
@@ -65,12 +65,12 @@ THE SOFTWARE.
     <changelist>-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>11</java.level>
-    <jenkins.version>2.375.4</jenkins.version>
-    <jenkins.bom.baseline>bom-2.375.x</jenkins.bom.baseline>
-    <jenkins.bom.version>2025.v816d28f1e04f</jenkins.bom.version>
-    <jetty.version>10.0.12</jetty.version>
-    <jenkins-test-harness.version>2140.ve736dc2b_b_d2c</jenkins-test-harness.version>
+    <java.level>17</java.level>
+    <jenkins.version>2.462.3</jenkins.version>
+    <jenkins.bom.baseline>bom-2.462.x</jenkins.bom.baseline>
+    <jenkins.bom.version>3387.v0f2773fa_3200</jenkins.bom.version>
+    <jetty.version>10.0.24</jetty.version>
+    <jenkins-test-harness.version>2287.v4f0199c6eda_8</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <spotbugs.failOnError>false</spotbugs.failOnError>
   </properties>
@@ -101,14 +101,14 @@ THE SOFTWARE.
       <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.12.0</version>
+        <version>3.17.0</version>
       </dependency>
 
       <!-- Plugins -->
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
-        <version>2.16.0</version>
+        <version>2.16.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -135,7 +135,7 @@ THE SOFTWARE.
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <release>11</release>
+          <release>17</release>
         </configuration>
       </plugin>
       <plugin>
@@ -207,7 +207,7 @@ THE SOFTWARE.
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.8</version>
+            <version>0.8.12</version>
             <executions>
               <execution>
                 <goals>
