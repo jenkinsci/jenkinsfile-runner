@@ -23,7 +23,7 @@ The following format is used:
 ${JVM_VENDOR}-${JAVA_VERSION}[-${JVM_CLASSIFIER1}][-${JVM_CLASSIFIER2}]...[-${OS}]
 ----
 
-Examples: `eclipse-temurin-11-jre`, `eclipse-temurin-11-jre-alpine`
+Examples: `eclipse-temurin-17-jre`, `eclipse-temurin-17-jre-alpine`
 
 * `JVM_VENDOR` - source of the JVM in lowercase, e.g. Eclipse Temurin.
 * `JAVA_VERSION` - version of the JVM.

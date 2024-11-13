@@ -32,11 +32,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - alias: jre-11
-            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre/Dockerfile
+          - alias: jre-17
+            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre/Dockerfile
             tags: test
-          - alias: jre-11-alpine
-            dockerfile: packaging/docker/unix/eclipse-temurin-11-jre-alpine/Dockerfile
+          - alias: jre-17-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre-alpine/Dockerfile
             tags: test-alpine
     name: "Build Docker image: ${{ matrix.alias }}"
 
