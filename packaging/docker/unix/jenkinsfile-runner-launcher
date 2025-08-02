@@ -19,6 +19,16 @@ if [ -z "${JENKINSFILE_PATH}" ] ; then
   fi
 fi
 
+# check on plugins file set
+if [ -z "${JENKINSPLUGINS}" ] ; then
+  if [ -f "/workspace/plugins.txt" ] ; then
+   JENKINSPLUGINS="/workspace/plugins.txt"
+  else
+   # default set
+   JENKINSPLUGINS="/usr/share/jenkins/ref/plugins"
+  fi
+fi
+
 /app/bin/jenkinsfile-runner \
     --jenkins-war /app/jenkins \
     --plugins /usr/share/jenkins/ref/plugins \
