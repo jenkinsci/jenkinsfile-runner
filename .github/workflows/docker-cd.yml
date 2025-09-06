@@ -24,7 +24,7 @@ jobs:
         distribution: temurin
     - name: Build with Maven
       working-directory: .
-      run: mvn -B package -Dset.changelist -DargLine="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
+      run: mvn -B package
 
   build-docker:
     runs-on: ubuntu-latest
