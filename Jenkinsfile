@@ -25,7 +25,7 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     stage('Build') {
                         timeout(60) {
-                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco,run-its', '--add-opens=java.base/java.util=ALL-UNNAMED', '--add-opens=java.base/java.lang=ALL-UNNAMED', '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED'], '17')
+                            infra.runMaven(['clean', 'install', '-Dset.changelist', '-Dmaven.test.failure.ignore=true', '-Denvironment=test', '-Ppackage-app,package-vanilla,jacoco,run-its'], '17')
                         }
                     }
 
