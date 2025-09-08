@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.126</version>
+    <version>1.139</version>
     <relativePath />
   </parent>
 
@@ -66,10 +66,10 @@ THE SOFTWARE.
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>17</java.level>
-    <jenkins.version>2.462.3</jenkins.version>
-    <jenkins.bom.baseline>bom-2.462.x</jenkins.bom.baseline>
-    <jenkins.bom.version>3387.v0f2773fa_3200</jenkins.bom.version>
-    <jetty.version>10.0.24</jetty.version>
+    <jenkins.version>2.516.2</jenkins.version>
+    <jenkins.bom.baseline>bom-2.516.x</jenkins.bom.baseline>
+    <jenkins.bom.version>5353.v3dec76e40169</jenkins.bom.version>
+    <jetty.version>12.0.25</jetty.version>
     <jenkins-test-harness.version>2287.v4f0199c6eda_8</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <spotbugs.failOnError>false</spotbugs.failOnError>
