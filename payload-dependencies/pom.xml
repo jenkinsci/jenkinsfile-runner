@@ -32,6 +32,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>io.jenkins.plugins</groupId>
+      <artifactId>asm-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jenkins-ci.plugins.workflow</groupId>
       <artifactId>workflow-cps</artifactId>
     </dependency>
