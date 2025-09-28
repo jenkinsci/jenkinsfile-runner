@@ -109,7 +109,7 @@ public class SmokeTest {
 
         int result = new JFRTestUtil().run(jenkinsfile);
         assertThat("JFR should fail when there is no Jenkinsfile", result, not(equalTo(0)));
-        assertThat(systemOut.getLog(), containsString("FileNotFoundException"));
+        assertThat(systemOut.getLog(), containsString("NoSuchFileException"));
     }
 
     // TODO: uncomment once JFR can do something about timeouts internally
@@ -220,7 +220,7 @@ public class SmokeTest {
             System.setProperty(ConfigurationAsCode.CASC_JENKINS_CONFIG_PROPERTY, jcasc.getAbsolutePath());
             int result = new JFRTestUtil().runAsCLI(jenkinsfile);
             assertThat("Jenkinsfile Runner execution should have failed", result, not(equalTo(0)));
-            assertThat(systemErr.getLog(), containsString("No configurator for the following root elements globalNodeProperties"));
+            assertThat(systemErr.getLog(), containsString("No configurator for the following root elements:globalNodeProperties"));
         } finally {
             System.clearProperty(ConfigurationAsCode.CASC_JENKINS_CONFIG_PROPERTY);
         }

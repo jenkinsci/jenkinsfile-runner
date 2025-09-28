@@ -1,6 +1,6 @@
 FROM jenkins/jenkinsfile-runner:build-mvncache as jenkinsfilerunner-mvncache
 
-FROM maven:3.8.6-eclipse-temurin-11 as jenkinsfilerunner-build
+FROM maven:3.9.9-eclipse-temurin-17-focal as jenkinsfilerunner-build
 RUN apt-get update && apt-get install -y unzip
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 COPY --from=jenkinsfilerunner-mvncache /mavenrepo /mavenrepo
@@ -18,18 +18,14 @@ RUN cd /jenkinsfile-runner && mvn clean package --batch-mode -ntp --show-version
 
 # Prepare the Jenkins core
 RUN mkdir /app && unzip /jenkinsfile-runner/vanilla-package/target/war/jenkins.war -d /app/jenkins && \
-  rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar \
-# Delete HPI files and use the archive directories instead
-RUN echo "Optimizing plugins..." && \
-  cd /jenkinsfile-runner/vanilla-package/target/plugins && \
-  rm -rf *.hpi && \
-  for f in * ; do echo "Exploding $f..." && mv "$f" "$f.hpi" ; done;
+  rm -rf /app/jenkins/scripts /app/jenkins/jsbundles /app/jenkins/css /app/jenkins/images /app/jenkins/help /app/jenkins/WEB-INF/detached-plugins /app/jenkins/WEB-INF/jenkins-cli.jar /app/jenkins/WEB-INF/lib/jna-4.5.2.jar
   
-FROM eclipse-temurin:11.0.18_10-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 ENV JENKINS_UC https://updates.jenkins.io
 ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc
-ENV JENKINS_PM_VERSION 2.5.0
+ENV JENKINS_PM_VERSION 2.13.2
 ENV JENKINS_PM_URL https://github.com/jenkinsci/plugin-installation-manager-tool/releases/download/${JENKINS_PM_VERSION}/jenkins-plugin-manager-${JENKINS_PM_VERSION}.jar
+ENV JDK_17 true
 
 USER root
 RUN apk add --update --no-cache wget git \
