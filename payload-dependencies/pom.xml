@@ -146,7 +146,7 @@
           <webApp>
             <contextPath>/jenkins</contextPath>
           </webApp>
-          <minimumJavaVersion>1.${java.level}</minimumJavaVersion>
+          <minimumJavaVersion>${java.level}</minimumJavaVersion>
           <systemProperties>
             <hudson.Main.development>${hudson.Main.development}</hudson.Main.development>
           </systemProperties>

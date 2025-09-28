@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.139</version>
+    <version>1.140</version>
     <relativePath />
   </parent>
 
@@ -69,7 +69,7 @@ THE SOFTWARE.
     <jenkins.version>2.516.2</jenkins.version>
     <jenkins.bom.baseline>bom-2.516.x</jenkins.bom.baseline>
     <jenkins.bom.version>5353.v3dec76e40169</jenkins.bom.version>
-    <jetty.version>12.0.25</jetty.version>
+    <jetty.version>12.0.27</jetty.version>
     <jenkins-test-harness.version>2287.v4f0199c6eda_8</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <spotbugs.failOnError>false</spotbugs.failOnError>
@@ -101,7 +101,7 @@ THE SOFTWARE.
       <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.17.0</version>
+        <version>3.18.0</version>
       </dependency>
 
       <!-- Plugins -->
@@ -164,6 +164,13 @@ THE SOFTWARE.
       <id>repo.jenkins-ci.org</id>
       <url>https://repo.jenkins-ci.org/public/</url>
       <!-- allow snapshots -->
+    </repository>
+    <repository>
+      <id>maven-central</id>
+      <url>https://repo1.maven.org/maven2/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
