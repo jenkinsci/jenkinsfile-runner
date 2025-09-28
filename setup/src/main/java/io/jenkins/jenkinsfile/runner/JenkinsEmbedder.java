@@ -73,14 +73,14 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
 
 import io.jenkins.jenkinsfile.runner.util.ExecutionEnvironment;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
 import io.jenkins.jenkinsfile.runner.util.JenkinsRecipe;
 import io.jenkins.jenkinsfile.runner.util.LenientRunnable;
 import io.jenkins.lib.support_log_formatter.SupportLogFormatter;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import org.apache.commons.io.FileUtils;
@@ -205,9 +205,9 @@ public abstract class JenkinsEmbedder implements RootAction {
         // TODO: set NOOP API
         // jenkins.setCrumbIssuer(new TestCrumbIssuer());
 
-        jenkins.servletContext.setAttribute("app",jenkins);
-        jenkins.servletContext.setAttribute("version","?");
-        WebAppMain.installExpressionFactory(new ServletContextEvent(jenkins.servletContext));
+        jenkins.getServletContext().setAttribute("app",jenkins);
+        jenkins.getServletContext().setAttribute("version","?");
+        WebAppMain.installExpressionFactory(new ServletContextEvent(jenkins.getServletContext()));
 
         // set a default JDK to be the one that the harness is using.
         jenkins.getJDKs().add(new JDK("default",System.getProperty("java.home")));
@@ -685,7 +685,7 @@ public abstract class JenkinsEmbedder implements RootAction {
         } finally {
             jettyLevel(Level.INFO);
         }
-        MIME_TYPES.addMimeMapping("js","application/javascript");
+        // FIXME: MIME_TYPES.addMimeMapping("js","application/javascript");
         Functions.DEBUG_YUI = true;
 
         try {
