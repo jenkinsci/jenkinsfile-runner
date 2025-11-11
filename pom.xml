@@ -101,7 +101,7 @@ THE SOFTWARE.
       <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.12.0</version>
+        <version>3.18.0</version>
       </dependency>
 
       <!-- Plugins -->
