@@ -65,7 +65,8 @@ THE SOFTWARE.
     <changelist>-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>17</java.level>
+    <java.level>21</java.level>
+    <maven.compiler.release>21</maven.compiler.release>
     <jenkins.version>2.516.2</jenkins.version>
     <jenkins.bom.baseline>bom-2.516.x</jenkins.bom.baseline>
     <jenkins.bom.version>5353.v3dec76e40169</jenkins.bom.version>
@@ -125,6 +126,17 @@ THE SOFTWARE.
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- 1.31 from the Jenkins parent ships ASM that does not know Java 21
+               class files (major version 65). 1.35 understands them. -->
+          <groupId>org.kohsuke</groupId>
+          <artifactId>access-modifier-checker</artifactId>
+          <version>1.35</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <!-- to treat executable-war type of artifact correctly -->
@@ -135,7 +147,7 @@ THE SOFTWARE.
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <release>17</release>
+          <release>21</release>
         </configuration>
       </plugin>
       <plugin>
