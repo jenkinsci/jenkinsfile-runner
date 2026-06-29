@@ -139,6 +139,18 @@ THE SOFTWARE.
         </configuration>
       </plugin>
       <plugin>
+        <!-- Java 17+ needs explicit module opens for XStream serialization
+             (hudson.model.ParametersAction#parameterDefinitionNames touches
+             AbstractList.modCount via reflection) and for the appassembler /
+             plugin-manager classloader plumbing. Mirrors the flags baked into
+             app/pom.xml's appassembler config so 'mvn test' has the same JVM
+             posture as the produced bin/jenkinsfile-runner script. -->
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -235,7 +247,7 @@ THE SOFTWARE.
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin.version}</version>
             <configuration>
-              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true ${argLine}</argLine>
+              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED ${argLine}</argLine>
             </configuration>
           </plugin>
         </plugins>

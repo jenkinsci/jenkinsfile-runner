@@ -88,6 +88,11 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         contextPath = validateHttpPath(launcherOptions.httpPath);
         WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
+        // Jetty 12 EE9: skip webdefault-ee9.xml. JFR runs Jenkins headlessly so the
+        // default servlet listeners (e.g. IntrospectorCleaner) are not needed; loading
+        // them via the WebAppClassLoader fails because the jetty-ee9-servlet jar lives
+        // on the server classloader, not the webapp one. Aligns with NoListenerConfiguration.
+        context.setDefaultsDescriptor(null);
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
