@@ -23,7 +23,7 @@
               <goal>assemble</goal>
             </goals>
             <configuration>
-              <extraJvmArguments>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED</extraJvmArguments>
+              <extraJvmArguments>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --enable-native-access=ALL-UNNAMED</extraJvmArguments>
               <programs>
                 <program>
                   <id>jenkinsfile-runner</id>
