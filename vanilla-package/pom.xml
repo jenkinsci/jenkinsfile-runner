@@ -229,6 +229,7 @@
               <excludes>
                 <exclude>**/its/**.java</exclude>
               </excludes>
+              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED ${argLine}</argLine>
             </configuration>
           </plugin>
         </plugins>
