@@ -58,11 +58,11 @@ jobs:
           - alias: jre-21
             dockerfile: packaging/docker/unix/eclipse-temurin-21-jre/Dockerfile
             tag-prefix: eclipse-temurin-21-jre-
-            extra-tags--pattern: ", ghcr.io/${{ github.repository }}:jre-21-$RELEASE_VERSION"
+            extra-tags: ", ghcr.io/${{ github.repository }}:jre-21-$RELEASE_VERSION"
           - alias: jre-21-alpine
             dockerfile: packaging/docker/unix/eclipse-temurin-21-jre-alpine/Dockerfile
             tag-prefix: eclipse-temurin-21-jre-alpine-
-            extra-tags-pattern: ", ghcr.io/${{ github.repository }}:alpine-$RELEASE_VERSION, ghcr.io/${{ github.repository }}:jre-21-alpine-$RELEASE_VERSION"
+            extra-tags: ", ghcr.io/${{ github.repository }}:alpine-$RELEASE_VERSION, ghcr.io/${{ github.repository }}:jre-21-alpine-$RELEASE_VERSION"
     permissions:
       contents: read
       packages: write
