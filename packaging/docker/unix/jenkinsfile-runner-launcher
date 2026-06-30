@@ -6,7 +6,7 @@ fi
 if [ -n "$JDK_11" ] ; then
   export JAVA_OPTS="--illegal-access=permit $JAVA_OPTS"
 fi
-if [ -n "$JDK_17" ] ; then
+if [ -n "$JDK_17" ] || [ -n "$JDK_21" ] ; then
   export JAVA_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED $JAVA_OPTS"
 fi
 

@@ -1,4 +1,4 @@
-FROM maven:3.9.9-eclipse-temurin-17-focal
+FROM maven:3.9-eclipse-temurin-21
 WORKDIR /src
 ENV MAVEN_OPTS=-Dmaven.repo.local=/mavenrepo
 ADD . /src

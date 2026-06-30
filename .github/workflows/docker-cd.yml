@@ -17,10 +17,10 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Set up JDK 17
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: 17
+        java-version: 21
         distribution: temurin
     - name: Build with Maven
       working-directory: .
@@ -35,11 +35,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - alias: jre-17
-            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre/Dockerfile
+          - alias: jre-21
+            dockerfile: packaging/docker/unix/eclipse-temurin-21-jre/Dockerfile
             tags: test
-          - alias: jre-17-alpine
-            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre-alpine/Dockerfile
+          - alias: jre-21-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-21-jre-alpine/Dockerfile
             tags: test-alpine
     name: "Build Docker image: ${{ matrix.alias }}"
 
@@ -75,16 +75,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - alias: jre-17
-            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre/Dockerfile
-            tag-prefix: eclipse-temurin-17-jre-
+          - alias: jre-21
+            dockerfile: packaging/docker/unix/eclipse-temurin-21-jre/Dockerfile
+            tag-prefix: eclipse-temurin-21-jre-
             tag-latest: true
-            extra-tags: ", ghcr.io/${{ github.repository }}:jre-17"
-          - alias: jre-17-alpine
-            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre-alpine/Dockerfile
-            tag-prefix: eclipse-temurin-17-jre-alpine-
+            extra-tags: ", ghcr.io/${{ github.repository }}:jre-21"
+          - alias: jre-21-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-21-jre-alpine/Dockerfile
+            tag-prefix: eclipse-temurin-21-jre-alpine-
             tag-latest: false
-            extra-tags: ", ghcr.io/${{ github.repository }}:alpine, ghcr.io/${{ github.repository }}:jre-17-alpine"
+            extra-tags: ", ghcr.io/${{ github.repository }}:alpine, ghcr.io/${{ github.repository }}:jre-21-alpine"
     needs:
       - build-maven
       - build-docker

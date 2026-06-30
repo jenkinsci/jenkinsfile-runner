@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'temurin'
       - name: Set version
         id: set-version
@@ -55,14 +55,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - alias: jre-17
-            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre/Dockerfile
-            tag-prefix: eclipse-temurin-17-jre-
-            extra-tags--pattern: ", ghcr.io/${{ github.repository }}:jre-17-$RELEASE_VERSION"
-          - alias: jre-17-alpine
-            dockerfile: packaging/docker/unix/eclipse-temurin-17-jre-alpine/Dockerfile
-            tag-prefix: eclipse-temurin-17-jre-alpine-
-            extra-tags-pattern: ", ghcr.io/${{ github.repository }}:alpine-$RELEASE_VERSION, ghcr.io/${{ github.repository }}:jre-17-alpine-$RELEASE_VERSION"
+          - alias: jre-21
+            dockerfile: packaging/docker/unix/eclipse-temurin-21-jre/Dockerfile
+            tag-prefix: eclipse-temurin-21-jre-
+            extra-tags--pattern: ", ghcr.io/${{ github.repository }}:jre-21-$RELEASE_VERSION"
+          - alias: jre-21-alpine
+            dockerfile: packaging/docker/unix/eclipse-temurin-21-jre-alpine/Dockerfile
+            tag-prefix: eclipse-temurin-21-jre-alpine-
+            extra-tags-pattern: ", ghcr.io/${{ github.repository }}:alpine-$RELEASE_VERSION, ghcr.io/${{ github.repository }}:jre-21-alpine-$RELEASE_VERSION"
     permissions:
       contents: read
       packages: write
