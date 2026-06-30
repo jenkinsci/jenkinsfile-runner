@@ -4,6 +4,7 @@ import hudson.ClassicPluginStrategy;
 import hudson.PluginManager;
 import hudson.util.PluginServletFilter;
 import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
+import io.jenkins.jenkinsfile.runner.bootstrap.SideClassLoader;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherCommand;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions;
 import io.jenkins.jenkinsfile.runner.util.JenkinsHomeLoader;
@@ -249,7 +250,9 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
     }
 
     protected Class<?> getClassFromJar(String classname) throws IOException, ClassNotFoundException {
-        ClassLoader cl = new ClassLoaderBuilder(jenkins.getPluginManager().uberClassLoader)
+        // Payload runs against the plugin uber classloader but must still see bootstrap CLI types
+        // (e.g. PipelineRunOptions) when JenkinsfileRunnerLauncher invokes Runner.run() reflectively.
+        ClassLoader cl = new ClassLoaderBuilder(new SideClassLoader(jenkins.getPluginManager().uberClassLoader))
             .collectJars(command.getPayloadJarDir())
             .make();
         Thread.currentThread().setContextClassLoader(cl);
