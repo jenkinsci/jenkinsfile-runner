@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.107</version>
+    <version>1.140</version>
     <relativePath />
   </parent>
 
@@ -65,12 +65,17 @@ THE SOFTWARE.
     <changelist>-SNAPSHOT</changelist>
     <gitHubRepo>jenkinsci/jenkinsfile-runner</gitHubRepo>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>11</java.level>
-    <jenkins.version>2.375.4</jenkins.version>
-    <jenkins.bom.baseline>bom-2.375.x</jenkins.bom.baseline>
-    <jenkins.bom.version>2025.v816d28f1e04f</jenkins.bom.version>
-    <jetty.version>10.0.12</jetty.version>
-    <jenkins-test-harness.version>2140.ve736dc2b_b_d2c</jenkins-test-harness.version>
+    <java.level>21</java.level>
+    <maven.compiler.release>21</maven.compiler.release>
+    <jenkins.version>2.555.3</jenkins.version>
+    <jenkins.bom.baseline>bom-2.555.x</jenkins.bom.baseline>
+    <jenkins.bom.version>6641.vfe1b_b_3c48a_4a_</jenkins.bom.version>
+    <!-- Jenkins core 2.555.x brings spotbugs-annotations 4.9.8 transitively;
+         the runner parent 1.140 still ships 4.9.4. Match core to satisfy
+         RequireUpperBoundDeps. -->
+    <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version>
+    <jetty.version>12.0.27</jetty.version>
+    <jenkins-test-harness.version>2573.vd91b_8a_43e019</jenkins-test-harness.version>
     <!--TODO: Reenable once all the issues are fixed (JENKINS-57353)-->
     <spotbugs.failOnError>false</spotbugs.failOnError>
   </properties>
@@ -101,14 +106,41 @@ THE SOFTWARE.
       <dependency> <!-- Upper bounds prevention between Pipeline as YAML and JCAsC-->
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.18.0</version>
+        <version>3.20.0</version>
+      </dependency>
+      <!-- Jenkins 2.555.x brings asm-api plugin 9.10.1; the Jenkins parent
+           still pins org.ow2.asm:asm at 9.9.1. Align to satisfy RequireUpperBoundDeps. -->
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>9.10.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-commons</artifactId>
+        <version>9.10.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-tree</artifactId>
+        <version>9.10.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-util</artifactId>
+        <version>9.10.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-analysis</artifactId>
+        <version>9.10.1</version>
       </dependency>
 
       <!-- Plugins -->
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>pipeline-utility-steps</artifactId>
-        <version>2.16.0</version>
+        <version>2.16.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -125,6 +157,25 @@ THE SOFTWARE.
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- maven-hpi-plugin from the parent (3.1746) ships an ASM
+               that does not know class file major version 65 (Java 21).
+               3.1814 understands it. -->
+          <groupId>org.jenkins-ci.tools</groupId>
+          <artifactId>maven-hpi-plugin</artifactId>
+          <version>3.1814.v77d15159f9b_d</version>
+        </plugin>
+        <plugin>
+          <!-- 1.31 from the Jenkins parent ships ASM that does not know Java 21
+               class files (major version 65). 1.35 understands them. -->
+          <groupId>org.kohsuke</groupId>
+          <artifactId>access-modifier-checker</artifactId>
+          <version>1.35</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <!-- to treat executable-war type of artifact correctly -->
@@ -135,7 +186,19 @@ THE SOFTWARE.
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <release>11</release>
+          <release>21</release>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!-- Java 17+ needs explicit module opens for XStream serialization
+             (hudson.model.ParametersAction#parameterDefinitionNames touches
+             AbstractList.modCount via reflection) and for the appassembler /
+             plugin-manager classloader plumbing. Mirrors the flags baked into
+             app/pom.xml's appassembler config so 'mvn test' has the same JVM
+             posture as the produced bin/jenkinsfile-runner script. -->
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED</argLine>
         </configuration>
       </plugin>
       <plugin>
@@ -164,6 +227,13 @@ THE SOFTWARE.
       <id>repo.jenkins-ci.org</id>
       <url>https://repo.jenkins-ci.org/public/</url>
       <!-- allow snapshots -->
+    </repository>
+    <repository>
+      <id>maven-central</id>
+      <url>https://repo1.maven.org/maven2/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
@@ -228,7 +298,7 @@ THE SOFTWARE.
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin.version}</version>
             <configuration>
-              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true ${argLine}</argLine>
+              <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED ${argLine}</argLine>
             </configuration>
           </plugin>
         </plugins>

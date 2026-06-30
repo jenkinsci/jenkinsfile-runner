@@ -17,21 +17,21 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.ServletContext;
 import jenkins.model.Jenkins;
 import jenkins.util.SystemProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jetty.ee9.webapp.Configuration;
+import org.eclipse.jetty.ee9.webapp.WebAppContext;
+import org.eclipse.jetty.ee9.webapp.WebXmlConfiguration;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.RolePrincipal;
 import org.eclipse.jetty.security.UserPrincipal;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.eclipse.jetty.webapp.Configuration;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 /**
  * Shared behaviour for different modes of launching an embedded Jenkins in the context of jenkinsfile-runner.
@@ -88,6 +88,11 @@ public abstract class JenkinsLauncher<T extends JenkinsLauncherCommand> extends 
         contextPath = validateHttpPath(launcherOptions.httpPath);
         WebAppContext context = new WebAppContext(launcherOptions.warDir.getPath(), contextPath);
         context.setClassLoader(getClass().getClassLoader());
+        // Jetty 12 EE9: skip webdefault-ee9.xml. JFR runs Jenkins headlessly so the
+        // default servlet listeners (e.g. IntrospectorCleaner) are not needed; loading
+        // them via the WebAppClassLoader fails because the jetty-ee9-servlet jar lives
+        // on the server classloader, not the webapp one. Aligns with NoListenerConfiguration.
+        context.setDefaultsDescriptor(null);
         context.setConfigurations(new Configuration[]{new WebXmlConfiguration()});
         context.addBean(new NoListenerConfiguration(context));
         server.setHandler(context);
