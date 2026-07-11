@@ -3,9 +3,11 @@ package io.jenkins.jenkinsfile.runner;
 import com.cloudbees.hudson.plugins.folder.Folder;
 import com.cloudbees.plugins.credentials.Credentials;
 import com.cloudbees.plugins.credentials.CredentialsUnavailableException;
+import hudson.init.Terminator;
 import hudson.model.Action;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
+import hudson.model.Executor;
 import hudson.model.Failure;
 import hudson.model.ParametersAction;
 import hudson.model.StringParameterValue;
@@ -177,4 +179,17 @@ public class Runner {
             }
         }
     }
+
+    @Terminator
+    public static void stopBuilds() throws Exception {
+        for (WorkflowJob p : Jenkins.get().allItems(WorkflowJob.class)) {
+            for (WorkflowRun b : p.getBuilds()) {
+                Executor exec = b.getExecutor();
+                if (exec != null) {
+                    exec.interrupt();
+                }
+            }
+        }
+    }
+
 }
