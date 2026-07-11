@@ -47,8 +47,61 @@ See the https://github.com/jenkinsci/plugin-installation-manager-tool[Plugin Ins
 
 == Adding tools
 
-NOTE: This documentation section has not been implemented yet.
-Please feel free to submit a pull request!
+To add a tool let's say `git`, you can use https://github.com/jenkinsci/configuration-as-code-plugin[Jenkins Configuration-as-Code]. To know more about tools in jenkins, see https://www.jenkins.io/doc/book/managing/tools/[Managing Tools].
+
+To configure a tool in jenkins, you first need to install required plugins for that tool, so you can install plugins in `jenkinsfile-runner` as shown in link:#_installing_plugins[Installing Plugins] section. As `git` plugin is already present in the `jenkins/jenkinsfile-runner` docker image, so no need to install it again.
+
+*Note:* Here `git` tool is different than `git` plugin, here `git` tool is the `git` command that jenkins internally uses to clone repositories.
+
+Most of the tool plugins in jenkins has support to automatically download tool from internet and install it which can be specified in Jenkins CasC, like shown in this https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/nodejs[example]. But If you want to manually install the tool, you can write the installation steps of the tool in the same Dockerfile (that used to install plugins), like here for `git`, the preferred method to install `git` command is with OS Package Manager.
+
+Dockerfile::
+
+[source]
+----
+FROM jenkins/jenkinsfile-runner
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+----
+
+Next, Creating Jenkins CasC YAML file for configuring `git` tool in jenkins. Refer to link:/demo/casc/README.md[JCasC demo] for more examples.
+
+jenkins.yaml::
+
+[source]
+----
+tool:
+  git:
+    installations:
+      - name: git
+        home: /usr/bin/git
+----
+
+Now you can run a Jenkinsfile having `git` as a stage like given below.
+The following is a simple Jenkinsfile to Clone the git repositories using `git` tool.
+
+Jenkinsfile::
+[source]
+----
+pipeline {
+    agent any
+    stages {
+        stage('Clone git repository') {
+            tools {git 'git'} //optional
+            steps {
+                git branch: 'master', url: 'git-repo-url'
+            }
+        }
+    }
+}
+----
+You can then run `jenkinsfile-runner` like the following
+[source]
+----
+docker run --rm -v $(pwd)/Jenkinsfile:/workspace/Jenkinsfile -v $(pwd)/jenkins.yaml:/usr/share/jenkins/ref/casc/jenkins.yaml jenkinsfile-runner:my-image
+----
+Here `jenkinsfile-runner:my-image` is custom docker image created from above Dockerfile.
+
+Same procedure can be applied to add other tools like `ant`, `maven`, `jdk`, `nodejs`, `terraform` or any other tool in `jenkinsfile-runner` docker image.
 
 == Configuring Jenkins
 
