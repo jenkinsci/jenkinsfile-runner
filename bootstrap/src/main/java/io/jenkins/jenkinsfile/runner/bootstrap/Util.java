@@ -5,12 +5,12 @@ import hudson.util.VersionNumber;
 import picocli.CommandLine;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.jar.JarEntry;
@@ -67,27 +67,31 @@ public class Util {
             // Get current working directory path
             Path currentPath = FileSystems.getDefault().getPath("").toAbsolutePath();
             //Create Temporary directory
-            Path path = Files.createTempDirectory(currentPath.toAbsolutePath(), "jenkinsfile-runner");
-            File destDir = path.toFile();
+            Path destPath = Files.createTempDirectory(currentPath.toAbsolutePath(), "jenkinsfile-runner");
+            File destDir = destPath.toFile();
+            // Canonicalize once so every entry can be checked against the real destination root,
+            // guarding against a maliciously crafted WAR escaping it via "../" or absolute paths
+            // (a.k.a. "Zip Slip", CWE-22).
+            Path destDirReal = destPath.toRealPath();
 
             while (enu.hasMoreElements()) {
                 JarEntry je = enu.nextElement();
-                File file = new File(destDir, je.getName());
-                if (!file.exists()) {
-                    file.getParentFile().mkdirs();
-                    file = new File(destDir, je.getName());
+
+                Path resolved = destDirReal.resolve(je.getName()).normalize();
+                if (!resolved.startsWith(destDirReal)) {
+                    throw new IOException(
+                            "Entry " + je.getName() + " in " + warFile
+                                    + " would be extracted outside of the target directory. Aborting.");
                 }
+
                 if (je.isDirectory()) {
+                    Files.createDirectories(resolved);
                     continue;
                 }
-                InputStream is = jarfile.getInputStream(je);
 
-                try (FileOutputStream fo = new FileOutputStream(file)) {
-                    while (is.available() > 0) {
-                        fo.write(is.read());
-                    }
-                    fo.close();
-                    is.close();
+                Files.createDirectories(resolved.getParent());
+                try (InputStream is = jarfile.getInputStream(je)) {
+                    Files.copy(is, resolved, StandardCopyOption.REPLACE_EXISTING);
                 }
             }
             return destDir;
