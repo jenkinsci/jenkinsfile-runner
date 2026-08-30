@@ -2,9 +2,9 @@ package io.jenkins.jenkinsfile.runner;
 
 import hudson.Extension;
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.PipelineRunOptions;
+import io.jenkins.plugins.pipeline.PipelineAsYamlScriptFlowDefinition;
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
-import org.jenkinsci.plugins.workflow.multibranch.yaml.pipeline.PipelineAsYamlScriptFlowDefinition;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
